@@ -1,0 +1,171 @@
+/*
+                       __    __    _______  _______ 
+.---.-..--.--..-----.|  |  |__|  |       ||   |   |
+|  _  ||_   _||  -__||  |   __   |   -   ||       |
+|___._||__.__||_____||__|  |__|  |_______||__|_|__|
+                      \\\_____ axels OBJECT MANAGER
+
+----------------------------------------------------------------------
+
+javascript functions for all pages
+
+----------------------------------------------------------------------
+*/
+
+/**
+ * get query parameters from url as object
+ * 
+ * @example:
+ *   var _GET=getQueryParams();
+ *   console.log(_GET['app']);
+ * 
+ * @returns {object}
+ */
+function getQueryParams() {
+    var qs = document.location.search.split('+').join(' ');
+    var params = {},
+            tokens,
+            re = /[?&]?([^=]+)=([^&]*)/g;
+    while (tokens = re.exec(qs)) {
+        params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+    }
+    return params;
+}
+
+/**
+ * Show given content in the overlay window.
+ * @param {string} sHtmlcode   output to show in the overlay; empty text hides the overlay
+ * @return bool
+ */
+function overlayDisplay(sHtmlcode){
+  $('#overlay-text').html(sHtmlcode);
+  if(sHtmlcode){
+    overlayShow();
+  } else {
+    overlayHide();
+  }
+  return true;
+}
+
+/**
+ * bring overlay window to front
+ */
+function overlayShow(){
+  $('#overlay').show();
+}
+
+/**
+ * hide overlay window
+ */
+function overlayHide(){
+  $('#overlay').hide();
+}
+
+function dosearch(){
+  var _GET=getQueryParams();
+  var q=$("#searchtop").val();
+
+  if(q){
+    httprequest("GET", "?app="+_GET['app']+"&page=search&q="+q, {}, "overlay-text");
+    overlayShow();
+  } else {
+    overlayHide();
+  }
+}
+
+/**
+ * TODO: beautify
+ * - Example POST method implementation:
+ *   https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+ * - Parse Javascript fetch in PHP
+ *   https://stackoverflow.com/questions/35091757/parse-javascript-fetch-in-php
+ * @param {string}  method  http method
+ * @param {string}  url     url to request
+ * @param {json}    data    request body as key -> value in a JSON
+ * @param {string}  idOut   optional: id of output element in DOM
+ * @return void
+ */
+async function httprequest(method="GET", url = "", data = {}, idOut = null) {
+
+    console.log("httprequest("+method+", "+url+", "+data+", "+idOut+")");
+
+    if(method=="POST" || method=="PUT"){
+      var fd = new FormData();
+      for(var key in data){
+        fd.append(key,data[key]);
+      }        
+    } else {
+      var fd = null;
+    }
+
+    // Default options are marked with *
+    const response = await fetch(url, {
+      method: method, // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        // "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+        // 'Content-Type': 'multipart/form-data',
+      },
+      redirect: "follow", // manual, *follow, error
+      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: fd, // body data type must match "Content-Type" header
+    });
+    // return response.json(); // parses JSON response into native JavaScript objects
+
+    var responsebody = await response.text();
+    if (idOut) {
+      $('#'+idOut).html(responsebody);
+    } else {
+      document.open();
+      document.write(responsebody);
+      document.close();
+    }
+
+  }
+
+
+// ----------------------------------------------------------------------
+// MAIN
+// ----------------------------------------------------------------------
+
+$(document).ready(function () {
+
+    // var oQuery = getQueryParams();
+    $('.dataTable').DataTable({
+      "lengthMenu": [[25, 100, -1], [25, 100, "..."]],
+      stateSave: true,
+    });
+
+    $('.summernote').summernote({
+      minHeight: 100,             // set minimum height of editor
+      maxHeight: 500,             // set maximum height of editor
+      toolbar: [
+        ['style', ['bold', 'italic', 'underline', 'clear']],
+        ['font', ['strikethrough', 'superscript', 'subscript']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['table', ['table']],
+        // ['insert', ['link', 'picture', 'video']],
+        ['insert', ['link']],
+        ['view', ['fullscreen', 'codeview', 'help']]
+      ]
+    });
+
+    $('#overlay').click(function () {
+      $(this).hide();
+    });
+
+    // search field on top right
+    $('#searchtop').click(function () {
+      dosearch();
+    });
+    $('#searchtop').keyup(function () {
+      dosearch();
+    });
+    $('#searchtop').keypress(function () {
+      dosearch();
+    });
+
+  });

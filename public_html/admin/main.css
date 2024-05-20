@@ -1,0 +1,67 @@
+/**
+                       __    __    _______  _______ 
+.---.-..--.--..-----.|  |  |__|  |       ||   |   |
+|  _  ||_   _||  -__||  |   __   |   -   ||       |
+|___._||__.__||_____||__|  |__|  |_______||__|_|__|
+                      \\\_____ axels OBJECT MANAGER
+
+
+*/
+
+button{border: 1px solid rgba(0,0,0,0.1) !important;}
+del{background-color: #fdd;}
+ins{background-color: #cfc}
+
+
+.required{color: #c00;}
+
+li.nav-item .active{background-color: #cee;}
+.sidebar-dark-gray .nav-sidebar > .nav-item > .nav-link.active, .sidebar-light-gray .nav-sidebar > .nav-item > .nav-link.active {
+	background: #489;
+	color: #fff;
+}
+
+
+a .fix-nolabel{margin-top: -0.5em;}
+
+div#overlay{position: fixed; height: 100%; width: 100%; top: 0; background: rgba(0,30,30,0.5); display: none;}
+div#overlay-text{position: fixed; height: 80%; width: 60%; top: 5em; left: 20%; background: #fff; 
+	border: 3px solid rgba(0,80,120,0.3); border-radius: 2em ;
+	box-shadow: 1em 1em 3em #345;
+	padding: 2em;
+	overflow: auto;
+}
+
+pre.config{background:#f4f4f4; color:#448; border-radius: 0.5em; max-height: auto; transition: all ease-in-out 0.2s;}
+.hidden{max-height: 0px; padding: 0; margin: 0;}
+
+select{ border: 1px solid #eee; border-radius: 0.3em; padding: 0.1em 0.5em; background-color: #dee;}
+.dataTables_filter label input {
+	border: 1px solid #ced4da;
+	border-radius: .25rem;
+}
+table.dataTable thead th, table.dataTable thead td {
+	border-bottom: 1px solid #bcc;
+	background-color: #dee;
+}
+
+table.dataTable.no-footer {
+	border-bottom: 1px solid #bcc;
+}
+
+table tr.error{background:#f0e0e0 !important;}
+table tr.info{}
+table tr.warning{background:#f0e0c0 !important;}
+
+.nav-item hr{color: #505860; border-top: 1px solid; height: 1px; padding: 0; margin: 0; }
+
+.callout, .card, .info-box {box-shadow: 0 0 1px rgba(0,0,0,.125),0 0.3em 1em rgba(0,150,200,.1);}
+h2 a, h3 a, h4 a, .callout a, .card-header a, table a{color: #358;}
+.callout a:hover, .card-header a:hover{color: #09a;}
+.card-header {background: #f8fafa;}
+.card-title i {color:rgba(0,80,80,0.3)}
+.card-title i, .callout i {color:rgba(0,80,80,0.3);}
+.card-title i, .callout i {color:var(--cyan);}
+
+input.form-control[required]{ border-right: 0.3em solid #c00; background: linear-gradient(90deg, #fffcfc 85%, #fee);}
+#msgOtherChanges{display: none;}

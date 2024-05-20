@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--
+                             __    __    _______  _______ 
+       .---.-..--.--..-----.|  |  |__|  |       ||   |   |
+       |  _  ||_   _||  -__||  |   __   |   -   ||       |
+       |___._||__.__||_____||__|  |__|  |_______||__|_|__|
+                             \\\_____ axels OBJECT MANAGER
+
+    -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{PAGE_TITLE}}</title>
+
+    <!--
+    <script type="text/javascript" src="js/asimax.class.js"></script>
+    
+    visjs
+    <script type="text/javascript" src="vendor/vis/4.21.0/vis.min.js"></script>
+    <link href="vendor/vis/4.21.0/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css"/>
+    
+    -->
+
+    <script type="text/javascript" src="../vendor/jquery/3.6.1/jquery.min.js"></script>
+
+    <!-- datatable -->
+    <script type="text/javascript" src="../vendor/datatables/1.10.15/js/jquery.dataTables.min.js"></script>
+    <link href="../vendor/datatables/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+    
+    <!-- fontawesome -->
+    <link href="../vendor/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css"/>
+
+    <!-- bootstrap-select -->
+    <link rel="stylesheet" href="../vendor/bootstrap-select/1.13.18/css/bootstrap-select.min.css">
+    <script src="../vendor/bootstrap-select/1.13.18/js/bootstrap-select.min.js"></script>
+
+    <!-- Adminlte -->
+    <link rel="stylesheet" href="{{DIR_ADMINLTE}}/css/adminlte.min.css?v=3.2.0">
+
+    <link rel="stylesheet" href="{{DIR_ADMINLTEPLUGINS}}/summernote/summernote-bs4.min.css">
+    <link rel="stylesheet" href="{{DIR_ADMINLTEPLUGINS}}/dropzone/dropzone.css" type="text/css" />
+
+
+    <link rel="stylesheet" href="main.css">
+
+</head>
+
+<body class="hold-transition {{PAGE_SKIN}} {{PAGE_LAYOUT}}">
+    <div class="wrapper">
+
+        {{NAVI_TOP}}
+
+        <aside class="main-sidebar elevation-4 sidebar-dark-gray">
+        
+
+            {{BRAND}}
+
+            <div class="sidebar">
+                {{NAVI_LEFT}}
+            </div>
+
+        </aside>
+
+        <div class="content-wrapper px-4 py-2">
+
+
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            {{PAGE_HEADER_LEFT}}
+
+                            <!-- <h1 class="m-0">Starter Page</h1> -->
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                {{PAGE_HEADER_RIGHT}}                                
+                                <!--
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active">Starter Page</li>
+                                -->
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="content">
+                <div class="container-fluid">
+                    {{PAGE_BODY}}
+                </div>
+            </div>
+
+        </div>
+
+
+        <aside class="control-sidebar control-sidebar-dark">
+
+            <div class="p-3">
+                <h5>Title</h5>
+                <p>Sidebar content</p>
+            </div>
+        </aside>
+
+
+        <footer class="main-footer">
+
+            <div class="float-right d-none d-sm-inline">
+                {{PAGE_FOOTER_RIGHT}}
+            </div>
+
+            {{PAGE_FOOTER_LEFT}}
+        </footer>
+    </div>
+
+    <script>{{INJECT_JS}}</script>
+    <script src="{{DIR_ADMINLTEPLUGINS}}/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="{{DIR_ADMINLTEPLUGINS}}/summernote/summernote-bs4.min.js"></script>
+    <script src="{{DIR_ADMINLTEPLUGINS}}/dropzone/dropzone.js"></script>
+
+
+    <script src="{{DIR_ADMINLTE}}/js/adminlte.min.js?v=3.2.0"></script>
+    <script type="text/javascript" src="js/functions.js"></script>
+    {{JS_BODY_END}}
+
+    <div id="overlay">
+        <div id="overlay-text"></div>
+    </div>
+</body>
+
+</html>

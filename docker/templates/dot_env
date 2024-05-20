@@ -1,0 +1,28 @@
+# TARGET: docker/.env
+# ======================================================================
+#
+# {{generator}}
+# values to be used in docker-composer.yml
+#
+# ======================================================================
+
+# ----- application
+APP_NAME={{APP_NAME}}
+
+# uid of www-data in the docker container
+DOCKER_USER_UID={{DOCKER_USER_UID}}
+
+APP_PORT={{APP_PORT}}
+WEBROOT={{WEBROOT}}
+
+# --- 8< --- {{CUTTER_NO_DATABASE}} --- 8< ---
+
+DB_PORT={{DB_PORT}}
+
+# ----- database settings
+MYSQL_RANDOM_ROOT_PASSWORD={{MYSQL_RANDOM_ROOT_PASSWORD}}
+MYSQL_ALLOW_EMPTY_PASSWORD={{MYSQL_ALLOW_EMPTY_PASSWORD}}
+MYSQL_ROOT_PASS={{MYSQL_ROOT_PASS}}
+MYSQL_USER={{APP_NAME}}
+MYSQL_PASS={{MYSQL_PASS}}
+MYSQL_DB={{APP_NAME}}
