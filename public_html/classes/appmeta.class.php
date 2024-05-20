@@ -15,7 +15,7 @@
  * handle metadata of a single application
  * 
  * @author Axel Hahn
- * @link TODO
+ * @link https://github.com/axelhahn/axelOM/
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL 3.0
  * 
  * ----------------------------------------------------------------------

@@ -72,5 +72,5 @@ return [
     // '{{INJECT_JS}}' => $cr->renderJSLang(),
     '{{INJECT_JS}}' => '',
     '{{PAGE_FOOTER_LEFT}}'=>'&copy; 2023-'.date('Y').' - Axel Hahn',
-    '{{PAGE_FOOTER_RIGHT}}'=>'Source: <a href="#" target="_blank">TODO</a>',
+    '{{PAGE_FOOTER_RIGHT}}'=>'Source: <a href="https://github.com/axelhahn/axelOM/" target="_blank">Github: axelhahn/axelOM</a>',
 ];
