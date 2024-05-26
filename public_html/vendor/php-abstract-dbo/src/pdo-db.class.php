@@ -233,7 +233,7 @@ class pdo_db
     }
     /**
      * enable/ disable debug; database error is visible on enabled debug only
-     * @param  bool  $bNewValue  new debug mode; 0|false = off; any value=true
+     * @param  bool  $bNewValue  new debug mode; false = off; true = on
      * @return bool
      */
     public function setDebug(bool $bNewValue) :bool
@@ -249,7 +249,7 @@ class pdo_db
     }
     /**
      * enable/ disable debug; show error message if they occur
-     * @param  string|bool  $bNewValue  new debug mode; 0|false = off; any value=true
+     * @param  string|bool  $bNewValue  new debug mode; false = off; true = on
      * @return bool
      */
     public function showErrors(bool $bNewValue) :bool

@@ -796,12 +796,13 @@ class pdo_db_base
         }
         $this->_aRelations = [];
         $oRelation = new pdo_db_relations($this->_pdo);
+        $aData=['id' => $this->id()];
         $aRelations = $oRelation->search([
             'columns' => '*',
             'where' => '
-                (`from_table`="' . $this->_table . '" AND `from_id`="' . $this->id() . '")
+                (`from_table`="' . $this->_table . '" AND `from_id`=:id )
                 OR 
-                (`to_table`="' . $this->_table . '" AND `to_id`="' . $this->id() . '")
+                (`to_table`="' . $this->_table . '" AND `to_id`=:id )
                 AND `deleted`=0',
             'order' => [
                 'from_table ASC',
@@ -811,20 +812,22 @@ class pdo_db_base
                 'to_id ASC',
                 'to_column ASC',
             ],
-        ]);
+        ], $aData);
         // $this->_aQueries[]=$oRelation->lastquery();
         if (is_array($aRelations) && count($aRelations)) {
             foreach ($aRelations as $aEntry) {
                 $aTmp = $this->_getRelationSortorder($aEntry['from_table'], $aEntry['from_id'],$aEntry['from_column'], $aEntry['to_table'], $aEntry['to_id'],$aEntry['to_column']);
 
-                $sTableKey = $this->_table == $aEntry['from_table']
+                $sTableKey = $this->_table.':'.$this->id() == $aEntry['from_table'].':'.$aEntry['from_id']
                     ? 'to'
                     : 'from';
                 $sTableSelfKey = $sTableKey == 'from'
                     ? 'to'
                     : 'from';
                 $sRelKey = $this->_getRelationKey($aTmp[$sTableKey . '_table'], $aTmp[$sTableKey . '_id'], $aTmp[$sTableSelfKey . '_column']);
-                $aTargetItem=$this->makeQuery('SELECT * FROM `' . $aEntry[$sTableKey . '_table'] . '` WHERE id=' . $aEntry[$sTableKey . '_id'])[0];
+                $sSql='SELECT * FROM `' . $aEntry[$sTableKey . '_table'] . '` WHERE id=:id AND deleted=0';
+                $aData=['id' => $aEntry[$sTableKey . '_id']];
+                $aTargetItem=$this->makeQuery($sSql, $aData)[0];
                 $this->_aRelations['_targets'][$sRelKey] = [
                     'column' => $aEntry[$sTableSelfKey . '_column'].$aEntry[$sTableKey . '_column'],
                     'table' => $aEntry[$sTableKey . '_table'],
@@ -1369,15 +1372,19 @@ class pdo_db_base
     // ----------------------------------------------------------------------
 
     /**
-     * search
+     * search for items in the current table
+     * You should use ":<placeholder>" in your sql statements to use
+     * prepared statements
+     * 
      * @param  array  $aOptions  array with search options
      *                          - columns - array|string
      *                          - where   - array|string
      *                          - order   - array|string
      *                          - limit   - string
+     * @param  array  $aData    array with values for prepared statement
      * @return array|bool
      */
-    public function search(array $aOptions = []) :array|bool
+    public function search(array $aOptions = [], array $aData = []) :array|bool
     {
 
         $sColumns = '';
@@ -1428,7 +1435,7 @@ class pdo_db_base
             . ($sWhere ? 'WHERE ' . $sWhere . ' ' : '')
             . $sOrder
             . $sLimit;
-        $result = $this->makeQuery($sSql);
+        $result = $this->makeQuery($sSql, $aData);
         if (is_array($result) && count($result)) {
             return $result;
         }
