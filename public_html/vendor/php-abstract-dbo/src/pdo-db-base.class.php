@@ -11,8 +11,6 @@
  * TODO:
  * 
  * - validate values in method set() - WIP
- * - better handling of errors - see  $this->_aLastError (set in 
- *   makeQuery()) vs $this->_sLastError
  * - More useful debugging _wd()
  * - find a sexy name
  * 
@@ -90,7 +88,7 @@ class pdo_db_base
      * default columns for each object type
      */
     protected array $_aDefaultColumns = [
-        'id'          => [
+        'id' => [
             'create' => 'INTEGER primary key autoincrement',
             // 'extra' =>  'primary key autoincrement',
             // 'label' => 'ID',                    'descr' => '', 'type' => 'hidden',         'edit' => false,
@@ -98,7 +96,7 @@ class pdo_db_base
         ],
         'timecreated' => ['create' => 'DATETIME', 'dummyvalue' => 'automatic'],
         'timeupdated' => ['create' => 'DATETIME', 'dummyvalue' => 'automatic'],
-        'deleted'     => ['create' => 'INTEGER',  'dummyvalue' => '0'],
+        'deleted' => ['create' => 'INTEGER', 'dummyvalue' => '0'],
     ];
 
     /**
@@ -116,7 +114,7 @@ class pdo_db_base
     // ----------------------------------------------------------------------
 
     /**
-     * constructor - sets internal environment variables and checks existence 
+     * Constructor - sets internal environment variables and checks existence 
      * of the database
      * @param  string $sObjectname  object name to generate a tablename from it
      * @param  string $sDbConfig    database config file
@@ -130,10 +128,11 @@ class pdo_db_base
         $this->_pdo = $oDB;
         if (!$this->_pdo->tableExists($this->_table)) {
             $this->_wd(__METHOD__ . ' Need to create table.');
-            if(!$this->_createDbTable()){
+            if (!$this->_createDbTable()) {
                 $this->_wd(__METHOD__ . ' Error creating table.');
                 die('ERROR: Unable to create table for [' . $sObjectname . '].');
-            };
+            }
+            ;
         }
 
         // generate item
@@ -148,55 +147,55 @@ class pdo_db_base
     // ----------------------------------------------------------------------
 
     /**
-     * get a table name of a given class name
+     * Get a table name of a given class name
      * @see reverse function _getObjectFromTablename()
      * @param  string  $s      input string to generate a table name from
      * @return string
      */
-    public function getTablename(string $s) :string
+    public function getTablename(string $s): string
     {
         return basename(str_replace('\\', '/', $s));
     }
     /**
-     * get a class name from a given table name
+     * Get a class name from a given table name
      * @see reverse function getTablename()
      * @param  string  $s      input string to generate a table name from
      * @return string
      */
-    protected function _getObjectFromTablename(string $s) : string
+    protected function _getObjectFromTablename(string $s): string
     {
         return __NAMESPACE__ . '\\' . $s;
     }
 
     /**
-     * write debug output if enabled by flag
+     * Write debug output if enabled by flag
      * @param  string  $s  string to show
      * @return bool
      */
-    protected function _wd(string $s) :bool
+    protected function _wd(string $s): bool
     {
         return $this->_pdo->_wd($s, $this->_table);
     }
 
     /**
-     * helper function to insert timestamp for creation and update
+     * Helper function to insert timestamp for creation and update
      * @return string
      */
-    protected function _getCurrentTime() :string
+    protected function _getCurrentTime(): string
     {
         return date("Y-m-d H:i:s");
     }
 
 
     /**
-     * execute a sql statement
+     * Execute a sql statement
      * a wrapper for $this->_pdo->makeQuery() that adds the current table
      * 
      * @param  string  $sSql   sql statement
      * @param  array   $aData  array with data items; if present prepare statement will be executed 
      * @return array|boolean
      */
-    public function makeQuery(string $sSql, array $aData = []) :array|bool
+    public function makeQuery(string $sSql, array $aData = []): array|bool
     {
         $this->_wd(__METHOD__ . " ($sSql, " . (count($aData) ? "DATA[" . count($aData) . "]" : "NODATA") . ")");
         return $this->_pdo->makeQuery($sSql, $aData, $this->_table);
@@ -204,10 +203,10 @@ class pdo_db_base
 
 
     /**
-     * create database table
+     * Create database table
      * @return bool
      */
-    private function _createDbTable() :bool
+    private function _createDbTable(): bool
     {
         if ($this->_pdo->tableExists($this->_table)) {
             $this->_log(PB_LOGLEVEL_INFO, __METHOD__ . '()', '{' . $this->_table . '} Table already exists');
@@ -216,8 +215,8 @@ class pdo_db_base
 
         $sSql = '';
         $sSqlIndex = '';
-        $aDB=$this->_pdo->getSpecialties();
-        if(!$aDB){
+        $aDB = $this->_pdo->getSpecialties();
+        if (!$aDB) {
             $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . '()', 'Unable to get database specifics. Database type not supported: ' . $this->_pdo->driver());
             return false;
         }
@@ -225,9 +224,9 @@ class pdo_db_base
         // db columns are default colums + columns for my object
         foreach (array_merge($this->_aDefaultColumns, $this->_aProperties) as $sCol => $aData) {
             if (isset($aData['create'])) {
-                $sColumnType= str_ireplace(array_keys($aDB), array_values($aDB), $aData['create']);
+                $sColumnType = str_ireplace(array_keys($aDB), array_values($aDB), $aData['create']);
                 $sSql .= ($sSql ? ",\n" : '')
-                        ."    $sCol {$sColumnType}";                
+                    . "    $sCol {$sColumnType}";
                 // $sSql .= ($sSql ? ', ' : '')
                 //     . "$sCol " . $aData['create']
                 //     . (isset($aData['extra']) ? ' ' . $aData['extra'] : '');
@@ -251,13 +250,13 @@ class pdo_db_base
      * - columns with wrong type
      * @return array|bool
      */
-    public function verifyColumns() :array|bool
+    public function verifyColumns(): array|bool
     {
 
         $this->_wd(__METHOD__);
         $aDbSpecifics = [
-            'sqlite' => [ 'sql' => 'PRAGMA table_info(`' . $this->_table . '`)', 'key4column'=>'name',  'key4type' => 'type', ],
-            'mysql' =>  [ 'sql' => 'DESCRIBE `' . $this->_table . '`;',          'key4column'=>'Field', 'key4type' => 'Type', ],
+            'sqlite' => ['sql' => 'PRAGMA table_info(`' . $this->_table . '`)', 'key4column' => 'name', 'key4type' => 'type',],
+            'mysql' => ['sql' => 'DESCRIBE `' . $this->_table . '`;', 'key4column' => 'Field', 'key4type' => 'Type',],
         ];
 
 
@@ -272,8 +271,8 @@ class pdo_db_base
             $this->_log(PB_LOGLEVEL_ERROR, __METHOD__, '{' . $this->_table . '} Unable to get table infos by sql query: ' . $aDbSpecifics[$type]['sql'] . '');
             return false;
         }
-        $aDB=$this->_pdo->getSpecialties();
-        if(!$aDB){
+        $aDB = $this->_pdo->getSpecialties();
+        if (!$aDB) {
             $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . '()', 'Unable to get database specifics. Database type not supported: ' . $this->_pdo->driver());
             return false;
         }
@@ -286,18 +285,18 @@ class pdo_db_base
         // put names into key
         foreach ($result as $aColumndef) {
             $aCols[$aColumndef[$aDbSpecifics[$type]['key4column']]] = [
-                'column'          => $aColumndef[$aDbSpecifics[$type]['key4column']],
-                'type_current'    => strtolower($aColumndef[$aDbSpecifics[$type]['key4type']]),
-                'type'            => false,
+                'column' => $aColumndef[$aDbSpecifics[$type]['key4column']],
+                'type_current' => strtolower($aColumndef[$aDbSpecifics[$type]['key4type']]),
+                'type' => false,
                 'type_translated' => false,
             ];
         }
 
         $aAllTables = array_merge($this->_aDefaultColumns, $this->_aProperties);
         foreach ($aAllTables as $sColumn => $aData) {
-            $_sCreateType=preg_replace('/([a-z\(0-0\)]*)\ .*$/', '$1', $aData['create']);
-            $aCols[$sColumn]['type']=$aData['create'];
-            $aCols[$sColumn]['type_translated']=strtolower(str_ireplace(array_keys($aDB), array_values($aDB), $_sCreateType));
+            $_sCreateType = preg_replace('/([a-z\(0-0\)]*)\ .*$/', '$1', $aData['create']);
+            $aCols[$sColumn]['type'] = $aData['create'];
+            $aCols[$sColumn]['type_translated'] = strtolower(str_ireplace(array_keys($aDB), array_values($aDB), $_sCreateType));
             if (!isset($aCols[$sColumn]['type_current'])) {
                 $iErrors++;
                 $aReturn['tables'][$sColumn] = [
@@ -305,7 +304,7 @@ class pdo_db_base
                     'is' => '-- missing --',
                     'must' => $aCols[$sColumn]['type'],
                 ];
-                $aMessages[] = 'Database column <strong>' . $sColumn . '</strong>: Column <ins>' . $sColumn . '</ins> needs to be created as <em>'.$aData['create'].'</em>.';
+                $aMessages[] = 'Database column <strong>' . $sColumn . '</strong>: Column <ins>' . $sColumn . '</ins> needs to be created as <em>' . $aData['create'] . '</em>.';
             } elseif (!isset($aCols[$sColumn]['type_translated']) || $aCols[$sColumn]['type_translated'] !== $aCols[$sColumn]['type_current']) {
                 $iErrors++;
                 $aReturn['tables'][$sColumn] = [
@@ -313,14 +312,15 @@ class pdo_db_base
                     'is' => $aCols[$sColumn]['type_current'],
                     'must' => $aCols[$sColumn]['type'],
                 ];
-                $aMessages[] = 'Database column <strong>' . $sColumn . '</strong>: It\'s type is not up to date. Alter column from <del>'.$aCols[$sColumn]['type_current'].'</del> to <ins>' . $aCols[$sColumn]['type'] . '</ins>';
+                $aMessages[] = 'Database column <strong>' . $sColumn . '</strong>: It\'s type is not up to date. Alter column from <del>' . $aCols[$sColumn]['type_current'] . '</del> to <ins>' . $aCols[$sColumn]['type'] . '</ins>';
             } else {
                 $iOK++;
                 $aReturn['tables'][$sColumn] = [
                     'ok' => 1,
                     'is' => $aCols[$sColumn]['type_current'],
                 ];
-            };
+            }
+            ;
         }
 
         foreach ($aCols as $sColumn => $aData) {
@@ -355,13 +355,13 @@ class pdo_db_base
     // ----------------------------------------------------------------------
 
     /**
-     * add a log message for current object
+     * Add a log message for current object
      * @param  string  $sLevel    loglevel; one of inf|warn|error
      * @param  string  $sMethod   the method where the error occured
      * @param  string  $sMessage  the error message
      * @return bool
      */
-    protected function _log(string $sLevel, string $sMethod, string $sMessage) :bool
+    protected function _log(string $sLevel, string $sMethod, string $sMessage): bool
     {
         return $this->_pdo->_log($sLevel, $this->_table, $sMethod, $sMessage);
     }
@@ -372,10 +372,10 @@ class pdo_db_base
     // ----------------------------------------------------------------------
 
     /**
-     * generate a hash for a new empty item
+     * Generate a hash for a new empty item
      * @return bool
      */
-    public function new() :bool
+    public function new(): bool
     {
         $this->_aItem = [];
         $this->_bChanged = true;
@@ -390,10 +390,10 @@ class pdo_db_base
     }
 
     /**
-     * create a new entry in the database
+     * Create a new entry in the database
      * @return bool|integer false on failure or new id on success
      */
-    public function create() :bool|int
+    public function create(): bool|int
     {
         $this->_wd(__METHOD__);
 
@@ -411,13 +411,13 @@ class pdo_db_base
             $this->_bChanged = false;
 
             // handle lookups
-            foreach($this->_aProperties as $sCol => $aCol) {
+            foreach ($this->_aProperties as $sCol => $aCol) {
 
                 // if coumn is a lookup and a value was set then create relation
-                if(isset($aCol['lookup']) && $this->_aItem[$sCol]){
-                    $sTargetTable=$aCol['lookup']['table'];
+                if (isset($aCol['lookup']) && $this->_aItem[$sCol]) {
+                    $sTargetTable = $aCol['lookup']['table'];
                     if (!$this->relCreate($sTargetTable, $this->_aItem[$sCol], $sCol)) {
-                        $this->_log(PB_LOGLEVEL_ERROR, __METHOD__, 'Creation of relation from table {'.$this->_table.'.'.$sCol.'} to table '.$sTargetTable.' failed.');
+                        $this->_log(PB_LOGLEVEL_ERROR, __METHOD__, 'Creation of relation from table {' . $this->_table . '.' . $sCol . '} to table ' . $sTargetTable . ' failed.');
                         return false;
                     }
                 }
@@ -430,20 +430,20 @@ class pdo_db_base
     }
 
     /**
-     * read an entry  from database by given id
+     * Read an entry from database by given id
      * @param  int    $iId             id to read
      * @param  bool   $bReadRelations  read relation too? default: false
      * @return bool|int
      */
-    public function read(int $iId, bool $bReadRelations = false) :bool
+    public function read(int $iId, bool $bReadRelations = false): bool
     {
         $this->_wd(__METHOD__);
         $this->new();
 
         $this->_bChanged = false;
         $sSql = 'SELECT * FROM `' . $this->_table . '` WHERE `id`=:id AND deleted=0';
-        $aData=[
-            'id'=>(int)$iId,
+        $aData = [
+            'id' => (int) $iId,
         ];
         $result = $this->makeQuery($sSql, $aData);
         if (isset($result[0])) {
@@ -461,15 +461,14 @@ class pdo_db_base
     }
 
     /**
-     * update entry; the field "id" is required to identify a single row in the table
+     * Update entry; the field "id" is required to identify a single row in the table
      * @return int|bool
      */
-    public function update() :int|bool
+    public function update(): int|bool
     {
         $this->_wd(__METHOD__);
 
-        // TODO: enable
-        if(! $this->_bChanged ){
+        if (!$this->_bChanged) {
             $this->_log(PB_LOGLEVEL_INFO, __METHOD__, 'Skip database update: dataset was not changed.');
             return false;
         } else {
@@ -484,59 +483,59 @@ class pdo_db_base
             $sSql = 'UPDATE `' . $this->_table . '` ' . 'SET ' . $sSql . ' WHERE `id` = :id';
             $return = $this->makeQuery($sSql, $this->_aItem);
         }
-        if (is_array($return) || ! $this->_bChanged) {
+        if (is_array($return) || !$this->_bChanged) {
 
             // handle lookups
-            if(!$this->_aRelations || !count($this->_aRelations)){
+            if (!$this->_aRelations || !count($this->_aRelations)) {
                 $this->_relRead();
             }
 
             // echo '<pre>'. print_r($this->_aRelations, 1).'</pre>'; // die(__FILE__.':'.__LINE__);
 
             // loop over lookups in relations
-            if(isset($this->_aRelations['_lookups']) && count($this->_aRelations['_lookups'])){
-                    
-                foreach($this->_aRelations['_lookups'] as $sCol => $aRel){
+            if (isset($this->_aRelations['_lookups']) && count($this->_aRelations['_lookups'])) {
 
-                    $iItemvalue=$this->get($sCol);
-                    if($iItemvalue) {
-                
-                        $iTargetId=$this->_aRelations['_targets'][$aRel['relkey']]['id'] ?? false;
+                foreach ($this->_aRelations['_lookups'] as $sCol => $aRel) {
+
+                    $iItemvalue = $this->get($sCol);
+                    if ($iItemvalue) {
+
+                        $iTargetId = $this->_aRelations['_targets'][$aRel['relkey']]['id'] ?? false;
                         // print_r($this->_aRelations['_targets'][$aRel['relkey']]);
                         // echo "iItemvalue = $iItemvalue | iTargetId = $iTargetId<br>";
                         // die(__FILE__.':'.__LINE__);
 
 
-                        if(!$iTargetId){
+                        if (!$iTargetId) {
                             // create new relation
-                            $this->_wd(__METHOD__.' create new relation for '.$sCol);
+                            $this->_wd(__METHOD__ . ' create new relation for ' . $sCol);
                             $this->relCreate($this->_aProperties[$sCol]['lookup']['table'], $iItemvalue, $sCol);
                         } else {
 
                             // if current value is not equal to target id:
                             // update relation
-                            if((int)$iItemvalue!==(int)$iTargetId){
-                                $this->_wd(__METHOD__.' updating relation for '.$sCol.': '.$iTargetId.' --> '.$iItemvalue);
+                            if ((int) $iItemvalue !== (int) $iTargetId) {
+                                $this->_wd(__METHOD__ . ' updating relation for ' . $sCol . ': ' . $iTargetId . ' --> ' . $iItemvalue);
                                 $this->relUpdate($aRel['relkey'], $iItemvalue);
                             } else {
-                                $this->_wd('no relation change for '.$sCol);
+                                $this->_wd('no relation change for ' . $sCol);
                             }
                         }
                     } else {
                         // value in item was deleted -> delete relation too
-                        $this->_wd(__METHOD__.' deleting relation for '.$sCol);
+                        $this->_wd(__METHOD__ . ' deleting relation for ' . $sCol);
                         $this->relDelete($aRel['relkey']);
                     }
                 }
             }
             // loop over lookups columns in item
-            foreach($this->_aProperties as $sCol => $aCol){
-                if(isset($aCol['lookup'])){
-                    $sTargetTable=$aCol['lookup']['table'];
-                    $iItemvalue=$this->get($sCol);
-                    $sRelKey=$this->_getRelationKey($sTargetTable, 0, $sCol);
-                    if(!$iItemvalue && isset($this->_aRelations['_targets'][$sRelKey])){
-                        $this->_wd(__METHOD__.' Delete unneeded relation '.$sRelKey);
+            foreach ($this->_aProperties as $sCol => $aCol) {
+                if (isset($aCol['lookup'])) {
+                    $sTargetTable = $aCol['lookup']['table'];
+                    $iItemvalue = $this->get($sCol);
+                    $sRelKey = $this->_getRelationKey($sTargetTable, 0, $sCol);
+                    if (!$iItemvalue && isset($this->_aRelations['_targets'][$sRelKey])) {
+                        $this->_wd(__METHOD__ . ' Delete unneeded relation ' . $sRelKey);
                         $this->relDelete($sRelKey);
                     }
                 }
@@ -550,25 +549,22 @@ class pdo_db_base
     }
 
     /**
-     * delete entry by a given id or current item
+     * Delete entry by a given id or current item
      * @param  integer  $iId   optional: id of the entry to delete; default: delete current item
      * @return bool
      */
-    public function delete(int $iId = 0) :bool
+    public function delete(int $iId = 0): bool
     {
         $iId = $iId ? $iId : $this->id();
         if ($iId) {
             if ($this->relDeleteAll($iId)) {
 
                 $sSql = 'DELETE from `' . $this->_table . '` WHERE `id`=:id';
-                $aData=[
-                    'id'=>$iId,
+                $aData = [
+                    'id' => $iId,
                 ];
                 $result = $this->makeQuery($sSql, $aData);
                 if (is_array($result)) {
-                    // TODO: delete relations
-                    // - delete relations from_table+from_id
-                    // - delete relations to_table+to_id
                     if ($iId == $this->id()) {
                         $this->new();
                     }
@@ -577,7 +573,8 @@ class pdo_db_base
                 } else {
                     $this->_log(PB_LOGLEVEL_ERROR, __METHOD__, '{' . $this->_table . '} Deletion if item with id [' . $iId . '] failed.');
                     return false;
-                };
+                }
+                ;
             } else {
                 $this->_log(PB_LOGLEVEL_ERROR, __METHOD__, '{' . $this->_table . '} Deletion if relations for id [' . $iId . '] failed. Item was not deleted.');
             }
@@ -596,7 +593,7 @@ class pdo_db_base
      * removes the schema from database
      * @return bool
      */
-    public function flush() :bool
+    public function flush(): bool
     {
         // - delete relations from_table and to_table
         if (!$this->relFlush()) {
@@ -612,10 +609,10 @@ class pdo_db_base
     }
 
     /**
-     * save item
+     * Save item. If id is set, update. Otherwise create.
      * @return bool
      */
-    public function save() :bool
+    public function save(): bool
     {
         return $this->id()
             ? $this->update()
@@ -627,23 +624,31 @@ class pdo_db_base
     // ----------------------------------------------------------------------
 
     /**
-     * generate a key for a relation to another table and its id
-     * @param  string   $sTable   target table
-     * @param  integer  $iId      target id
-     * @param  string   $sCol     optional: column name wuith lookup
+     * Generate a key for a relation to another table and its id.
+     * TODO: use id of relation object seems to be possible
+     *       see relCreate() - there is a check for possibly duplicate entry
+     * 
+     * @param  string   $sToTable    target table
+     * @param  integer  $iToId       target id
+     * @param  string   $sSourceCol  optional: column name with lookup
+     * @param  string   $sToCol      optional: column name on target
      * @return string
      */
-    protected function _getRelationKey(string $sToTable, int $iToId, string|null $sSourceCol='') :string
+    protected function _getRelationKey(string $sToTable, int $iToId, string|null $sSourceCol = '', string|null $sToCol = ''): string
     {
-        return ''
-            .$sSourceCol 
-                ? $sToTable . ':column__'.$sSourceCol 
-                : $sToTable . ':'.$iToId
-            ;
+        $sReturn = ''
+            . (isset($sSourceCol) && $sSourceCol > '')
+            ? $sToTable . ':column__' . $sSourceCol
+            : ((isset($sToCol) && $sToCol > '')
+                ? $sToTable . ':' . $iToId . ':' . $sToCol
+                : $sToTable . ':' . $iToId
+            )
+        ;
+        return $sReturn;
     }
 
     /**
-     * generate a key for a relation to another table and its id
+     * Generate a key for a relation to another table and its id
      * The tables here are sorted already (see _getRelationSortorder)
      * @param  string   $sFromTable  table name
      * @param  integer  $iFromId     table id
@@ -653,17 +658,17 @@ class pdo_db_base
      * @param  string   $sToCol      column name
      * @return string
      */
-    protected function _getRelationUuid(string $sFromTable, int $iFromId, string|null $sFromCol, string $sToTable, int $iToId, string|null $sToCol) :string
+    protected function _getRelationUuid(string $sFromTable, int $iFromId, string|null $sFromCol, string $sToTable, int $iToId, string|null $sToCol): string
     {
         return md5(
             $sFromTable . ':' . $iFromId . ':' . $sFromCol
-            .'-->' 
+            . '-->'
             . $sToTable . ':' . $iToId . ':' . $sToCol
         );
     }
 
     /**
-     * generate a relation item in the wanted sort order of given tables including uuid
+     * Generate a relation item in the wanted sort order of given tables including uuid
      * The tables here are unsorted
      * @param  string   $sTable1  first table name
      * @param  integer  $iId1     first table id
@@ -671,36 +676,36 @@ class pdo_db_base
      * @param  integer  $iId2     second table id
      * @return array
      */
-    protected function _getRelationSortorder(string $sTable1, int $iId1, string|null $sCol1, string $sTable2, int $iId2, string|null $sCol2) :array
+    protected function _getRelationSortorder(string $sTable1, int $iId1, string|null $sCol1, string $sTable2, int $iId2, string|null $sCol2): array
     {
         $aReturn = ($sTable1 < $sTable2 || ($sTable1 == $sTable2 && $iId1 < $iId2))
             ? [
-                'from_table'       => $sTable1,
-                'from_id'          => $iId1,
-                'from_column'      => $sCol1,
-                'to_table'         => $sTable2,
-                'to_id'            => $iId2,
-                'to_column'        => $sCol2,
+                'from_table' => $sTable1,
+                'from_id' => $iId1,
+                'from_column' => $sCol1,
+                'to_table' => $sTable2,
+                'to_id' => $iId2,
+                'to_column' => $sCol2,
             ]
             : [
-                'from_table'       => $sTable2,
-                'from_id'          => $iId2,
-                'from_column'      => $sCol2,
-                'to_table'         => $sTable1,
-                'to_id'            => $iId1,
-                'to_column'        => $sCol1,
+                'from_table' => $sTable2,
+                'from_id' => $iId2,
+                'from_column' => $sCol2,
+                'to_table' => $sTable1,
+                'to_id' => $iId1,
+                'to_column' => $sCol1,
             ]
-            ;
+        ;
         $aReturn['uuid'] = $this->_getRelationUuid($aReturn['from_table'], $aReturn['from_id'], $aReturn['from_column'], $aReturn['to_table'], $aReturn['to_id'], $aReturn['to_column']);
         return $aReturn;
     }
 
     /**
-     * internal data: add a relation item to current item
+     * Internal data: add a relation item to current item
      * @param  array $aRelitem relation item array [from_table, from_id, from_column, to_table, to_id, to_columnuuid]
      * @return bool
      */
-    protected function _addRelationToItem(array $aRelitem = []) :bool
+    protected function _addRelationToItem(array $aRelitem = []): bool
     {
         $this->_wd(__METHOD__ . '()');
         if (!isset($this->_aRelations)) {
@@ -723,7 +728,7 @@ class pdo_db_base
                 'to_id' => $aRelitem['from_id'],
                 'to_column' => $aRelitem['from_column'],
             ];
-        $sKey = $this->_getRelationKey($aTarget['to_table'], $aTarget['to_id']);
+        $sKey = $this->_getRelationKey($aTarget['to_table'], $aTarget['to_id'], $aTarget['from_column'], $aTarget['to_column']);
         $this->_aRelations[$sKey] = [
             'target' => $aTarget,
             'db' => $aRelitem,
@@ -731,13 +736,13 @@ class pdo_db_base
         return true;
     }
     /**
-     * create a relation from the current item to an id of a target object
+     * Create a relation from the current item to an id of a target object
      * @param  string  $sToTable     target object
-     * @param  string  $sToId        target object
+     * @param  string  $sToId        id of target object
      * @param  string  $sFromColumn  optional: source column
      * @return bool
      */
-    public function relCreate(string $sToTable, int $iToId, string|null $sFromColumn=NULL) :bool
+    public function relCreate(string $sToTable, int $iToId, string|null $sFromColumn = NULL): bool
     {
         $this->_wd(__METHOD__ . "($sToTable, $iToId, $sFromColumn)");
         if (!$this->id()) {
@@ -757,16 +762,17 @@ class pdo_db_base
             $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . "($sToTable, $iToId)", "The target table {'.$sToTable.'} does not exist.");
             return false;
         }
-        if (!(int)$iToId) {
+        if (!(int) $iToId) {
             $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . "($sToTable, $iToId)", "{'.$this->_table.'} The target id is not set or not valid.");
             return false;
         }
 
         // helper function:
         $aTmp = $this->_getRelationSortorder($this->_table, $this->id(), $sFromColumn, $sToTable, $iToId, NULL);
-        $sKey = $this->_getRelationKey($sToTable, $iToId, $sToTable);
+
+        $sKey = $this->_getRelationKey($sToTable, $iToId, $sFromColumn);
         if (isset($this->_aRelations[$sKey])) {
-            $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . "($sToTable, $iToId)", '{' . $this->_table . '} The relation already exists. It has the key ['.$sKey.'].');
+            $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . "($sToTable, $iToId)", '{' . $this->_table . '} The relation already exists. It has the key [' . $sKey . '].');
             return false;
         }
 
@@ -789,14 +795,14 @@ class pdo_db_base
      * This function is used in methods read() and relRead()
      * @return bool
      */
-    protected function _relRead() :bool
+    protected function _relRead(): bool
     {
         if (!isset($this->_aRelations)) {
             return false;
         }
         $this->_aRelations = [];
         $oRelation = new pdo_db_relations($this->_pdo);
-        $aData=['id' => $this->id()];
+        $aData = ['id' => $this->id()];
         $aRelations = $oRelation->search([
             'columns' => '*',
             'where' => '
@@ -816,81 +822,91 @@ class pdo_db_base
         // $this->_aQueries[]=$oRelation->lastquery();
         if (is_array($aRelations) && count($aRelations)) {
             foreach ($aRelations as $aEntry) {
-                $aTmp = $this->_getRelationSortorder($aEntry['from_table'], $aEntry['from_id'],$aEntry['from_column'], $aEntry['to_table'], $aEntry['to_id'],$aEntry['to_column']);
+                $aTmp = $this->_getRelationSortorder($aEntry['from_table'], $aEntry['from_id'], $aEntry['from_column'], $aEntry['to_table'], $aEntry['to_id'], $aEntry['to_column']);
 
-                $sTableKey = $this->_table.':'.$this->id() == $aEntry['from_table'].':'.$aEntry['from_id']
+                $sTableKey = $this->_table . ':' . $this->id() == $aEntry['from_table'] . ':' . $aEntry['from_id']
                     ? 'to'
                     : 'from';
                 $sTableSelfKey = $sTableKey == 'from'
                     ? 'to'
                     : 'from';
-                $sRelKey = $this->_getRelationKey($aTmp[$sTableKey . '_table'], $aTmp[$sTableKey . '_id'], $aTmp[$sTableSelfKey . '_column']);
-                $sSql='SELECT * FROM `' . $aEntry[$sTableKey . '_table'] . '` WHERE id=:id AND deleted=0';
-                $aData=['id' => $aEntry[$sTableKey . '_id']];
-                $aTargetItem=$this->makeQuery($sSql, $aData)[0];
+
+                // TODO: use id of relation object seems to be possible
+                $sRelKey = $this->_getRelationKey($aTmp[$sTableKey . '_table'], $aTmp[$sTableKey . '_id'], $aTmp[$sTableSelfKey . '_column'], $aTmp[$sTableKey . '_column']);
+                // $sRelKey = $aEntry['id'];
+
+                $sSql = 'SELECT * FROM `' . $aEntry[$sTableKey . '_table'] . '` WHERE id=:id AND deleted=0';
+                $aData = ['id' => $aEntry[$sTableKey . '_id']];
+                $aTargetResult = $this->makeQuery($sSql, $aData);
+                if (!isset($aTargetResult[0])) {
+                    $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . "()", '{' . $this->_table . '} The target id ' . $aData['id'] . ' was not found in table ' . $aEntry[$sTableKey . '_table']);
+                    continue;
+                }
+
                 $this->_aRelations['_targets'][$sRelKey] = [
-                    'column' => $aEntry[$sTableSelfKey . '_column'].$aEntry[$sTableKey . '_column'],
+                    'column' => $aEntry[$sTableSelfKey . '_column'] . $aEntry[$sTableKey . '_column'],
                     'table' => $aEntry[$sTableKey . '_table'],
                     'id' => $aEntry[$sTableKey . '_id'],
                     '_relid' => $aEntry['id'],
-                    '_target' => $aTargetItem,
+                    '_target' => $aTargetResult[0],
                 ];
             }
         }
+        // echo '<pre>_aItem = '; print_r($this->_aItem); echo '<hr>'; print_r($aRelations); echo '<hr>'; print_r($this->_aRelations); die(__FILE__.':'.__LINE__);
 
-        // --- add lookups
-        foreach($this->_aProperties as $sCol => $aCol) {
+        // --- add lookup columns of current object into subkey "_lookups"
+        foreach ($this->_aProperties as $sCol => $aCol) {
 
             // if coumn is a lookup and a value was set:
-            if(isset($aCol['lookup']) && $this->_aItem[$sCol]){
+            if (isset($aCol['lookup']) && $this->_aItem[$sCol]) {
 
-                $sTargetTable=$aCol['lookup']['table'];
-                $iTargetId=$this->get($sCol);
-                if($iTargetId){
+                $sTargetTable = $aCol['lookup']['table'];
+                $iTargetId = $this->get($sCol);
+                if ($iTargetId) {
 
-                    $sRelKey=$this->_getRelationKey($sTargetTable, $iTargetId,$sCol);
+                    $sRelKey = $this->_getRelationKey($sTargetTable, $iTargetId, $sCol);
 
 
-                    $this->_aRelations['_lookups'][$sCol]=[
-                        'relkey'=>$this->_getRelationKey($sTargetTable, $iTargetId,$sCol),
-                        'columns'=>$aCol['lookup']['columns'],
-                        'value'=>isset($this->_aRelations['_targets'][$sRelKey]['_target'])
+                    $this->_aRelations['_lookups'][$sCol] = [
+                        'relkey' => $this->_getRelationKey($sTargetTable, $iTargetId, $sCol),
+                        'columns' => $aCol['lookup']['columns'],
+                        'value' => isset($this->_aRelations['_targets'][$sRelKey]['_target'])
                             ? $this->getLabel($this->_aRelations['_targets'][$sRelKey]['_target'], $aCol['lookup']['columns'])
                             : '{{needs_to_be_created}}'
-                            ,
+                        ,
                     ];
                 }
 
             }
         }
 
-        // echo '<pre>_aItem = '; print_r($this->_aItem); print_r($this->_aRelations); die(__FILE__.':'.__LINE__);
+        // echo '<pre>_aItem = '; print_r($this->_aItem); echo '<hr>'; print_r($aRelations); echo '<hr>'; print_r($this->_aRelations); die(__FILE__.':'.__LINE__);
         return true;
     }
 
     /**
-     * get relations of the current item
-     * @param  array  $aFilter  optional: filter existing relaions by table and column
+     * Get relations of the current item
+     * @param  array  $aFilter  optional: filter existing relations by table and column
      *                          Keys:
      *                            table => <TARGETTABLE>  table must match
      *                            column => <COLNAME>     column name must match too
      * @return array
      */
-    public function relRead(array $aFilter=[]) :array
+    public function relRead(array $aFilter = []): array
     {
         $this->_wd(__METHOD__ . '() reading relations for ' . $this->_table . ' item id ' . $this->id());
         if (is_array($this->_aRelations) && !count($this->_aRelations)) {
             $this->_relRead();
         }
-        
-        if(isset($aFilter['table'])){
-            $aReturn=[];
-            if(isset($this->_aRelations['_targets'])){
-                foreach($this->_aRelations['_targets'] as $sKey => $aRelation) {
-                    if($aRelation['table']==$aFilter['table']){
+
+        if (isset($aFilter['table'])) {
+            $aReturn = [];
+            if (isset($this->_aRelations['_targets'])) {
+                foreach ($this->_aRelations['_targets'] as $sKey => $aRelation) {
+                    if ($aRelation['table'] == $aFilter['table']) {
                         if (
                             !isset($aFilter['column'])
-                            || (isset($aFilter['column']) && $aRelation['column']==$aFilter['column'])
+                            || (isset($aFilter['column']) && $aRelation['column'] == $aFilter['column'])
                         ) {
                             $aReturn['_targets'][$sKey] = $aRelation;
                         }
@@ -898,16 +914,52 @@ class pdo_db_base
                 }
             }
         } else {
-            $aReturn=$this->_aRelations;
+            $aReturn = $this->_aRelations;
         }
         return $aReturn;
     }
+
     /**
-     * delete a single relation from current item
+     * Update a single relation from current item with new value
+     * @param  string   $sRelKey     key of the relation; a string like 'table:id'
+     * @param  integer  $iItemvalue  new id to on target db
+     * @return bool
+     */
+    public function relUpdate(string $sRelKey, int $iItemvalue): bool
+    {
+        $this->_wd(__METHOD__ . "($sRelKey, $iItemvalue)");
+        if (!isset($this->_aRelations['_targets'][$sRelKey])) {
+            $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . "($sRelKey)", '{' . $this->_table . '} The given key does not exist.');
+            return false;
+        }
+        if (!isset($this->_aRelations['_targets'][$sRelKey]['_relid'])) {
+            $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . "($sRelKey)", '{' . $this->_table . '} The key [_relid] was not found.');
+            return false;
+        }
+
+        if (
+            is_array($this->makeQuery(
+                'UPDATE `pdo_db_relations` SET to_id = :to_id WHERE id = :id',
+                [
+                    'id' => $this->_aRelations['_targets'][$sRelKey]['_relid'],
+                    'to_id' => $iItemvalue,
+                ]
+            )
+            )
+        ) {
+            return true;
+        }
+        ;
+        $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . "($sRelKey, $iItemvalue)", 'Unable to update relation.');
+        return false;
+    }
+
+    /**
+     * Delete a single relation from current item
      * @param  string  $sRelKey  key of the relation; a string like 'table:id'
      * @return bool
      */
-    public function relDelete(string $sRelKey) :bool
+    public function relDelete(string $sRelKey): bool
     {
         if (!isset($this->_aRelations['_targets'][$sRelKey])) {
             $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . "($sRelKey)", '{' . $this->_table . '} The given key does not exist.');
@@ -922,45 +974,14 @@ class pdo_db_base
     }
 
     /**
-     * update a single relation from current item with new value
-     * @param  string   $sRelKey  key of the relation; a string like 'table:id'
-     * @param  integer  $sRelKey  pointer to new id on target db
-     * @return bool
-     */
-    public function relUpdate(string $sRelKey, int $iItemvalue) :bool{
-        $this->_wd(__METHOD__ . "($sRelKey, $iItemvalue)");
-        if (!isset($this->_aRelations['_targets'][$sRelKey])) {
-            $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . "($sRelKey)", '{' . $this->_table . '} The given key does not exist.');
-            return false;
-        }
-        if (!isset($this->_aRelations['_targets'][$sRelKey]['_relid'])) {
-            $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . "($sRelKey)", '{' . $this->_table . '} The key [_relid] was not found.');
-            return false;
-        }
-
-        if (is_array($this->makeQuery('UPDATE `pdo_db_relations` SET to_id = :to_id WHERE id = :id', 
-            [
-                'id' => $this->_aRelations['_targets'][$sRelKey]['_relid'],
-                'to_id' => $iItemvalue,
-            ]))){
-            return true;
-        };
-        $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . "($sRelKey, $iItemvalue)", 'Unable to update relation.');
-        return false;
-    }
-
-
-    /**
-     * delete all relations of a single item
+     * Delete all relations of a single item
      * called by delete(ID) before deleting the item itself
      * @param  integer  $iId  if of an item; default: false (=current item)
+     * @return bool
      */
-    public function relDeleteAll(int $iId = 0) :bool
+    public function relDeleteAll(int $iId = 0): bool
     {
         $this->_wd(__METHOD__ . "($iId)");
-        if (!isset($this->_aRelations['_targets'])) {
-            return true;
-        }
 
         // when not deleting the current - but a given - id --> store current item + its relations
         if ($iId && $iId !== $this->id()) {
@@ -969,13 +990,16 @@ class pdo_db_base
             $this->read($iId, true);
         }
 
-        $bOK=true;
-        foreach (array_keys($this->_aRelations['_targets']) as $sRelKey) {
-            $this->_log(PB_LOGLEVEL_INFO, __METHOD__ . "()", 'start this->relDelete("'.$sRelKey.'").');
-            if (!$this->relDelete($sRelKey)) {
-                $bOK=false;
-                break;
-            };
+        $bOK = true;
+        if (isset($this->_aRelations['_targets'])) {
+            foreach (array_keys($this->_aRelations['_targets']) as $sRelKey) {
+                $this->_log(PB_LOGLEVEL_INFO, __METHOD__ . "()", 'start this->relDelete("' . $sRelKey . '").');
+                if (!$this->relDelete($sRelKey)) {
+                    $bOK = false;
+                    break;
+                }
+                ;
+            }
         }
         // restore current item + its relations when not deleting the current but a given id
         if (isset($tmpItem)) {
@@ -986,11 +1010,11 @@ class pdo_db_base
     }
 
     /**
-     * delete all relations of type
-     * called by flush() before deleting all items of a type
+     * Delete all relations of current object type.
+     * Called by flush() before deleting all items of a type.
      * @return bool
      */
-    public function relFlush() :bool
+    public function relFlush(): bool
     {
         $sSql = 'DELETE FROM `pdo_db_relations` WHERE `from_table`="' . $this->_table . '" OR `to_table`="' . $this->_table . '"';
         return is_array($this->makeQuery($sSql));
@@ -1000,31 +1024,32 @@ class pdo_db_base
     // GETTER
     // ----------------------------------------------------------------------
     /**
-     * get count of existing items
+     * Get count of existing items
      * @return integer
      */
-    public function count() :int
+    public function count(): int
     {
         $aTmp = $this->makeQuery('SELECT count(id) AS count FROM `' . $this->_table . '` WHERE deleted=0');
         return isset($aTmp[0]['count']) ? $aTmp[0]['count'] : 0;
     }
+
     /**
-     * get id of the current item as integer
+     * Get id of the current item as integer
      * it returns false if there is no id
      * @return int|bool
      */
-    public function id() :int|bool
+    public function id(): int|bool
     {
-        return (int)$this->_aItem['id'] ? (int)$this->_aItem['id'] : false;
+        return (int) $this->_aItem['id'] ? (int) $this->_aItem['id'] : false;
     }
 
     /**
-     * get a single property of an item.
+     * Get a single property of an item.
      * opposite function of set(KEY, VALUE)
      * @param  string  $sKey2Get  key of your object to set
      * @return mixed
      */
-    public function get(string $sKey2Get) :mixed
+    public function get(string $sKey2Get): mixed
     {
         if (array_key_exists($sKey2Get, $this->_aItem)) {
             return $this->_aItem[$sKey2Get];
@@ -1034,21 +1059,22 @@ class pdo_db_base
     }
 
     /**
-     * get array of attribute names
+     * Get array of attribute names
      * @param  bool  $bWithValues  flag: including values? default: false
      * @return array
      */
-    public function getAttributes(bool $bWithValues = false) :array
+    public function getAttributes(bool $bWithValues = false): array
     {
         return $bWithValues
             ? $this->_aProperties
             : array_keys($this->_aProperties);
     }
+
     /**
-     * get array of main attributes to show in overview or to select a relation 
+     * Get array of main attributes to show in overview or to select a relation 
      * @return array
      */
-    public function getBasicAttributes() :array
+    public function getBasicAttributes(): array
     {
         $aReturn = [];
         foreach ($this->_aProperties as $sKey => $aDefs) {
@@ -1063,7 +1089,7 @@ class pdo_db_base
         return $aReturn;
     }
 
-     /**
+    /**
      * Get a single line for a database row description
      *
      * It fetches the basic attributes of the item and creates a single line string
@@ -1073,10 +1099,10 @@ class pdo_db_base
      * @param  array  $aItem  item data; default: current item
      * @return bool|string
      */
-     public function getDescriptionLine(array $aItem = []) :bool|string
-     {
+    public function getDescriptionLine(array $aItem = []): bool|string
+    {
         // Fetch the item data, if not given
-         $aItem = count($aItem) ? $aItem : $this->_aItem;
+        $aItem = count($aItem) ? $aItem : $this->_aItem;
 
         // If the item has no data, return false
         if (!$aItem) {
@@ -1090,10 +1116,11 @@ class pdo_db_base
         }
 
         // Remove the trailing dash
-         return rtrim($sReturn, ' - ');
-     }
+        return rtrim($sReturn, ' - ');
+    }
+
     /**
-     * get a label for the item.
+     * Get a label for the item.
      * It fetches the basic attributes if needed. 
      * Alternatively it uses the id
      * 
@@ -1101,21 +1128,21 @@ class pdo_db_base
      * @param  array  $aColumns  array of columns to show
      * @return mixed bool|string
      */
-    public function getLabel(array $aItem = [], array $aColumns=[]) :string
+    public function getLabel(array $aItem = [], array $aColumns = []): string
     {
         // which columns to look for?
-        $aDefaultColumns=[ 'label', 'displayname'];
+        $aDefaultColumns = ['label', 'displayname'];
 
         if (!count($aItem)) {
             $aItem = $this->_aItem;
-            if(!$aColumns){
-                $aColumns=[$this->getBasicAttributes()[0]];
+            if (!$aColumns) {
+                $aColumns = [$this->getBasicAttributes()[0]];
             }
         } else {
-            if(!$aColumns){
-                foreach($aDefaultColumns as $sCol2Test){
-                    if(isset($aItem[$sCol2Test])){
-                        $aColumns=[$sCol2Test];
+            if (!$aColumns) {
+                foreach ($aDefaultColumns as $sCol2Test) {
+                    if (isset($aItem[$sCol2Test])) {
+                        $aColumns = [$sCol2Test];
                         break;
                     }
                 }
@@ -1126,56 +1153,58 @@ class pdo_db_base
             return false;
         }
 
-        $sReturn='';
-        if (!$aColumns){
-            $sReturn.= '#'.$aItem['id'];
+        $sReturn = '';
+        if (!$aColumns) {
+            $sReturn .= '#' . $aItem['id'];
         } else {
-            foreach($aColumns as $sCol){
-                $sReturn.=($sReturn ? ', ' : '')
+            foreach ($aColumns as $sCol) {
+                $sReturn .= ($sReturn ? ', ' : '')
                     . ($aItem[$sCol] ? $aItem[$sCol] : '?')
-                    ;
+                ;
             }
         }
         return $sReturn;
     }
 
     /**
-     * for 1:1 lookups: get the label of the related item by a given column.
+     * For 1:1 lookups: get the label of the related item by a given column.
      * It fetches the current value of the column and returns the label of the
      * connected item of the lookup table
      * 
      * @param string  $sColumn  name of the lookup column
      * @return string|bool
      */
-    public function getRelLabel(string $sColumn) :string|bool {
-        if (!isset($this->_aProperties[$sColumn]['lookup']['table'])){
-            throw new Exception(__METHOD__.' Column '.$sColumn.' is not a lookup column');            
+    public function getRelLabel(string $sColumn): string|bool
+    {
+        if (!isset($this->_aProperties[$sColumn]['lookup']['table'])) {
+            throw new Exception(__METHOD__ . ' Column ' . $sColumn . ' is not a lookup column');
         }
-        if(!$this->get($sColumn)){
+        if (!$this->get($sColumn)) {
             return false;
         }
 
-        $sTargetTable=$this->_aProperties[$sColumn]['lookup']['table'];
-        $sRelKey=$this->_getRelationKey($sTargetTable,0,$sColumn);
-        $aItem=$this->relRead([
-            'table'=>$this->_aProperties[$sColumn]['lookup']['table'], 
-            'column'=>$sColumn,
+        $sTargetTable = $this->_aProperties[$sColumn]['lookup']['table'];
+        $sRelKey = $this->_getRelationKey($sTargetTable, 0, $sColumn);
+        $aItem = $this->relRead([
+            'table' => $this->_aProperties[$sColumn]['lookup']['table'],
+            'column' => $sColumn,
         ])['_targets'][$sRelKey]['_target'] ?? false;
 
         // print_r($aItem);
         return $this->getLabel($aItem);
     }
+
     /**
-     * get current item as an array
+     * Get current item as an array
      * @return array
      */
-    public function getItem() :array
+    public function getItem(): array
     {
         return $this->_aItem;
     }
 
     /**
-     * return or guess the form type of a given attribute
+     * Return or guess the form type of a given attribute
      * If $this->_aProperties[$sAttr]['form'] was defined then it returns that value.
      * Otherwise the type will be guessed based on the attribute name or create statement.
      * 
@@ -1193,26 +1222,26 @@ class pdo_db_base
      * @param  string  $sAttr  name of the property
      * @return array|bool
      */
-    public function getFormtype(string $sAttr) :array|bool
+    public function getFormtype(string $sAttr): array|bool
     {
         if (!isset($this->_aProperties[$sAttr])) {
             $this->_log(PB_LOGLEVEL_WARN, __METHOD__ . '(' . $sAttr . ')', 'Attribute does not exist');
             return false;
         }
 
-        $aColumnMatcher=[
-            [ 'regex' =>'/^date/',     'tag' => 'input',    'type' => 'date'           ],
-            [ 'regex' =>'/^datetime/', 'tag' => 'input',    'type' => 'datetime-local' ],
-            [ 'regex' =>'/^html/',     'tag' => 'textarea', 'type' => 'html'           ],
-            [ 'regex' =>'/^number/',   'tag' => 'input',    'type' => 'number'         ],
+        $aColumnMatcher = [
+            ['regex' => '/^date/', 'tag' => 'input', 'type' => 'date'],
+            ['regex' => '/^datetime/', 'tag' => 'input', 'type' => 'datetime-local'],
+            ['regex' => '/^html/', 'tag' => 'textarea', 'type' => 'html'],
+            ['regex' => '/^number/', 'tag' => 'input', 'type' => 'number'],
         ];
-        
+
         $aReturn = [];
-        $aReturn['debug']=[];
+        $aReturn['debug'] = [];
 
         // set given attributes
-        if(isset($this->_aProperties[$sAttr]['attr'])) {
-            $aReturn=$this->_aProperties[$sAttr]['attr'];
+        if (isset($this->_aProperties[$sAttr]['attr'])) {
+            $aReturn = $this->_aProperties[$sAttr]['attr'];
             $aReturn['debug']['_given_attr'] = $this->_aProperties[$sAttr]['attr'];
         }
 
@@ -1221,11 +1250,11 @@ class pdo_db_base
             $aReturn['debug']['_forced_attr'] = $this->_aProperties[$sAttr]['force'];
             $aReturn = $this->_aProperties[$sAttr]['force'];
         } else {
-            
+
             // force: set select for lookup
-            if (isset($this->_aProperties[$sAttr]['lookup'])){
+            if (isset($this->_aProperties[$sAttr]['lookup'])) {
                 $aReturn['debug']['_force_lookup'] = 1;
-                $aLookup=$this->_aProperties[$sAttr]['lookup'];
+                $aLookup = $this->_aProperties[$sAttr]['lookup'];
                 // WIP
                 /*
                 'lookup'=> [
@@ -1237,97 +1266,101 @@ class pdo_db_base
                     'bootstrap-select' => true     // use bootstrap-select plugin?
                 ]
                 */
-    
-                $sSql='SELECT id,'.implode(',' , $aLookup['columns'])
-                    .' FROM '.$aLookup['table']
-                    .( isset($aLookup['where']) && $aLookup['where'] ? ' WHERE '.$aLookup['where'] : '' )
+
+                $sSql = 'SELECT id,' . implode(',', $aLookup['columns'])
+                    . ' FROM ' . $aLookup['table']
+                    . (isset($aLookup['where']) && $aLookup['where'] ? ' WHERE ' . $aLookup['where'] : '')
                     . ''
-                    ;
+                ;
                 // echo "DEBUG: sSql = $sSql<br>";
-                $aLookupdata=$this->makeQuery($sSql);
-                $aReturn['tag']='select';
-                $aReturn['bootstrap-select']=isset($aLookup['bootstrap-select']) ? $aLookup['bootstrap-select'] : false;
+                $aLookupdata = $this->makeQuery($sSql);
+                $aReturn['tag'] = 'select';
+                $aReturn['bootstrap-select'] = isset($aLookup['bootstrap-select']) ? $aLookup['bootstrap-select'] : false;
 
 
                 unset($aReturn['type']);
-                $aReturn['size']=isset($aLookup['size']) && (int)$aLookup['size'] ? (int)$aLookup['size'] : 1;
+                $aReturn['size'] = isset($aLookup['size']) && (int) $aLookup['size'] ? (int) $aLookup['size'] : 1;
 
                 // generate option tags for select box
-                $aOptions=[];
+                $aOptions = [];
 
                 // get relations that match the wanted lookup table and the current column
 
                 // loop over all entries of the looked up table
-                if($aLookupdata){
-                        $aOptions[]=[
-                            'value'=>'',
-                            'label'=>'--- {{select_relation_item}} ---',
-                        ];
-                        foreach($aLookupdata as $aOptionItem) {
-                        $bSelected=$aOptionItem['id']===$this->get($sAttr);
+                if ($aLookupdata) {
+                    $aOptions[] = [
+                        'value' => '',
+                        'label' => '--- {{select_relation_item}} ---',
+                    ];
+                    foreach ($aLookupdata as $aOptionItem) {
+                        $bSelected = $aOptionItem['id'] === $this->get($sAttr);
 
-                        $aOptions[]=[
+                        $aOptions[] = [
                             // 'value'=>$aLookup['table'].':'.$aOptionItem['id'],
-                            'value'=>$aOptionItem['id'],
-                            'label'=>$this->getLabel($aOptionItem, $aLookup['columns']),
+                            'value' => $aOptionItem['id'],
+                            'label' => $this->getLabel($aOptionItem, $aLookup['columns']),
                         ];
-                        if($bSelected){
-                            $aOptions[count($aOptions)-1]['selected']=true;
+                        if ($bSelected) {
+                            $aOptions[count($aOptions) - 1]['selected'] = true;
                         }
                     }
                 } else {
-                    $aOptions[]=[
-                        'value'=>'',
-                        'label'=>'--- {{select_no_data_set}} ---',
-                    ];    
+                    $aOptions[] = [
+                        'value' => '',
+                        'label' => '--- {{select_no_data_set}} ---',
+                    ];
                 }
-                $aReturn['options']=$aOptions;
+                $aReturn['options'] = $aOptions;
 
                 // echo '<pre>';
                 // print_r($aLookupdata); die();
                 // print_r($aReturn); die();
 
             } else {
-                $sCreate=$this->_aProperties[$sAttr]['create'];
+                $sCreate = $this->_aProperties[$sAttr]['create'];
                 // everything before an optional "(" 
-                $sBasetype=strtolower(preg_replace('/\(.*$/', '', $sCreate));
-                $iSize=(int)strtolower(preg_replace('/.*\((.*)\)$/', '$1', $sCreate));
-    
+                $sBasetype = strtolower(preg_replace('/\(.*$/', '', $sCreate));
+                $iSize = (int) strtolower(preg_replace('/.*\((.*)\)$/', '$1', $sCreate));
+
                 $aReturn['debug']['_dbtable_create'] = $sCreate;
                 $aReturn['debug']['_basetype'] = $sBasetype;
                 $aReturn['debug']['_size'] = $iSize;
-    
+
                 switch ($sBasetype) {
                     case 'int':
                     case 'integer':
-                        $aReturn['tag']  = isset($aReturn['tag'])                    ? $aReturn['tag']       : 'input';
-                        $aReturn['type'] = isset($aReturn['type'])                   ? $aReturn['type']      : 'integer';
-                        break;;
+                        $aReturn['tag'] = isset($aReturn['tag']) ? $aReturn['tag'] : 'input';
+                        $aReturn['type'] = isset($aReturn['type']) ? $aReturn['type'] : 'integer';
+                        break;
+                        ;
                     case 'text':
-                        $aReturn['tag'] = isset($aReturn['tag'])                     ? $aReturn['tag']       : 'textarea';
-                        $aReturn['rows'] = isset($aReturn['rows'])                   ? $aReturn['rows']      : 5;
-                        break;;
+                        $aReturn['tag'] = isset($aReturn['tag']) ? $aReturn['tag'] : 'textarea';
+                        $aReturn['rows'] = isset($aReturn['rows']) ? $aReturn['rows'] : 5;
+                        break;
+                        ;
                     case 'varchar':
                         if ($iSize) {
                             if ($iSize > 1024) {
-                                $aReturn['tag'] = isset($aReturn['tag'])             ? $aReturn['tag']       : 'textarea';
+                                $aReturn['tag'] = isset($aReturn['tag']) ? $aReturn['tag'] : 'textarea';
                                 $aReturn['maxlength'] = isset($aReturn['maxlength']) ? $aReturn['maxlength'] : $iSize;
-                                $aReturn['rows'] = isset($aReturn['rows'])           ? $aReturn['rows']      : 5;
+                                $aReturn['rows'] = isset($aReturn['rows']) ? $aReturn['rows'] : 5;
                             } else {
-                                $aReturn['tag'] = isset($aReturn['tag'])             ? $aReturn['tag']       : 'input';
-                                $aReturn['type'] = isset($aReturn['type'])           ? $aReturn['type']      : 'text';
+                                $aReturn['tag'] = isset($aReturn['tag']) ? $aReturn['tag'] : 'input';
+                                $aReturn['type'] = isset($aReturn['type']) ? $aReturn['type'] : 'text';
                                 $aReturn['maxlength'] = isset($aReturn['maxlength']) ? $aReturn['maxlength'] : $iSize;
                             }
                         } else {
-                            $aReturn['tag'] = isset($aReturn['tag'])                 ? $aReturn['tag']       : 'input';
-                            $aReturn['type'] = isset($aReturn['type'])               ? $aReturn['type']      : 'text';
+                            $aReturn['tag'] = isset($aReturn['tag']) ? $aReturn['tag'] : 'input';
+                            $aReturn['type'] = isset($aReturn['type']) ? $aReturn['type'] : 'text';
                         }
-                        break;;
+                        break;
+                        ;
                     default:
-                        break;;
+                        break;
+                        ;
                 }
-    
-                foreach($aColumnMatcher as $aMatchdata){
+
+                foreach ($aColumnMatcher as $aMatchdata) {
                     if (preg_match($aMatchdata['regex'], $sAttr)) {
                         $aReturn['debug']['_match'] = $aMatchdata;
                         $aReturn['tag'] = $aMatchdata['tag'];
@@ -1337,12 +1370,12 @@ class pdo_db_base
             }
 
         }
-        
+
         $aReturn['name'] = $sAttr;
         $aReturn['label'] = isset($aReturn['label']) ? $aReturn['label'] : $sAttr;
 
-        if (isset($aReturn['required']) && $aReturn['required']){
-            $aReturn['label'].=' <span class="required">*</span>';
+        if (isset($aReturn['required']) && $aReturn['required']) {
+            $aReturn['label'] .= ' <span class="required">*</span>';
         }
 
         // DEBUG:
@@ -1352,18 +1385,20 @@ class pdo_db_base
     }
 
     /**
-     * get bool if the current dataset item was changed
+     * Get bool if the current dataset item was changed
      * @return bool
      */
-    public function hasChange() :bool {
+    public function hasChange(): bool
+    {
         return $this->_bChanged;
     }
-    
+
     /**
-     * get current table
+     * Get current table
      * @return string
      */
-    public function getTable() :string {
+    public function getTable(): string
+    {
         return $this->_table;
     }
 
@@ -1372,7 +1407,7 @@ class pdo_db_base
     // ----------------------------------------------------------------------
 
     /**
-     * search for items in the current table
+     * Search for items in the current table
      * You should use ":<placeholder>" in your sql statements to use
      * prepared statements
      * 
@@ -1384,7 +1419,7 @@ class pdo_db_base
      * @param  array  $aData    array with values for prepared statement
      * @return array|bool
      */
-    public function search(array $aOptions = [], array $aData = []) :array|bool
+    public function search(array $aOptions = [], array $aData = []): array|bool
     {
 
         $sColumns = '';
@@ -1453,10 +1488,10 @@ class pdo_db_base
      * - validate a field if validate_regex set regex
      * Opposite function of get()
      * @param  string  $sKey2Set  key of your object to set
-     * @param  mixed     $value     new value to set
+     * @param  mixed   $value     new value to set
      * @return bool
      */
-    public function set(string $sKey2Set, mixed $value) :bool
+    public function set(string $sKey2Set, mixed $value): bool
     {
         if (isset($this->_aProperties[$sKey2Set])) {
 
@@ -1471,11 +1506,11 @@ class pdo_db_base
                 switch ($sFunc) {
                     case 'string':
                         // echo "found<br>";
-                        $_bValOK = $_bValOK       && is_string($value);
+                        $_bValOK = $_bValOK && is_string($value);
                         $_bValError = $_bValError || !is_string($value);
                         break;
                     case 'integer':
-                        $_bValOK = $_bValOK       && ctype_digit(strval($value));
+                        $_bValOK = $_bValOK && ctype_digit(strval($value));
                         $_bValError = $_bValError || !ctype_digit(strval($value));
                         break;
                     default:
@@ -1487,7 +1522,7 @@ class pdo_db_base
 
             if (isset($this->_aProperties[$sKey2Set]['validate_regex'])) {
                 // echo "Check Regex ".$this->_aProperties[$sKey2Set]['validate_regex']."<br>";
-                $_bValOK = $_bValOK       && preg_match($this->_aProperties[$sKey2Set]['validate_regex'], $value);
+                $_bValOK = $_bValOK && preg_match($this->_aProperties[$sKey2Set]['validate_regex'], $value);
                 $_bValError = $_bValError || !preg_match($this->_aProperties[$sKey2Set]['validate_regex'], $value);
             } else {
                 // echo "Skip 'validate_regex'<br>";
@@ -1503,7 +1538,7 @@ class pdo_db_base
                 } else {
                     // echo "SKIP: new value fo $sKey2Set is existing value<br>";
                 }
-                
+
                 return true;
             } else {
                 echo "SKIP '$sKey2Set' => '$value' -- validation failed<br>";
@@ -1516,21 +1551,22 @@ class pdo_db_base
     }
 
     /**
-     * set new values for an item.
+     * Set new values for an item.
      * The general fields (id, created, updated, delete) cannot be set.
      * Opposite function if getItem()
      * @param  array  $aNewValues  new values to set; a subset of this->_aItem
      * @return bool
      */
-    public function setItem(array $aNewValues) :bool
+    public function setItem(array $aNewValues): bool
     {
+        $bReturn = true;
         foreach (array_keys($aNewValues) as $sKey) {
             if (!isset($this->_aDefaultColumns[$sKey])) {
-                $this->set($sKey, $aNewValues[$sKey]);
+                $bReturn = $bReturn && $this->set($sKey, $aNewValues[$sKey]);
             }
         }
         // return $this->save();
-        return true;
+        return $bReturn;
     }
 }
 
