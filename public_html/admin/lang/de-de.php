@@ -111,6 +111,8 @@ return [
     "view"=> "Ansehen",
 
     // ----- messages
+    "msgerr.missing_permissions" => "FEHLER: Sie haben nicht die ben&ouml;tigten Berechtigungen.",
+
     "msgerr.no_or_invalid_object_name" => "Es wurde kein oder ein ung&&uuml;ltiger Objektnamen angegeben.",
     "msgerr.no_or_invalid_object_name2" => "Pr&uuml;fen Sie den Objektnamen in der URL oder beginnen Sie von der Startseite.",
     "msgerr.class_file_missing"=>"Class-Datei existiert nicht.",

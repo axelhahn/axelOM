@@ -40,26 +40,29 @@ $s=''
 
 $sBoxes='';
 foreach ($adminmetainfos->getApps(1) as $sApp => $aAppData){
-    $appmeta=new appmetainfos($sAppRootDir.'/'.$sApp);
-    $iCount=count($appmeta->getObjects());
-    $sItems=$renderAdminLTE->getBadge([
-        'type'=>$iCount ? 'success' : 'secondary',
-        'title'=>'{{home.count}}: '.$iCount,
-        'text'=>$iCount ? $iCount : 'NA',
-    ]);;
+    if ($acl->canView($sApp)){
 
-    $sBoxContent=''
-        .($appmeta->getApphint() && $appmeta->getApphint() ? $appmeta->getApphint().'<br>' : '')
-        .'{{home.objects}}: '.$sItems.'<br>';
-    $sBoxes.=$renderAdminLTE->addCol(
-        $renderAdminLTE->getCard(array (
-            'type' => '',
-            'title' => '<a href="?app='.$sApp.'&page=home">' .icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</a>',
-            'text' => $sBoxContent,
-            // 'variant' => '',
-        )),
-        3
-    );
+        $appmeta=new appmetainfos($sAppRootDir.'/'.$sApp);
+        $iCount=count($appmeta->getObjects());
+        $sItems=$renderAdminLTE->getBadge([
+            'type'=>$iCount ? 'success' : 'secondary',
+            'title'=>'{{home.count}}: '.$iCount,
+            'text'=>$iCount ? $iCount : 'NA',
+        ]);;
+
+        $sBoxContent=''
+            .($appmeta->getApphint() && $appmeta->getApphint() ? $appmeta->getApphint().'<br>' : '')
+            .'{{home.objects}}: '.$sItems.'<br>';
+        $sBoxes.=$renderAdminLTE->addCol(
+            $renderAdminLTE->getCard(array (
+                'type' => '',
+                'title' => '<a href="?app='.$sApp.'&page=home">' .icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</a>',
+                'text' => $sBoxContent,
+                // 'variant' => '',
+            )),
+            3
+        );
+    }
 }
 $s.=$renderAdminLTE->addRow($sBoxes);
 

@@ -26,6 +26,10 @@ $sObjLabel= ''
 $TITLE=''.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().' ' 
     . '<strong>'.($sObjLabel ? '  ' . $sObjLabel : '') .'</strong> ';
 
+if(!$acl->canEdit($sTabApp)){
+    $BODY='';
+    return false;
+}
 // addMsg('ok', 'OK: I am a test');
 
 $sMainContent = '';

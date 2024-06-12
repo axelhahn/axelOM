@@ -11,11 +11,12 @@
 
 $iTimerStart=microtime(true);
 define("APP_NAME", 'axel :: OM');
-define("APP_VERSION", '0.0.8');
+define("APP_VERSION", '0.0.9');
 // $sUiLang="en-en";
 
 require_once('../classes/render-adminlte.class.php');
 require_once('classes/adminmeta.class.php');
+require_once('classes/adminacl.class.php');
 require_once('../classes/appmeta.class.php');
 require_once('../classes/queryparam.class.php');
 require_once('../classes/icon.class.php');
@@ -36,6 +37,9 @@ if(!$sTabApp && !$sPage){
 
 $adminmetainfos=new adminmetainfos();
 $appmetainfos=new appmetainfos();
+$acl=new adminacl();
+
+// $acl->setUser('berta');
 
 $renderAdminLTE=new renderadminlte();
 $aReplace=include("./config/page_replacements.php");
@@ -56,32 +60,36 @@ $aObjects=[];
 foreach(array_keys($adminmetainfos->getApps()) as $sApp){
     $appmeta=new appmetainfos($sAppRootDir.'/'.$sApp);
 
-    if($sApp==$sTabApp){
-        // tab is active
+    if ($acl->canView($sApp)){
+        if($sApp==$sTabApp){
+            // tab is active
 
 
-        $aSidebarNav[]=['href'=>'?app='.$sApp.'&page=home',          'label'=>'Home :: ' . $appmeta->getAppname(), 'icon'=>$appmeta->getAppicon() ? $appmeta->getAppicon() : icon::getclass('home')];
-        if(count($appmeta->getObjects())){
-            $aSidebarNav[]=['href'=>'#', 'label'=>'-'];
-        }
-        foreach ($appmeta->getObjects() as $sMyObject=>$aMyObject){
-            $aSidebarNav[]=[
-                'href'=>'?app='.$sTabApp.'&page=object&object='.$sMyObject, 
-                'label'=>$appmeta->getObjectLabel($sMyObject), 
-                'icon'=> $appmeta->getObjectIcon($sMyObject),
-                'title'=> $appmeta->getObjectHint($sMyObject),
-            ];
-        }
-        if(count($appmeta->getObjects())){
-            $aSidebarNav[]=['href'=>'#', 'label'=>'-'];
-            $aSidebarNav[]=['href'=>'?app='.$sTabApp.'&page=object&object=pdo_db_attachments',          'label'=>'{{files}}', 'icon'=>icon::getclass('file')];
-        }
-        $aSidebarNav[]=['href'=>'#', 'label'=>'-'];
-        $aSidebarNav[]=['href'=>'?app='.$sTabApp.'&page=tools',           'label'=>'{{tools}}', 'icon'=>icon::getclass('tools')];
+            $aSidebarNav[]=['href'=>'?app='.$sApp.'&page=home',          'label'=>'Home :: ' . $appmeta->getAppname(), 'icon'=>$appmeta->getAppicon() ? $appmeta->getAppicon() : icon::getclass('home')];
+            if(count($appmeta->getObjects())){
+                $aSidebarNav[]=['href'=>'#', 'label'=>'-'];
+            }
+            foreach ($appmeta->getObjects() as $sMyObject=>$aMyObject){
+                $aSidebarNav[]=[
+                    'href'=>'?app='.$sTabApp.'&page=object&object='.$sMyObject, 
+                    'label'=>$appmeta->getObjectLabel($sMyObject), 
+                    'icon'=> $appmeta->getObjectIcon($sMyObject),
+                    'title'=> $appmeta->getObjectHint($sMyObject),
+                ];
+            }
+            if(count($appmeta->getObjects())){
+                $aSidebarNav[]=['href'=>'#', 'label'=>'-'];
+                $aSidebarNav[]=['href'=>'?app='.$sTabApp.'&page=object&object=pdo_db_attachments',          'label'=>'{{files}}', 'icon'=>icon::getclass('file')];
+            }
+            if ($acl->isAppAdmin($sApp) ){
+                $aSidebarNav[]=['href'=>'#', 'label'=>'-'];
+                $aSidebarNav[]=['href'=>'?app='.$sTabApp.'&page=tools', 'label'=>'{{tools}}', 'icon'=>icon::getclass('tools')];
+            }
 
-        $aTopnav[]=['href'=>'?app='.$sApp.'&page=home', 'label'=>$appmeta->getAppname(), 'icon'=>$appmeta->getAppicon() ?? icon::getclass('app'), 'class'=>'active' ];
-    } else {
-        $aTopnav[]=['href'=>'?app='.$sApp.'&page=home', 'label'=>$appmeta->getAppname(), 'icon'=>$appmeta->getAppicon() ?? icon::getclass('app')];
+            $aTopnav[]=['href'=>'?app='.$sApp.'&page=home', 'label'=>$appmeta->getAppname(), 'icon'=>$appmeta->getAppicon() ?? icon::getclass('app'), 'class'=>'active' ];
+        } else {
+            $aTopnav[]=['href'=>'?app='.$sApp.'&page=home', 'label'=>$appmeta->getAppname(), 'icon'=>$appmeta->getAppicon() ?? icon::getclass('app')];
+        }
     }
 }
 
@@ -89,6 +97,7 @@ foreach(array_keys($adminmetainfos->getApps()) as $sApp){
 if($sTabApp){
     $aTopnavRight[]=['label'=>'<input class="form-control form-control-sidebar fix-nolabel" type="search" id="searchtop" placeholder="{{search.placeholder}}" aria-label="Search">',];
 }
+$aTopnavRight[]=['label'=>'' . $acl->getUser(), 'icon'=>icon::getclass('user'), 'title'=> print_r($acl->getGroups(), 1) ];
 
 // highlight menu item
 for($i=0; $i<count($aSidebarNav); $i++){

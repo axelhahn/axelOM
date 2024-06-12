@@ -21,7 +21,11 @@ $sBackuppath=dirname(dirname(__DIR__)).'/apps/'.$sTabApp.'/data/';
 
 if($sTabApp){
 
-
+    if(!$acl->isAppAdmin($sTabApp)){
+        $BODY='';
+        return false;
+    }
+    
     // ----------------------------------------------------------------------
     // Actions
     // ----------------------------------------------------------------------

@@ -14,7 +14,20 @@
  * 
  */
 
-$sContent='';
+ $sContent='';
+
+$aReplace=[];
+$sLangfile=__DIR__.'/../lang/'.$sUiLang.'.php';
+if(file_exists($sLangfile)){
+    foreach(include($sLangfile) as $sKey=>$sTranslated){
+        $aReplace['{{'.$sKey.'}}']=$sTranslated;
+    };
+}
+
+if(!$acl->canView($sTabApp)){
+    $sContent.=str_replace(array_keys($aReplace), array_values($aReplace), '{{msgerr.missing_permissions}}');
+    die($sContent);
+}
 
 $q=queryparam::get('q');
 $sObjectUrl = '?app='.$sTabApp.'&page=object';
@@ -103,13 +116,6 @@ if (count($appmeta->getObjects())){
 // abort here - to prevent rendering a complete page.
 // BUT we need the replacement of language texts
 
-$aReplace=[];
-$sLangfile=__DIR__.'/../lang/'.$sUiLang.'.php';
-if(file_exists($sLangfile)){
-    foreach(include($sLangfile) as $sKey=>$sTranlated){
-        $aReplace['{{'.$sKey.'}}']=$sTranlated;
-    };
-}
 
 $sContent=str_replace(array_keys($aReplace), array_values($aReplace), $sContent);
 die($sContent);

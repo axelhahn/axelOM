@@ -14,7 +14,14 @@
 
 $sContextbar='';
 
+
+
 $TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> :: {{home.backend}}' ;
+
+if(!$acl->canView($sTabApp)){
+    $BODY='';
+    return false;
+}
 
 $s=''
     . ($appmeta->getApphint() && $appmeta->getApphint() 
