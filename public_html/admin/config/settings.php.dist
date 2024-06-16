@@ -1,0 +1,54 @@
+<?php
+/*
+ 
+                             __    __    _______  _______ 
+       .---.-..--.--..-----.|  |  |__|  |       ||   |   |
+       |  _  ||_   _||  -__||  |   __   |   -   ||       |
+       |___._||__.__||_____||__|  |__|  |_______||__|_|__|
+                             \\\_____ axels OBJECT MANAGER
+ 
+
+       this file is included by ../index.php
+
+*/
+
+return [
+
+    // show debug window?
+    'debug' => true,
+
+    // language of backnd ui
+    'lang' => 'en-en',
+    // 'lang' => 'de-de',
+    
+    // if "acl" is missing or empty --> sets admin user for everything
+    /*
+    'acl'=>[
+
+        // ---------- USER
+        'userfield'=>'REMOTE_USER',
+        'displayname'=>false,
+
+        // 'userfield'=>'mail', // set by shibbolethauthentication
+
+        // ---------- GROUPS
+        'groups'=>[
+
+            // global admins for all apps
+            'global'=>[
+                'admin'=>[
+                    'admin',
+                ],
+            ],
+
+            // ----- "myapp"
+            'myapp'=>[
+                'admin'=>[],
+                'manager'=>[],
+                'viewer'=>['fred'],
+            ],
+
+        ],
+    ],
+    */
+];
