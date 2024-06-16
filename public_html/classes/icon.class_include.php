@@ -5,6 +5,10 @@ return [
     // home page
     'apps'=>'fa-solid fa-box-open',
     'objects'=>'fa-solid fa-cubes',
+    'about'=>'fa-solid fa-comment',
+
+    '403' => 'fa-solid fa-lock',
+    '404' => 'fa-solid fa-bug',
 
     // form buttons
 
@@ -17,11 +21,19 @@ return [
     'restore' => 'fa-solid fa-file-import',
     'save' => 'fa-solid fa-paper-plane',
 
+    'yes' => 'fa-solid fa-check',
+    'no' => 'fa-solid fa-minus',
+    'close' => 'fa-solid fa-ban',
+
     // menu icons
 
     'home' => 'fa-solid fa-house',
     'app' => 'fa-solid fa-box-archive',
     'object' => 'fa-solid fa-cube',
+
+    'adminuser' => 'fa-solid fa-user-tie',
+    'user' => 'fa-solid fa-user',
+    'users' => 'fa-solid fa-users',
 
     'file' => 'fas fa-file',
     'tools' => 'fa-solid fa-wrench',
@@ -45,7 +57,6 @@ return [
     'repair' => 'fa-solid fa-wrench',
 
     // debug
-
     'clock'=>'fa-solid fa-clock',
     'debug'=>'fa-solid fa-bug',
     'log'=>'fa-regular fa-file-lines',
