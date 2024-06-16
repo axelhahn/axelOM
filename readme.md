@@ -5,7 +5,7 @@ A web ui using AdminmLTE for visual editing of objects for multiple apps.
 
 📄 Source: <https://github.com/axelhahn/axelOM/> \
 📜 License: GNU GPL 3.0 \
-📖 Docs: TODO
+📗 Docs: TODO
 
 - - -
 

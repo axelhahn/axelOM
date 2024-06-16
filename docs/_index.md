@@ -3,9 +3,9 @@
 
 Free software and Open Source
 
-📄 Source:
+📄 Source: <https://github.com/axelhahn/axelOM/> \
 📜 License: GNU GPL 3.0 \
-📖 Docs: 
+📗 Docs: 
 
 - - -
 
