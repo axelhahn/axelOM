@@ -12,16 +12,14 @@
  * 
  */
 
-$sContextbar='';
-
-
-
-$TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> :: {{home.backend}}' ;
-
 if(!$acl->canView($sTabApp)){
-    $BODY='';
+    include('error403.php');
     return false;
 }
+
+$sContextbar='';
+
+$TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> :: {{home.backend}}' ;
 
 $s=''
     . ($appmeta->getApphint() && $appmeta->getApphint() 
@@ -95,16 +93,22 @@ $sContextbar = $renderAdminLTE->getCallout([
     'type' => 'primary',
     'title' => icon::get('more').'{{more}}',
     'text' => ''
-        .$renderAdminLTE->getButton([
-            'type' => '',
-            'text' => icon::get('file').'{{files}}',
-            'onclick' => 'location.href=\'?app='.$appmeta->getId().'&page=object&object=pdo_db_attachments\';',
-        ]).'<br><br>'
-        .$renderAdminLTE->getButton([
-            'type' => '',
-            'text' => icon::get('tools').'{{tools}}',
-            'onclick' => 'location.href=\'?app='.$appmeta->getId().'&page=tools\';',
-        ]).'<br>'
+        .($acl->canEdit($sTabApp) 
+            ? $renderAdminLTE->getButton([
+                'type' => '',
+                'text' => icon::get('file').'{{files}}',
+                'onclick' => 'location.href=\'?app='.$appmeta->getId().'&page=object&object=pdo_db_attachments\';',
+            ]).'<br><br>' 
+            : ''
+        )
+        .($acl->isAppAdmin($sTabApp) 
+            ? $renderAdminLTE->getButton([
+                'type' => '',
+                'text' => icon::get('tools').'{{tools}}',
+                'onclick' => 'location.href=\'?app='.$appmeta->getId().'&page=tools\';',
+            ]).'<br>'
+            : ''
+        )
         ,
 ]);
 

@@ -11,6 +11,11 @@
  * 
  */
 
+if(!$acl->canView($sTabApp)){
+    include('error403.php');
+    return false;
+}
+
 require_once('inc_functions.php');
 
 $sBaseAppUrl = '?app='.$sTabApp.'&page=object';
@@ -24,11 +29,6 @@ $sObjLabel= ''
 $TITLE=''.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().' ' 
     . '<strong>'.($sObjLabel ? '  ' . $sObjLabel : '') .'</strong> ';
 
-if(!$acl->canView($sTabApp)){
-    $BODY='';
-    return false;
-}
-    
 // addMsg('ok', 'OK: I am a test');
 
 // ---------- let's init
@@ -65,7 +65,7 @@ if (isset($_POST['action'])) {
     
     }
 
-    if ($acl->canView($sTabApp)){
+    if ($acl->canEdit($sTabApp)){
 
         switch ($_POST['action']) {
             case 'new':
@@ -448,7 +448,7 @@ if ($bShowEdit) {
 
     // ---------- show editor: first item / new item / edit id
 
-    if(!$acl->canEdit()){
+    if(!$acl->canEdit($sTabApp)){
         $sMainContent=addMsg('error', '{{msgerr.missing_permissions}}');
     } else {
 

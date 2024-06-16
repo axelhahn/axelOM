@@ -11,6 +11,11 @@
  * 
  */
 
+if(!$acl->isAppAdmin($sTabApp)){
+    include('error403.php');
+    return false;
+}
+
 require_once('inc_functions.php');
 
 $sContextbar='';

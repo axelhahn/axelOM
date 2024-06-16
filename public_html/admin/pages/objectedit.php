@@ -13,6 +13,11 @@
  *  
  */
 
+ if(!$acl->canEdit($sTabApp)){
+    include('error403.php');
+    return false;
+}
+
 require_once('inc_functions.php');
 
 $sBaseUrl    = '?app='.$sTabApp.'&page='.$sPage.'&object=' . $sObject;
@@ -26,10 +31,6 @@ $sObjLabel= ''
 $TITLE=''.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().' ' 
     . '<strong>'.($sObjLabel ? '  ' . $sObjLabel : '') .'</strong> ';
 
-if(!$acl->canEdit($sTabApp)){
-    $BODY='';
-    return false;
-}
 // addMsg('ok', 'OK: I am a test');
 
 $sMainContent = '';
