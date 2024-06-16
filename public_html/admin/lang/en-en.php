@@ -16,6 +16,10 @@ return [
 
     "nav.home" => "Home",
     "nav.apps" => "Apps",
+    "nav.about" => "About ...",
+
+    "nav.users" => "Users",
+    "nav.config" => "Configuration",
 
     // ----- page :: home
     "home.welcome" => "Welcome to <strong>Axels ObjManager</strong>",
@@ -25,6 +29,48 @@ return [
     "home.backend" => "Backend",
     "home.objecttypes"=> "Object types",
     "home.items"=> "Items",
+
+    // ----- page :: about
+    "about.title" => "About this backend",
+    "about.text" => '
+        Author: <strong>Axel Hahn</strong><br>
+        Programming langauge: PHP 8<br>
+        License: GNU GPL 3.0<br>
+        Sourcecode: Github<br>
+        Documentation: axel-hahn.de/docs/<br>
+        <br>
+        <strong>Used Products</strong>:<br>
+        Without the inclusion of other products, development takes much longer.<br>
+        My thanks go to the developers of the following projects:
+        <ul>
+            <li><a href="https://adminlte.io/">AdminLTE</a> - Bootstrap Admin Template
+                <ul>
+                <li><a href="https://summernote.org/">Summernote</a> - Summmernote (HTML-Editor)</li>
+                <li><a href="https://github.com/snapappointments/bootstrap-select">Bootstrap-Select plugin</a></li>
+                </ul>
+            <li><a href="https://jquery.com/">jQuery</a></li>
+            <li><a href="https://fontawesome.com/">Fontawesome</a> (Icons)</li>
+            <li><a href="https://os-docs.iml.unibe.ch/adminlte-renderer/">AdminLTE-Renderer - class</a> (Institut for Medical Education; University of Bern)</li>
+            <li><a href="https://github.com/axelhahn/php-abstract-dbo">php-abstract-dbo </a> - Axels Abstract PDO class (Axel Hahn)</li>
+        </ul>
+        ',
+
+    // ----- page :: errors
+    "403.title" => "403 :: Access denied",
+    "403.subtitle" => "You have no permissions for this page.",
+    "403.message" => "The backend has different access levels.<br>You have no permissions for this page and the access is denied.",
+
+    "404.title" => "404 :: Page not found",
+    "404.subtitle" => "The requested page was not found.",
+    "404.message" => "Check the url. Go back to the last page or start again from home page.",
+
+    // ----- page :: users list
+    "users.title" => "Users",
+    "users.subtitle" => "List of users and their permissions",
+    "users.info" => "The permissions are stored in config/settings.php.",
+    "users.noacl" => "No ACL is configured yet. The backend is open with full admin access.",
+    "users.global_admins" => "Global administrators",
+    "users.app_permissions" => "App permissions",
 
     // ----- page :: object
     "object.welcome" => "Welcome!",
@@ -75,12 +121,23 @@ return [
     "backup.timestamp"=> "Timestamp",
     "backup.size"=> "Size",
 
+    "userprofile.banner" => "User profile",
+    "userprofile.userid" => "User id",
+    "userprofile.name" => "Shown name",
+    "userprofile.groups" => "Groups",
+    "userprofile.permissions" => "Permissions",
+    "perms.view" => "View",
+    "perms.edit" => "Edit",
+    "perms.admin" => "Admin",
+    "perms.none" => "No permissions were given.",
+
     // ----- simple words
     "abort"=> "Abort",
+    "app"=>"Application",
     "attachments"=> "Attachments",
     "back"=>"Back",
     "backup"=>"Create new backup",
-    "config"=>"Konfiguration",
+    "config"=>"Configuration",
     "confirm_delete"=>"Are you sure you want to delete this",
     "confirm_restore"=>"Are you sure you want to restore this",
     "created"=> "Created",
@@ -107,6 +164,7 @@ return [
     "select_relation_item"=> "Select related item",
     "tdactions" => "Actions",
     "tools"=> "Tools",
+    "user"=> "User",
     "view"=> "View",
 
     // ----- messages

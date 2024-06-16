@@ -16,6 +16,10 @@ return [
 
     "nav.home" => "Start",
     "nav.apps" => "Apps",
+    "nav.about" => "&Uuml;ber ...",
+
+    "nav.users" => "Benutzer",
+    "nav.config" => "Konfiguration",
 
     // ----- page :: home
     "home.welcome" => "Willkommen bei <strong>Axels ObjManager</strong>",
@@ -25,6 +29,48 @@ return [
     "home.backend" => "Backend",
     "home.objecttypes"=> "Anzahl Objekte",
     "home.items"=> "Eintr&auml;ge",
+
+    // ----- page :: about
+    "about.title" => "&Uuml;ber dieses Backend",
+    "about.text" => '
+        Autor: <strong>Axel Hahn</strong><br>
+        Programmiersprache: PHP 8<br>
+        Lizenz: GNU GPL 3.0<br>
+        Sourcecode: Github<br>
+        Dokumentation: axel-hahn.de/docs/<br>
+        <br>
+        <strong>Verwendete Produkte</strong>:<br>
+        Ohne die Einbindung anderer Produkte w&auml;re die Entwickklung viel aufw&auml;ndiger.<br>
+        (M)Ein Dankeschön an die Entwickler der Tools
+        <ul>
+            <li><a href="https://adminlte.io/">AdminLTE</a> - Bootstrap Admin Template
+                <ul>
+                <li><a href="https://summernote.org/">Summernote</a> - Summmernote (HTML-Editor)</li>
+                <li><a href="https://github.com/snapappointments/bootstrap-select">Bootstrap-Select Plugin</a></li>
+                </ul>
+            <li><a href="https://jquery.com/">jQuery</a></li>
+            <li><a href="https://fontawesome.com/">Fontawesome</a> (Icons)</li>
+            <li><a href="https://os-docs.iml.unibe.ch/adminlte-renderer/">AdminLTE-Renderer - Klasse</a> (Institut f&uuml;r Medizinische Lehre; Universit&auml;t Bern)</li>
+            <li><a href="https://github.com/axelhahn/php-abstract-dbo">php-abstract-dbo </a> - Axels Abstract PDO Klasse (Axel Hahn)</li>
+        </ul>
+        ',
+
+    // ----- page :: errors
+    "403.title" => "403 :: Zugriff verweigert",
+    "403.subtitle" => "Für diese Seite fehlt die Berechtigung.",
+    "403.message" => "Das Backend kennt unterschiedliche Berechtigungsstufen.<br>F&uuml;r diese Seite fehlt die Berechtigung und deshalb ist der Zugriff verweigert.",
+
+    "404.title" => "404 :: Seite nicht gefunden",
+    "404.subtitle" => "Die angeforderte Seite wurde nicht gefunden",
+    "404.message" => "Pr&uuml;fe die URL. Gehe zur letzten Seite zur&uuml;ck oder beginne von der Startseite.",
+
+    // ----- page :: users list
+    "users.title" => "Benutzer",
+    "users.subtitle" => "Liste der Benutzer und Berechtigungen",
+    "users.info" => "Die Berechtigungen sind in der config/settings.php gespeichert.",
+    "users.noacl" => "Es ist keine ACL konfiguriert. Es gibt daher keine Berechtigungen.<br>Das Backend ist offen mit vollen Admin-Berechtigungen.",
+    "users.global_admins" => "Globale Administratoren",
+    "users.app_permissions" => "App-Berechtigungen",
 
     // ----- page :: object
     "object.welcome" => "Willkommen!",
@@ -75,10 +121,20 @@ return [
     "backup.timestamp"=> "Zeitstempel",
     "backup.size"=> "Dateigr&ouml;sse",
 
+    "userprofile.banner" => "Benutzerprofil",
+    "userprofile.userid" => "User-ID",
+    "userprofile.name" => "Angezeigter Name",
+    "userprofile.groups" => "Gruppen",
+    "userprofile.permissions" => "Berechtigungen",
+    "perms.view" => "Anzeigen",
+    "perms.edit" => "Bearbeiten",
+    "perms.admin" => "Admin",
+    "perms.none" => "Es sind keine Berechtigungen zugeordnet.",
 
     // ----- simple words
     "abort"=> "Abbrechen",
     "attachments"=> "Anh&auml;nge",
+    "app"=>"Application",
     "back"=>"Zur&uuml;ck",
     "backup"=>"Neues Backup erstellen",
     "config"=>"Konfiguration",
@@ -108,6 +164,7 @@ return [
     "select_relation_item"=> "Verkn&uuml;pfung w&auml;hlen",
     "tdactions"=> "Aktionen",
     "tools"=> "Werkzeuge",
+    "user"=> "Benutzer",
     "view"=> "Ansehen",
 
     // ----- messages
