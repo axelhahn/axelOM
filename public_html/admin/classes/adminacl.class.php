@@ -27,13 +27,34 @@
 class adminacl
 {
 
-    protected $_sUser = false;
-    protected $_aGroups = [];
-    protected $_aRoles = [];
+    /**
+     * current userid
+     * @var string
+     */
+    protected string $_sUser = '';
 
-    protected $_aConfig = [];
+    /**
+     * Human readable Username
+     * @var string
+     */
+    protected string $_sUserDisplayname = '';
+    /**
+     * Detected groups
+     * @var array
+     */
+    protected array $_aGroups = [];
 
-    protected $_sApp = false;
+    /**
+     * configuration data from config/settings.php
+     * @var array
+     */
+    protected array $_aConfig = [];
+
+    /**
+     * optional: current application to shorten acl check functions
+     * @var string
+     */
+    protected string $_sApp = '';
 
     // --------------------------------------------------------------
     // METHODS
@@ -60,13 +81,15 @@ class adminacl
 
 
     /**
-     * Detect a user from $_SERVER environment
+     * Detect a user from $_SERVER environment. Which field to read is in key acl->userfield
      * and then set its groups
      * @return bool
      */
     protected function _detectUser(): bool
     {
         $this->_sUser = 'nobody';
+        $this->_aGroups = ['@anonymous'];
+        $this->_sUserDisplayname = '';
 
         // print_r($_SERVER);
         if (!count($this->_aConfig)) {
@@ -77,6 +100,12 @@ class adminacl
 
         if (isset($this->_aConfig['userfield']) && isset($_SERVER[$this->_aConfig['userfield']])) {
             $this->_sUser = $_SERVER[$this->_aConfig['userfield']];
+            if (isset($this->_aConfig['displayname']) && is_array($this->_aConfig['displayname'])) {
+                foreach ($this->_aConfig['displayname'] as $sKey) {
+                    $this->_sUserDisplayname .= $this->_sUserDisplayname ? ' ' : '';
+                    $this->_sUserDisplayname .= isset($_SERVER[$sKey]) ? $_SERVER[$sKey] : '';
+                }
+            }
             $this->_detectGroups();
             return true;
         }
@@ -90,8 +119,6 @@ class adminacl
      */
     protected function _detectGroups(): bool
     {
-        $this->_aGroups = ['@anonymous'];
-        $this->_aRoles = [];
 
         $this->_aGroups = ['@authenticated'];
         if (isset($this->_aConfig['groups']) && count($this->_aConfig['groups'])) {
@@ -110,6 +137,10 @@ class adminacl
         }
         return true;
     }
+
+    // ----------------------------------------------------------------------
+    // SETTER
+    // ----------------------------------------------------------------------
 
     /**
      * Simulate another login. This will set the given user.
@@ -139,16 +170,46 @@ class adminacl
         return true;
     }
 
+    // ----------------------------------------------------------------------
+    // GET INFOS
+    // ----------------------------------------------------------------------
+
+    /**
+     * return current userid
+     * @return string
+     */
     public function getUser(): string
     {
         return $this->_sUser;
     }
 
+    /**
+     * return human readable username
+     * @return string
+     */
+    public function getUserDisplayname(): string
+    {
+        return $this->_sUserDisplayname ? $this->_sUserDisplayname : $this->_sUser;
+    }
+
+    /**
+     * get a list of current groups
+     * @return array
+     */
     public function getGroups(): array
     {
         return $this->_aGroups;
     }
 
+    // ----------------------------------------------------------------------
+    // GET PERMISSIONS
+    // ----------------------------------------------------------------------
+
+    /**
+     * check if the user is member of a given group - or global admin
+     * @param string $sWantedGroup  name of group to check
+     * @return bool
+     */
     public function is(string $sWantedGroup): bool
     {
         return array_search('admin', $this->_aGroups) !== false || array_search($sWantedGroup, $this->_aGroups) !== false;
@@ -165,13 +226,14 @@ class adminacl
 
     /**
      * return boolean if user is global admin
+     * @param string  $sAppname  appname to check
      * @return bool
      */
-    public function isAppAdmin(string $sAppname): bool
+    public function isAppAdmin(string $sAppname = ''): bool
     {
         $sAppname = $sAppname ? $sAppname : $this->_sApp;
         return $this->isAdmin()
-            || array_search($sAppname.'_admin', $this->_aGroups) !== false
+            || array_search($sAppname . '_admin', $this->_aGroups) !== false
         ;
     }
 
@@ -179,11 +241,11 @@ class adminacl
     {
         $sAppname = $sAppname ? $sAppname : $this->_sApp;
         return $this->isAppAdmin($sAppname)
-            || array_search($sAppname . '_moderator', $this->_aGroups) !== false
+            || array_search($sAppname . '_manager', $this->_aGroups) !== false
         ;
     }
 
-    public function canView(string $sAppname): bool
+    public function canView(string $sAppname = ''): bool
     {
         $sAppname = $sAppname ? $sAppname : $this->_sApp;
         return $this->canEdit($sAppname)
