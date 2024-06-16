@@ -1,0 +1,147 @@
+<?php
+/*
+ *
+ *                        __    __    _______  _______ 
+ * .---.-..--.--..-----.|  |  |__|  |       ||   |   |
+ * |  _  ||_   _||  -__||  |   __   |   -   ||       |
+ * |___._||__.__||_____||__|  |__|  |_______||__|_|__|
+ *                       \\\_____ axels OBJECT MANAGER
+ * 
+ * ADMIN USERS :: Overview of all users and their permissions
+ * 
+ */
+
+if(!$acl->isAdmin()){
+    include('error403.php');
+    return false;
+}
+
+$sContextbar='';
+$TITLE=icon::get('users') . '{{users.title}}';
+
+$sPerms='';
+$s='';
+
+function yesno($bValue){
+    return $bValue 
+        ? '<span class="btn btn-success">'.icon::get('yes') .'</span>'
+        : '<span class="btn btn-default">'.icon::get('no').'</span>'
+        ;
+}
+
+$s.=''
+. $renderAdminLTE->getCallout([
+    'type' => 'info',
+    'text' => '{{users.subtitle}}',
+    ]).'<br><br>'
+    ;
+
+if (!isset($aSettings['acl'])){
+    $s.=$renderAdminLTE->getCard(array (
+        'type' => '',
+        'title' => '',
+        'text' => '{{users.noacl}}'
+        ,
+        // 'variant' => '',
+    ));
+} else{
+
+    $aUsers=[];
+
+    $aGroups=$aSettings['acl']['groups'] ?? [];
+    // print_r($aGroups); die();
+
+    if (isset($aGroups['global']['admin']) && is_array($aGroups['global']['admin'])) {
+        $sGlobalAdmins='<div class="text-success"><strong>'.icon::get('adminuser') .implode('<br>'.icon::get('user'),$aGroups['global']['admin']).'</strong></div><br>';
+    } else {
+        $sGlobalAdmins='-';
+    }
+
+    foreach ($adminmetainfos->getApps(1) as $sApp => $aAppData){
+        $appmeta=new appmetainfos($sAppRootDir.'/'.$sApp);
+
+        if(isset($aGroups[$sApp])){
+            $aAppusers=[];
+            $sTable='';
+
+            // read all users from all groups, uniq and sorted
+            foreach($aGroups[$sApp] as $sGroup => $aMembers){
+                foreach ($aMembers as $sMember){
+                    $aAppusers[$sMember]=1;
+                }
+            }
+            $aAppusers=array_keys($aAppusers);
+            sort($aAppusers);
+
+            // render table data with users and their permissions
+            // echo '<pre>';print_r($aAppusers); die();
+            foreach($aAppusers as $sAppuser){
+                $aclapp=new adminacl();
+                $aclapp->setUser($sAppuser);
+                $sTable.='<tr>'
+                .'<td>'.icon::get('user') .'<strong>'. $sAppuser.'</strong><br>'.implode(', ', $aclapp->getGroups()).'</td>'
+                .'<td>'.yesno($aclapp->canView($sApp)).'</td>'
+                .'<td>'.yesno($aclapp->canEdit($sApp)).'</td>'
+                .'<td>'.yesno($aclapp->isAppAdmin($sApp)).'</td>'
+                .'</tr>'
+            ;
+
+            }
+            $sPerms.='<h5 class="text-primary">'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</h5>'
+                .($sTable
+                    ? '<table class="table"><thead><tr>
+                    <th>{{user}}</th><th>{{perms.view}}</th><th>{{perms.edit}}</th><th>{{perms.admin}}</th>
+                    </tz></thead><tbody>'.$sTable.'</tbody></table>'
+                    : icon::get('close').' {{perms.none}}'
+                )
+                ;
+    
+        }
+    }
+
+
+    $s.=''
+
+        .$renderAdminLTE->getCard(array (
+            'type' => '',
+            'title' => '',
+            'text' => ''
+            .'{{users.info}}<br><br>'
+            .'<table class="table"><tbody>
+
+            <tr>
+                <td>{{users.global_admins}}</td>
+                <td>'.$sGlobalAdmins.'</td>
+            </tr>
+ 
+            <tr>
+                <td>{{users.app_permissions}}</td>
+                <td>'.$sPerms.'</td>
+            </tr>
+
+            
+            </tbody></table>'
+            /*
+            .'<br>'
+            // .'<pre>'.print_r($aSettings['acl'], 1).'</pre>'
+            . $renderAdminLTE->getButton([
+                'type' => 'secondary',
+                'text' => icon::get('back') . '{{back}}',
+                'onclick' => 'history.back();',
+                ])
+                */
+            ,
+            // 'variant' => '',
+        ))
+
+    ;
+
+}
+
+
+$BODY=$renderAdminLTE->addRow(
+    $renderAdminLTE->addCol(
+        $s, 
+        12
+        )
+);
