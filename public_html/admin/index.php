@@ -9,9 +9,13 @@
 
 */
 
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
 $iTimerStart=microtime(true);
 define("APP_NAME", 'axel :: OM');
-define("APP_VERSION", '0.0.9');
+define("APP_VERSION", '0.0.10');
 // $sUiLang="en-en";
 
 require_once('../classes/render-adminlte.class.php');
@@ -39,8 +43,6 @@ $adminmetainfos=new adminmetainfos();
 $appmetainfos=new appmetainfos();
 $acl=new adminacl();
 
-// $acl->setUser('berta');
-
 $renderAdminLTE=new renderadminlte();
 $aReplace=include("./config/page_replacements.php");
 
@@ -64,8 +66,9 @@ foreach(array_keys($adminmetainfos->getApps()) as $sApp){
         if($sApp==$sTabApp){
             // tab is active
 
+            $aSidebarNav[]=['href'=>'?page=home', 'label'=>'{{back}}', 'icon'=>icon::getclass('back')];
 
-            $aSidebarNav[]=['href'=>'?app='.$sApp.'&page=home',          'label'=>'Home :: ' . $appmeta->getAppname(), 'icon'=>$appmeta->getAppicon() ? $appmeta->getAppicon() : icon::getclass('home')];
+            $aSidebarNav[]=['href'=>'?app='.$sApp.'&page=home',          'label'=>'{{nav.home}} :: ' . $appmeta->getAppname(), 'icon'=>$appmeta->getAppicon() ? $appmeta->getAppicon() : icon::getclass('home')];
             if(count($appmeta->getObjects())){
                 $aSidebarNav[]=['href'=>'#', 'label'=>'-'];
             }
@@ -77,7 +80,7 @@ foreach(array_keys($adminmetainfos->getApps()) as $sApp){
                     'title'=> $appmeta->getObjectHint($sMyObject),
                 ];
             }
-            if(count($appmeta->getObjects())){
+            if(count($appmeta->getObjects()) && $acl->canEdit($sTabApp)){
                 $aSidebarNav[]=['href'=>'#', 'label'=>'-'];
                 $aSidebarNav[]=['href'=>'?app='.$sTabApp.'&page=object&object=pdo_db_attachments',          'label'=>'{{files}}', 'icon'=>icon::getclass('file')];
             }
@@ -93,18 +96,39 @@ foreach(array_keys($adminmetainfos->getApps()) as $sApp){
     }
 }
 
+// no app is active? --> get sidebar nav for general backend
+if(!count($aSidebarNav)){
+    $aSidebarNav[]=['href'=>'?page=home', 'label'=>'{{nav.home}}', 'icon'=>icon::getclass('home')];
+    if($acl->isAdmin()){
+        $aSidebarNav[]=[
+            'href'=>'?page=adminusers', 
+            'label'=>'{{nav.users}}', 
+            'icon'=> icon::getclass('users'),
+            'title'=> '',
+        ];
+        /*
+        $aSidebarNav[]=[
+            'href'=>'?app=backend&page=adminconfig', 
+            'label'=>'{{nav.config}}', 
+            'icon'=> icon::getclass('config'),
+            'title'=> '',
+        ];
+        */    
+    }
+    $aSidebarNav[]=['href'=>'?page=adminabout', 'label'=>'{{nav.about}}', 'icon'=>icon::getclass('about')];
+}
+
 // add search field
 if($sTabApp){
     $aTopnavRight[]=['label'=>'<input class="form-control form-control-sidebar fix-nolabel" type="search" id="searchtop" placeholder="{{search.placeholder}}" aria-label="Search">',];
 }
-$aTopnavRight[]=['label'=>'' . $acl->getUser(), 'icon'=>icon::getclass('user'), 'title'=> print_r($acl->getGroups(), 1) ];
+$aTopnavRight[]=['href'=>'?page=userprofile', 'label'=>'' . $acl->getUserDisplayname(), 'icon'=>icon::getclass('user'), 'title'=> $acl->getUser()."\n- ".implode("\n- ",$acl->getGroups()), 'class'=>($sPage=='userprofile' ? 'active' : '') ];
 
 // highlight menu item
 for($i=0; $i<count($aSidebarNav); $i++){
     if (
         $aSidebarNav[$i]['href']==$_SERVER['REQUEST_URI']
         || $aSidebarNav[$i]['href']=='?'.$_SERVER['QUERY_STRING']
-        || $aSidebarNav[$i]['href'] == '?page='.$sPage
 
         // activate nav item when editing an object
         || ($sTabApp && $sObject && preg_match('/\?app='.$sTabApp.'&page=object.*&object='.$sObject.'/', $aSidebarNav[$i]['href']) )
@@ -255,7 +279,7 @@ $sBreadcrumb='<a href="?page=home">{{nav.home}}</a>'.$sBcSpacer
 
 
 $aReplace['{{PAGE_BODY}}']=$BODY;
-$aReplace['{{PAGE_HEADER_LEFT}}']='<h2>'.$TITLE.'</h2>';
+$aReplace['{{PAGE_HEADER_LEFT}}']='<h2 class="text-gray">'.$TITLE.'</h2>';
 $aReplace['{{PAGE_HEADER_RIGHT}}']=$sBreadcrumb;
 $aReplace['{{JS_BODY_END}}']=$JS_BODYEND ? $JS_BODYEND : '';
 
