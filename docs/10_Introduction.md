@@ -19,7 +19,7 @@ flowchart TD
     OM === B{{fa:fa-gear Config<br>Blog}}:::cfgfile
     OM === C{{fa:fa-gear Config<br>Devices}}:::cfgfile
 
-    subgraph " app<br>Address book"
+    subgraph " "
         A --- A1(fa:fa-file-code Person):::classes
         A --- A2(fa:fa-file-code Addresses):::classes
         A --- A3(fa:fa-file-code PhoneNumbers):::classes

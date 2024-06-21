@@ -49,16 +49,3 @@ Create *config/objects.php* to define per application
 #### Object classes
 
 In the classes folder create one class per object type.
-
-#### Example structure
-
-```txt
-.
-├── classes
-│   ├── [object_1].class.php
-│   └── [object_N].class.php
-├── config
-│   └── objects.php
-├── data
-└── files
-```

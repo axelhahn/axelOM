@@ -1,21 +1,15 @@
+<html>
+<div class="hero">
+  <h2>Axels Object Manager</h2>
+  A web ui using AdminLTE for visual editing of objects for multiple apps.<br>
+</div>
+</html>
 
-# create objects 
+<br>
 
 Free software and Open Source
 
+👤 Author: Axel Hahn \
 📄 Source: <https://github.com/axelhahn/axelOM/> \
 📜 License: GNU GPL 3.0 \
 📗 Docs: 
-
-- - -
-
-## About this class ##
-
-The main class abstracts CRUD actions to handle items of a custom object.
-It 
-
-* creates a database table per object; colums come from given properties during init
-* provides CRUD actions with the methods create() / read(ID) / update / delete()
-* save() automatically decides to use create() or update()
-* 
-

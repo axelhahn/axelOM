@@ -1,6 +1,6 @@
 # Axels Object Manager
 
-A web ui using AdminmLTE for visual editing of objects for multiple apps.
+A web ui using AdminLTE for visual editing of objects for multiple apps.
 
 
 📄 Source: <https://github.com/axelhahn/axelOM/> \
