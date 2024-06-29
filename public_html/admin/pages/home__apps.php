@@ -36,7 +36,16 @@ $s=''
                 'icon' => icon::getclass('objects'),
                 'iconbg' => 'secondary',
                 'text' => '{{home.objecttypes}}',
-                'number' => count($appmeta->getObjects()) ?? 0,
+                'number' => (count($appmeta->getObjects()) ?? 0)
+                    . ($acl->isAdmin()
+                        ? '<span style="float: right">'.$renderAdminLTE->getButton([
+                            'type' => 'success',
+                            'text' => icon::get('new').'{{new}} :: TODO',
+                            'onclick' => '',
+                        ]).'</span>'
+                        : ''
+                    )
+                    ,
                 // 'progressvalue' => 70,
                 // 'progresstext' => '70% Increase in 30 Days',
                 ))

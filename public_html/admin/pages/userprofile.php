@@ -77,7 +77,7 @@ $s=''
         </tbody></table>'
         .'<br>'
         . $renderAdminLTE->getButton([
-            'type' => 'secondary',
+            'type' => 'primary',
             'text' => icon::get('back') . '{{back}}',
             'onclick' => 'history.back();',
             ])

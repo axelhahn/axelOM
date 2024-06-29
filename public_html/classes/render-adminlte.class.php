@@ -1360,11 +1360,25 @@ class renderadminlte
     // ----------------------------------------------------------------------
 
 
-    public function getHorizontalFormElement(string $sInput, string $sLabel = '', string $sId = ''): string
+    /**
+     * Generates a horizontal form element with a label, input, and optional hint.
+     *
+     * @param string $sInput The HTML input element to be rendered.
+     * @param string $sLabel The label for the input element.
+     * @param string $sId The ID attribute for the label and input elements.
+     * @param string $sHint An optional hint to be displayed below the input element.
+     * @return string The generated HTML for the horizontal form element.
+     */
+    public function getHorizontalFormElement(string $sInput, string $sLabel = '', string $sId = '', string $sHint=''): string
     {
         return '<div class="form-group row">'
             . '<label for="' . $sId . '" class="col-sm-2 col-form-label">' . $sLabel . '</label>'
-            . '<div class="col-sm-10">' . $sInput . '</div>'
+            . '<div class="col-sm-10">'
+            . ($sHint 
+                ? '<div class="text-navy hint">' . $sHint . '</div>' 
+                : '')
+            . $sInput
+            . '</div>'
             . '</div>'
         ;
     }
@@ -1397,6 +1411,7 @@ class renderadminlte
         $aElement['id'] = $sFormid;
 
         $sLabel = isset($aOptions['label']) ? $aOptions['label'] : '';
+        $sHint = isset($aOptions['hint']) ? $aOptions['hint'] : '';
         $sPrepend = '';
         $sAppend = '';
 
@@ -1430,6 +1445,7 @@ class renderadminlte
             case 'checkbox':
             case 'radio':
                 $aElement['class'] = str_replace('form-control ', 'form-check-input', $aElement['class']);
+                $aElement['title'] = $aElement['title'] ?? $sHint;
                 return $this->_tag(
                     'div',
                     ['class' => 'form-check'],
@@ -1437,13 +1453,15 @@ class renderadminlte
                 );
                 break;
             case 'hidden':
+                $aElement['title'] = $aElement['title'] ?? $sHint;
                 return $this->_tag('input', $aElement, '', false);
                 break;
             default:
                 return $this->getHorizontalFormElement(
                     $sPrepend . $this->_tag('input', $aElement, '', false) . $sAppend,
                     $sLabel,
-                    $sFormid
+                    $sFormid,
+                    $sHint
                 );
         }
     }
@@ -1468,12 +1486,12 @@ class renderadminlte
             . ((isset($aOptions['type']) && $aOptions['type'] == 'html') ? 'summernote ' : '')
             . (isset($aOptions['class']) ? $aOptions['class'] : '')
         ;
-
-        $sLabel = isset($aOptions['label']) ? $aOptions['label'] : '';
         $sFormid = (isset($aOptions['id'])
             ? $aOptions['id']
             : (isset($aOptions['name']) ? $aOptions['name'] : 'field') . '-' . md5(microtime(true))
         );
+        $sLabel = isset($aOptions['label']) ? $aOptions['label'] : '';
+        $sHint = isset($aOptions['hint']) ? $aOptions['hint'] : '';
         $aElement['id'] = $sFormid;
 
         $value = isset($aOptions['value']) ? $aOptions['value'] : '';
@@ -1486,7 +1504,8 @@ class renderadminlte
         return $this->getHorizontalFormElement(
             $this->_tag('textarea', $aElement, $value),
             $sLabel,
-            $sFormid
+            $sFormid,
+            $sHint
         );
 
     }
@@ -1522,13 +1541,14 @@ class renderadminlte
             $aElement['data-live-search'] = "true";
         }
 
-        $sLabel = isset($aOptions['label']) ? $aOptions['label'] : '';
         $sFormid = (isset($aOptions['id'])
 
             ? $aOptions['id']
             : (isset($aOptions['name']) ? $aOptions['name'] : 'field') . '-' . md5(microtime(true))
         );
         $aElement['id'] = $sFormid;
+        $sLabel = isset($aOptions['label']) ? $aOptions['label'] : '';
+        $sHint = isset($aOptions['hint']) ? $aOptions['hint'] : '';
 
         $sOptionTags = '';
         foreach ($aOptions['options'] as $aField) {
@@ -1549,7 +1569,8 @@ class renderadminlte
                 $this->_tag('select', $aElement, $sOptionTags)
             ),
             $sLabel,
-            $sFormid
+            $sFormid,
+            $sHint
         );
 
     }

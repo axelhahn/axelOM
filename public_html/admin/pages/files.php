@@ -15,12 +15,28 @@ $sBaseUrl = '?page=files&app='.$sTabApp;
 
 $TITLE='File upload';
 
+$sMainContent = '';
+
+
+// ---------- let's init
+
+require_once('object__functions.php');
+include('inc_set_db.php'); // set $oDB
+
+$o=initClass( $oDB, 'pdo_db_attachments' );
+if(is_string($o)) {
+    // strng = error occured
+    $BODY = $o;
+    return true;
+}
+
+$sMainContent='Hello';
+/*
 $sForm='
     <form action="" method="post" enctype="multipart/form-data">
         <input type="file" name="file" />
     </form>
 ';
-
 $sConent=$renderAdminLTE->getCard(array(
     'type' => 'default',
     'variant' => 'outline',
@@ -31,10 +47,11 @@ $sConent=$renderAdminLTE->getCard(array(
     'text' => '...',
     'footer' => '',
 ));
+*/
 
 $BODY=$renderAdminLTE->addRow(
     $renderAdminLTE->addCol(
-        $s,
+        $sMainContent,
         10
         )
 );

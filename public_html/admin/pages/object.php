@@ -26,10 +26,34 @@ $sObjLabel= ''
     . (isset($aObjdata['icon']) ? icon::get($aObjdata['icon']) : '')
     . ($aObjdata['label'] ?? '');
 
-$TITLE=''.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().' ' 
-    . '<strong>'.($sObjLabel ? '  ' . $sObjLabel : '') .'</strong> ';
+$TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> :: ' 
+    . ''.($sObjLabel ? '  ' . $sObjLabel : '') .'';
 
 // addMsg('ok', 'OK: I am a test');
+
+/**
+ * get html code for a data list that must exist in app configuration
+ * in apps/<appname>/config/objects.php
+ * 
+ * @param  string  $sLabel  data list key
+ * @return string
+ */
+function getDatalist(string $sLabel): string
+{
+    global $appmeta;
+    $sReturn='';
+    $aLists=$appmeta->getConfig('datalists');
+    if(isset($aLists[$sLabel]) && is_array($aLists[$sLabel])){
+        $sReturn.='<datalist id="'.$sLabel.'">';
+        foreach($aLists[$sLabel] as $aItem){
+            $sReturn.='<option value="'.$aItem[0].'" label="'.$aItem[1].'"></option>';
+        }
+        $sReturn.='</datalist>';
+        $sReturn='<div class="form-group row"><label class="col-sm-2 col-form-label"></label>'
+        . '<div class="col-sm-10">'.$sReturn.'</div></div>';
+    }
+    return $sReturn;
+}
 
 // ---------- let's init
 
@@ -303,7 +327,7 @@ if ($iItems == 0) {
                 }
                 $sTable .= '<td>'.$sText.'</td>';
             }
-            $sTable .= '<td align="right">'
+            $sTable .= '<td align="right"><nobr>'
                 . ''
 
                 /*
@@ -336,7 +360,7 @@ if ($iItems == 0) {
                     ])
                     : '')
 
-                . '</td>' . "\n";
+                . '</nobr></td>' . "\n";
 
             $sTable .= '</tr>' . "\n";
         }
@@ -471,9 +495,19 @@ if ($bShowEdit) {
             $bIsEditable = array_search($sVarname, array_keys($aAttributes)) !== false;
             if($bIsEditable){
 
-                $aCfgForm=$o->getFormtype($sVarname);
+                if(!$aCfgForm=$o->getFormtype($sVarname)){
+                    $sForm.= $renderAdminLTE->getAlert([
+                        'type' => 'danger',
+                        'title' => 'getFormtype('.$sVarname.')',
+                        'dismissible' => 0,
+                        'text' => 'ERROR: ' . $oDB->error(),
+                    ]);
+                    continue;
+                }
                 // $aCfgForm['label']=$sVarname;
                 $aCfgForm['value']=$value;
+                $aCfgForm['title']=($aCfgForm['title'] ?? '');
+                $aCfgForm['title'].=($aCfgForm['title'] ? "\n" : '')."($sVarname)";
                 
                 // DEBUG
                 // $sForm.='<pre>aCfgForm = '.print_r($aCfgForm, 1).'</pre>';
@@ -482,7 +516,12 @@ if ($bShowEdit) {
                 if (isset($aCfgForm['tag'])) {
                     switch ($aCfgForm['tag']) {
                         case 'input':
-                            $sForm.=$renderAdminLTE->GetFormInput($aCfgForm);
+                            // $sForm.='<pre>'.print_r($aCfgForm, 1).'</pre>';
+                            $sMore='';
+                            if(isset($aCfgForm['datalist'])){
+                                $sMore.=getDatalist($aCfgForm['datalist']);
+                            }
+                            $sForm.=$renderAdminLTE->getFormInput($aCfgForm) . $sMore;
                             break;
                         case 'select':
                             $sForm.= // '<pre>'.htmlentities($renderAdminLTE->getFormSelect($aCfgForm), 1).'</pre>'.

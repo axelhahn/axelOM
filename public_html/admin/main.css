@@ -7,27 +7,37 @@
 
 
 */
+:root{
+	--navSidebarActiveItemBg: #489;
+	--navSidebarActiveItemColor: white;
+	--navTopActiveItemBg: #cee;
+	--overlayBg: rgba(0,30,30,0.5);
+	--overlayBoxBordercolor: rgba(0,30,30,0.5);
+	--overlayBoxShadow: #345;
+	--formHintBg: #e0f4f4;
+	--requiredColor: #c00;
+}
 
 button{border: 1px solid rgba(0,0,0,0.1) !important;}
 del{background-color: #fdd;}
 ins{background-color: #cfc}
 
 
-.required{color: #c00;}
+.required{color: var(--requiredColor);}
 
-li.nav-item .active{background-color: #cee;}
+li.nav-item .active{background-color: var(--navTopActiveItemBg);}
 .sidebar-dark-gray .nav-sidebar > .nav-item > .nav-link.active, .sidebar-light-gray .nav-sidebar > .nav-item > .nav-link.active {
-	background: #489;
-	color: #fff;
+	background: var(--navSidebarActiveItemBg);
+	color: var(--navSidebarActiveItemColor);
 }
 
 
 a .fix-nolabel{margin-top: -0.5em;}
 
-div#overlay{position: fixed; height: 100%; width: 100%; top: 0; background: rgba(0,30,30,0.5); display: none;}
+div#overlay{position: fixed; height: 100%; width: 100%; top: 0; background: var(--overlayBg); display: none;}
 div#overlay-text{position: fixed; height: 80%; width: 60%; top: 5em; left: 20%; background: #fff; 
-	border: 3px solid rgba(0,80,120,0.3); border-radius: 2em ;
-	box-shadow: 1em 1em 3em #345;
+	border: 3px solid var(--overlayBoxBordercolor); border-radius: 2em ;
+	box-shadow: 1em 1em 3em var(--overlayBoxShadow);
 	padding: 2em;
 	overflow: auto;
 }
@@ -63,5 +73,19 @@ h2 a, h3 a, h4 a, .callout a, .card-header a, table a{color: #358;}
 .card-title i, .callout i {color:rgba(0,80,80,0.3);}
 .card-title i, .callout i {color:var(--cyan);}
 
-input.form-control[required]{ border-right: 0.3em solid #c00; background: linear-gradient(90deg, #fffcfc 85%, #fee);}
+input.form-control[required]{ border-right: 0.3em solid var(--requiredColor); background: linear-gradient(90deg, #fffcfc 85%, #fee);}
+.row .hint{
+	background: var(--formHintBg); padding: 0.3em 0.7em; margin-bottom: 0.5em; transform: skewX(-5deg);
+	border-left: 2px dotted;
+	width: 95%;
+}
+
+datalist {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	writing-mode: vertical-lr;
+	width: 100%;
+}
+
 #msgOtherChanges{display: none;}

@@ -28,12 +28,22 @@ $s=''
                 'icon' => icon::getclass('apps'),
                 'iconbg' => 'info',
                 'text' => '{{home.apps}}',
-                'number' => count($adminmetainfos->getApps()) ?? 0,
+                'number' => (count($adminmetainfos->getApps()) ?? 0 )
+                    . ($acl->isAdmin()
+                        ? '<span style="float: right">'.$renderAdminLTE->getButton([
+                            'type' => 'success',
+                            'text' => icon::get('new').'{{new}} :: TODO',
+                            'onclick' => '',
+                        ]).'</span>'
+                        : ''
+                    )
+                    ,
                 // 'progressvalue' => 70,
                 // 'progresstext' => '70% Increase in 30 Days',
                 ))
             , 4
         )
+
     )
     .'<br>'
 ;

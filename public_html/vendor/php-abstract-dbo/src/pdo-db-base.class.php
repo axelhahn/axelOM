@@ -1245,7 +1245,18 @@ class pdo_db_base
             if (isset($this->_aProperties[$sAttr]['lookup'])) {
                 $aReturn['debug']['_force_lookup'] = 1;
                 $aLookup = $this->_aProperties[$sAttr]['lookup'];
-                // WIP
+
+                // verify lookup data
+                if(!isset($aLookup['columns'])) {
+                    $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . '(' . $sAttr . ')', 'No key [columns] in lookup for object key '.$sAttr.' to define labels for dropdown.<br>Suggestion: add<br>"columns" => "label"');
+                    return false;                            
+                }
+                if(!isset($aLookup['value'])) {
+                    $aLookup['value'] = 'id';
+                    // $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . '(' . $sAttr . ')', 'No key [value] in lookup for object key '.$sAttr.' to define values for dropdown.<br>Suggestion: add<br>"value" => "id"<br>in<pre>'.print_r($aLookup, 1).'</pre>');
+                    // return false;                            
+                }
+
                 /*
                 'lookup'=> [
                     'table'=>'objusers',           // which table to connect
@@ -1257,9 +1268,10 @@ class pdo_db_base
                 ]
                 */
 
-                $sSql = 'SELECT id,' . implode(',', $aLookup['columns'])
+                $sSql = 'SELECT ' . implode(',', $aLookup['columns']).', '.$aLookup['value']
                     . ' FROM ' . $aLookup['table']
                     . (isset($aLookup['where']) && $aLookup['where'] ? ' WHERE ' . $aLookup['where'] : '')
+                    .' ORDER BY ' . implode(' ASC ,', $aLookup['columns']).' ASC'
                     . ''
                 ;
                 // echo "DEBUG: sSql = $sSql<br>";
@@ -1282,11 +1294,11 @@ class pdo_db_base
                         'label' => '--- {{select_relation_item}} ---',
                     ];
                     foreach ($aLookupdata as $aOptionItem) {
-                        $bSelected = $aOptionItem['id'] === $this->get($sAttr);
+                        $bSelected = $aOptionItem[$aLookup['value']] === $this->get($sAttr);
 
                         $aOptions[] = [
                             // 'value'=>$aLookup['table'].':'.$aOptionItem['id'],
-                            'value' => $aOptionItem['id'],
+                            'value' => $aOptionItem[$aLookup['value']],
                             'label' => $this->getLabel($aOptionItem, $aLookup['columns']),
                         ];
                         if ($bSelected) {

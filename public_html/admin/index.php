@@ -15,7 +15,7 @@ header("Pragma: no-cache");
 
 $iTimerStart=microtime(true);
 define("APP_NAME", 'axel :: OM');
-define("APP_VERSION", '0.0.10');
+define("APP_VERSION", '0.0.11');
 // $sUiLang="en-en";
 
 require_once('../classes/render-adminlte.class.php');
@@ -284,11 +284,17 @@ $aReplace['{{PAGE_HEADER_RIGHT}}']=$sBreadcrumb;
 $aReplace['{{JS_BODY_END}}']=$JS_BODYEND ? $JS_BODYEND : '';
 
 // simple translate
-$sLangfile=__DIR__.'/lang/'.$sUiLang.'.php';
-if(file_exists($sLangfile)){
-    foreach(include($sLangfile) as $sKey=>$sTranlated){
-        $aReplace['{{'.$sKey.'}}']=$sTranlated;
-    };
+foreach([
+    __DIR__.'/lang/'.$sUiLang.'.php',
+    __DIR__.'/../apps/'.$sTabApp.'/lang/'.$sUiLang.'.php',
+] as $sLangfile){
+
+    // $sLangfile=__DIR__.'/lang/'.$sUiLang.'.php';
+    if(file_exists($sLangfile)){
+        foreach(include($sLangfile) as $sKey=>$sTranlated){
+            $aReplace['{{'.$sKey.'}}']=$sTranlated;
+        };
+    }
 }
 
 $sTemplate=file_get_contents('config/page.tpl.php');
