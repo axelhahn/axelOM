@@ -633,13 +633,14 @@ if ($bShowEdit) {
                     $sContentRelations.=''
                         . $renderAdminLTE->getButton([
                             'type' => ($sObjname == $sObject ? 'secondary' : 'success'),
-                            'text' => icon::get('new') . ($aObjdata['label'] ?? $sObjname),
+                            'text' => icon::get($appmeta->getObjectIcon($sObjname)) 
+                                . ($aObjdata['label'] ?? $sObjname),
                             'onclick' => 'location.href=\'' . $sBaseUrl . '&id='.$aItem['id'].'&newrel='.$sObjname.'#relations\'',
                         ]) .' '
                     ;
 
                 }
-                $sContentRelations=$sContentRelations ? '{{new}} '.$sContentRelations . '<br><br>' : '';
+                $sContentRelations=$sContentRelations ? icon::get('new')  . '{{new}} ... '.$sContentRelations . '<br><br>' : '';
             } else {
 
                 // --- form for adding a new relation of given object

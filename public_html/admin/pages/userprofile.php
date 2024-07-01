@@ -58,7 +58,7 @@ $s=''
 
         <tr>
             <td>{{userprofile.userid}}</td>
-            <td>'.$acl->getUser().'</td>
+            <td><strong>'.$acl->getUser().'</strong></td>
         </tr>
         <tr>
             <td>{{userprofile.name}}</td>
