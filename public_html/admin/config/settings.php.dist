@@ -29,7 +29,7 @@ return [
         'userfield'=>'REMOTE_USER',
         'displayname'=>false,
 
-        // 'userfield'=>'mail', // example for shibboleth authentication: configure by email instead of uuid
+        // 'userfield'=>'mail', // set by shibbolethauthentication
 
         // ---------- GROUPS
         'groups'=>[

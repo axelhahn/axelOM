@@ -91,7 +91,7 @@ return [
     "object.add_relation_to" => "Relation hinzuf&uuml;gen zu",
     "object.relations_locked" => "Das Objekt wurde bearbeitet. Die Verknüpfungen sind daher gesperrt. Speichern Sie zunächst das Objekt und bearbeiten Sie es erneut, um die Verknüpfungen zu ändern.",
 
-    "search.placeholder" => "Suchbegriff",
+    "search.placeholder" => "Tippen zum Suchen ...",
     "search.hits" => "Treffer",
     "search.results_for" => "Ergebnisse für",
     "search.no_results_for" => "Kein Treffer für",

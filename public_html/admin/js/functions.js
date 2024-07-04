@@ -12,6 +12,8 @@ javascript functions for all pages
 ----------------------------------------------------------------------
 */
 
+AOM_LEFT_SIDEBAR="";
+
 /**
  * get query parameters from url as object
  * 
@@ -127,6 +129,20 @@ async function httprequest(method="GET", url = "", data = {}, idOut = null) {
   }
 
 
+// // save left menu status
+// function saveLeftMenu(){
+//   localStorage.setItem("bodyClass", document.body.className);
+// }
+
+// // it is flickering on page reload
+// function restoreLeftMenu(){
+//   var s=localStorage.getItem("bodyClass", document.body.className);
+//   if (s) {
+//     document.body.className = s;
+//   }
+// }
+
+
 // ----------------------------------------------------------------------
 // MAIN
 // ----------------------------------------------------------------------
@@ -153,6 +169,7 @@ $(document).ready(function () {
       ]
     });
 
+    // hide overlay when clicking on the background outside the overlay window
     $('#overlay').click(function () {
       $(this).hide();
     });
@@ -167,5 +184,13 @@ $(document).ready(function () {
     $('#searchtop').keypress(function () {
       dosearch();
     });
+
+    // // save left menu status
+    // $('.nav-link[data-widget="pushmenu"]').click(function () {
+    //   window.setTimeout("saveLeftMenu()", 1000);
+    // });
+
+    // restoreLeftMenu();
+
 
   });

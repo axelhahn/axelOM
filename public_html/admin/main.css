@@ -45,11 +45,16 @@ div#overlay-text{position: fixed; height: 80%; width: 60%; top: 5em; left: 20%; 
 pre.config{background:#f4f4f4; color:#448; border-radius: 0.5em; max-height: auto; transition: all ease-in-out 0.2s;}
 .hidden{max-height: 0px; padding: 0; margin: 0;}
 
-select{ border: 1px solid #eee; border-radius: 0.3em; padding: 0.1em 0.5em; background-color: #dee;}
+.dataTables_length select{ border: 1px solid #eee; border-radius: 0.3em; padding: 0.1em 0.5em; background-color: #dee;}
+
 .dataTables_filter label input {
 	border: 1px solid #ced4da;
 	border-radius: .25rem;
 }
+.dataTables_wrapper .dataTables_filter{
+	float: left; text-align: unset; margin-left: 1em; padding-left: 1em; border-left: 1px solid #bcc;
+}
+
 table.dataTable thead th, table.dataTable thead td {
 	border-bottom: 1px solid #bcc;
 	background-color: #dee;

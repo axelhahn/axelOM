@@ -91,7 +91,7 @@ return [
     "object.add_relation_to" => "Add relation to",
     "object.relations_locked" => "The object was changed. That's why the relations were disabled. Save the object and edit it again, to change the relations.",
 
-    "search.placeholder" => "searchterm",
+    "search.placeholder" => "Type to search ...",
     "search.hits" => "Hits",
     "search.results_for" => "Results für",
     "search.no_results_for" => "No hit for",
