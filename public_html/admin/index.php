@@ -15,10 +15,9 @@ header("Pragma: no-cache");
 
 $iTimerStart=microtime(true);
 define("APP_NAME", 'axel :: OM');
-define("APP_VERSION", '0.0.11');
-// $sUiLang="en-en";
+define("APP_VERSION", '0.0.13');
 
-require_once('../classes/render-adminlte.class.php');
+require_once('../classes/render-adminlte4.class.php');
 require_once('classes/adminmeta.class.php');
 require_once('classes/adminacl.class.php');
 require_once('../classes/appmeta.class.php');
@@ -141,8 +140,10 @@ $appmeta=new appmetainfos($sAppRootDir.'/'.$sTabApp);
 
 $aReplace['{{NAVI_TOP}}']=''
 . $renderAdminLTE->addWrapper(
-    'nav', ['class'=>'main-header navbar navbar-expand navbar-white navbar-light'],
-    $renderAdminLTE->getTopNavigation($aTopnav, [], $aTopnavRight)
+    'nav', ['class'=>'app-header navbar navbar-expand bg-body'],
+    $renderAdminLTE->addWrapper('div', [ 'class' => 'container-fluid' ],
+        $renderAdminLTE->getTopNavigation($aTopnav, [], $aTopnavRight)
+    )
     // add 2nd navbar if needed
 )
 ;

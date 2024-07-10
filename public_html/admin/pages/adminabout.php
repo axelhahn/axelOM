@@ -21,7 +21,7 @@ $s='';
 
 $s.=''
 . $renderAdminLTE->getCallout([
-    'type' => 'info',
+    'type' => 'gray',
     'text' => '{{home.banner}}',
     ]).'<br><br>'
     ;

@@ -13,58 +13,19 @@
 */
 $sAppReldir=str_replace('/admin/index.php', '', $_SERVER['SCRIPT_NAME']);
 return [
-    '{{DIR_ADMINLTE}}' => $sAppReldir.'/vendor/admin-lte/3.2.0',
+    '{{DIR_ADMINLTE}}' => $sAppReldir.'/vendor/admin-lte/4.0.0-beta1',
     '{{DIR_ADMINLTEPLUGINS}}' => $sAppReldir.'/vendor/admin-lte-plugins',
     '{{PAGE_SKIN}}'    =>'',
     '{{PAGE_TITLE}}'   =>'',
     '{{PAGE_LAYOUT}}'  =>'layout-navbar-fixed layout-fixed sidebar-mini',
     // '{{NAVI_TOP}}'     =>'<nav class="main-header navbar navbar-expand navbar-white navbar-light"><ul class="navbar-nav" id="instances"></ul></nav>',
-    '{{BRAND}}'        =>'<a href="?" class="brand-link bg-navy">
+    '{{BRAND}}'        =>'<div class="sidebar-brand bg-navy">
+                            <a href="?" class="brand-link bg-navy">
                             <i class="fa-solid fa-cubes"></i> 
                             <span class="brand-text">'.APP_NAME.'</span>
                             <span class="brand-text font-weight-light">v'.APP_VERSION.'</span>
-                            </a>',
-    '{{NAVI_LEFT}}'    =>'
-                            <br>
-                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-pack"></i>
-                                        <p>Server</p>
-                                    </a>
-                                </li>
-                            </ul>
-                            <!--                            
-                            -->
-                            <div class="form-inline">
-                                <div class="input-group">
-                                    <input id="serverfiltertext" class="form-control form-control-sidebar" type="search" placeholder="Search"
-
-                                        onchange="filterServers();"
-                                        onkeypress="filterServers();"
-                                        onkeyup="filterServers();"
-                
-                                        >
-                                    <div class="input-group-append">
-                                        <button class="btn btn-sidebar"
-                                        onclick="$(\'#serverfiltertext\').val(\'\'); filterServers();"                                        >
-                                        ×
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-
-                            <div class="form-inline">
-                                <div id="selectserver" class="form-control-sidebar"></div>
-                            </div>
-                            <br>
-
-                            <div class="sidebar-infobox bottom">
-                                <i class="fas fa-info-circle"></i> PDO Class Admin v'.APP_VERSION.'<br>
-                                <i class="fab fa-php"></i> PHP '.PHP_VERSION.'<br>
-                            </div>
-                            ',
+                            </a></div>',
+    '{{NAVI_LEFT}}'    =>'',
 
     '{{PAGE_HEADER_LEFT}}'=>'{{PAGE_HEADER_LEFT}}',
     '{{PAGE_HEADER_RIGHT}}'=>'{{PAGE_HEADER_RIGHT}}',

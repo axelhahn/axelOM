@@ -119,7 +119,7 @@ if($sTabApp){
         // 
         . ($appmeta->getApphint() && $appmeta->getApphint() 
             ? $renderAdminLTE->getCallout(array (
-                'type' => 'info',
+                'type' => 'gray',
                 'text' => $appmeta->getApphint().' -> <strong>{{tools}}</strong>',
               )).'<br>'
             : '')
@@ -134,21 +134,21 @@ if($sTabApp){
         . '<td align="right">' . number_format( filesize($file), false, false,"'") . '</td>'
         . '<td align="right">' 
                 . $renderAdminLTE->getButton([
-                    'type' => 'dark',
+                    'class' => 'btn-outline-dark',
                     'text' => icon::get('view') . '{{view}}',
                     'title' => '{{view}}: '.$file,
                     'onclick' => 'httprequest(\'POST\', location.href , {\'action\': \'view\', \'file\': \''.basename($file).'\'});',
                 ])
                 .' '
                 . $renderAdminLTE->getButton([
-                    'type' => 'dark',
+                    'class' => 'btn-outline-dark',
                     'text' => icon::get('restore') . '{{restore}}',
                     'title' => '{{restore}}: '.$file,
                     'onclick' => 'if(confirm(\'{{confirm_restore}}\n\n'.$file.'\n\n?\')) httprequest(\'POST\', location.href , {\'action\': \'restore\', \'file\': \''.basename($file).'\'});',
                 ])
                 .' '
                 .$renderAdminLTE->getButton([
-                    'type' => 'danger',
+                    'class' => 'btn-outline-danger',
                     'text' => icon::get('delete') . '{{delete}}',
                     'title' => '{{delete}}: '.basename($file),
                     'onclick' => 'if(confirm(\'{{confirm_delete}}\n\n'.$file.'\n\n?\')) httprequest(\'POST\', location.href , {\'action\': \'delete\', \'file\': \''.basename($file).'\'});',
@@ -193,11 +193,11 @@ if($sTabApp){
 
 
     $sContextbar = $renderAdminLTE->getCallout([
-        'type' => 'primary',
+        'type' => '',
         'title' => icon::get('more').'{{more}}',
         'text' => '<h3>TODO</h3>'
             . $renderAdminLTE->getButton([
-                'type' => 'success',
+                'class' => 'btn-outline-success',
                 'text' => icon::get('optimize').'{{optimize}}',
                 'onclick' => 'httprequest(\'POST\', location.href , {\'action\': \'optimize\'})',
             ]) . '<br><br>'

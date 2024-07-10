@@ -49,8 +49,11 @@ function getDatalist(string $sLabel): string
             $sReturn.='<option value="'.$aItem[0].'" label="'.$aItem[1].'"></option>';
         }
         $sReturn.='</datalist>';
-        $sReturn='<div class="form-group row"><label class="col-sm-2 col-form-label"></label>'
-        . '<div class="col-sm-10">'.$sReturn.'</div></div>';
+        $sReturn='<div class="row mb-3">'
+            .'<label class="col-sm-2 col-form-label"></label>'
+            . '<div class="col-sm-10">'.$sReturn.'</div>'
+        .'</div>'
+        ;
     }
     return $sReturn;
 }
@@ -73,7 +76,7 @@ $aAttributes = $o->getAttributes(true);
 $sMainContent = ''
 . ($appmeta->getApphint() && $appmeta->getApphint() 
     ? $renderAdminLTE->getCallout(array (
-        'type' => 'info',
+        'type' => 'gray',
         'text' => $appmeta->getApphint() . ' -> <strong>' . $appmeta->getObjectHint($sObject).'</strong>',
     )).'<br>'
     : '');
@@ -103,7 +106,7 @@ if (isset($_POST['action'])) {
                             'title' => '{{edit}}: '.$o->getLabel($aItemData),
                             'onclick' => 'location.href=\'' . $sBaseUrl.'&id='.$o->id() . '\'',
                         ]);
-                        addMsg('ok', '{{msgok.item_was_created}}: ' . $o->id() . ' '.$sBtnEdit);
+                        addMsg('ok', '{{msgok.item_was_created}}: ' . $o->id() . ': ' . $o->getLabel() . ' '.$sBtnEdit);
                     }
                 } else {
                     addMsg('error', '{{msgerr.wrong_itemdata}}');
@@ -344,7 +347,7 @@ if ($iItems == 0) {
                  */
                 . ($bDbTableOk && ($acl->canEdit($sTabApp))
                     ? $renderAdminLTE->getButton([
-                        'type' => 'dark',
+                        'class' => 'btn-outline-dark',
                         'text' => icon::get('edit') . '{{edit}}',
                         'title' => '{{edit}}: '.$o->getLabel($aRow),
                         'onclick' => 'location.href=\'' . $sBaseUrl . '&id=' . $aRow['id'] . '\'',
@@ -353,7 +356,7 @@ if ($iItems == 0) {
                 .' '
                 . ($acl->canEdit($sTabApp)
                     ? $renderAdminLTE->getButton([
-                        'type' => 'danger',
+                        'class' => 'btn-outline-danger',
                         'text' => icon::get('delete') . '{{delete}}',
                         'title' => '{{delete}}: '.$o->getLabel($aRow),
                         'onclick' => 'if(confirm(\'{{confirm_delete}}\n\n'.$o->getLabel($aRow).'\n\n?\')) httprequest(\'POST\', location.href , {\'action\': \'delete\', \'id\': \''.$aRow['id'].'\'});',
@@ -415,7 +418,7 @@ if ($iItems == 0) {
         */
 
         $sContextbar .= $renderAdminLTE->getCallout([
-            'type' => 'primary',
+            'type' => '',
             'title' => icon::get('items').'{{items}}',
             'text' => '<h3>' . $iItems . '</h3>',
         ])
@@ -439,7 +442,7 @@ if ($iItems == 0) {
                     . ($acl->isAppAdmin($sTabApp)
                         ? '<hr>'
                             .$renderAdminLTE->getButton([
-                                'type' => '',
+                                'class' => 'btn-outline-dark',
                                 'text' => icon::get('config').'{{config}}',
                                 'onclick' => 'location.href=\'' . $sObjEditUrl . '\';',
                             ])
@@ -473,7 +476,7 @@ if ($bShowEdit) {
     // ---------- show editor: first item / new item / edit id
 
     if(!$acl->canEdit($sTabApp)){
-        $sMainContent=addMsg('error', '{{msgerr.missing_permissions}}');
+        addMsg('error', '{{msgerr.missing_permissions}}');
     } else {
 
         $aItem = $o->getItem();
@@ -587,25 +590,25 @@ if ($bShowEdit) {
                 .'</form>'
                 .'<br>'
                 .$renderAdminLTE->getButton([
-                    'type'=>'',
+                    'class' => 'btn-outline-dark',                    
                     'text'=>'{{reload_page}}',
                     'onclick'=>'location.reload()',
                 ])
                 ;
             $sContextbar.=''
                 . $renderAdminLTE->getCallout([
-                    'type' => 'primary',
+                    'type' => '',
                     'title' => icon::get('date').'{{last_changed}}',
                     'text' => $aItem['timeupdated'] ? '{{last_updated}}:<br>'.$aItem['timeupdated']: '{{created}}:<br>'.$aItem['timecreated'],
                 ])
                 . $renderAdminLTE->getCallout([
-                    'type' => 'primary',
+                    'type' => '',
                     'title' => icon::get('relation').'{{relations}}',
                     'text' => '<h3>' . (isset($aRelations['_targets']) ? count($aRelations['_targets']) : 0) . '</h3>',
                 ])
                 . '<div id="frmAttach">'
                 . $renderAdminLTE->getCallout([
-                    'type' => 'primary',
+                    'type' => '',
                     'title' => icon::get('attachments').'{{attachments}}',
                     'text' => '<h3>...</h3>'.$sFormAttach,
                 ])
@@ -678,9 +681,9 @@ if ($bShowEdit) {
                             . '<input type="hidden" name="action" value="relCreate">'
                             . '<input type="hidden" name="relobject" value="'.$o->getTablename($sRelClass).'">'
 
-                            . '<div class="form-group row">'
+                            . '<div class="row mb-3">'
 
-                                . '<label for="selectnewrel" class="col-sm-2 col-form-label">'
+                                . '<label for="selectnewrel" class="col-sm-2 col-form-select">'
                                     .icon::get($appmeta->getObjectIcon($sRelobjectname))
                                     .$appmeta->getObjectLabel($sRelobjectname).'<br>'
                                     // .'{{select_relation_item}}'
@@ -765,7 +768,7 @@ if ($bShowEdit) {
                         )
                         ;
                     $sBtnEdit=$renderAdminLTE->getButton([
-                        'type' => 'dark',
+                        'class' => 'btn-outline-dark',
                         'text' => icon::get('edit') . '{{edit}}',
                         'title' => '{{edit}} '.$sTargetLabel,
                         // 'onclick' => 'location.href=\'?page=object&app='.$sTabApp.'&object='.$aRelation['table'].'&id=' . $oRelobj->id() . '\'',
@@ -778,7 +781,7 @@ if ($bShowEdit) {
                             'text' => icon::get('delete') . '{{delete}}',
                         ])
                         : $renderAdminLTE->getButton([
-                        'type' => 'danger',
+                        'class' => 'btn-outline-danger',
                         'text' => icon::get('delete') . '{{delete}}',
                         'title' => 'Delete relation '.$o->getLabel().' -> '.$sTargetLabel,
                         'onclick' => 'if(confirm(\'{{confirm_delete}}\n\n'.$o->getLabel().' -> '.$sTargetLabel.'\n\n?\')) httprequest(\'POST\', location.href , {\'action\': \'relDelete\', \'relkey\': \''.$sRelKey.'\'});',

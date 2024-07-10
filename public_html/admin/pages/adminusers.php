@@ -31,7 +31,7 @@ function yesno($bValue){
 
 $s.=''
 . $renderAdminLTE->getCallout([
-    'type' => 'info',
+    'type' => 'gray',
     'text' => '{{users.subtitle}}',
     ]).'<br><br>'
     ;
@@ -79,23 +79,20 @@ if (!isset($aSettings['acl'])){
                 $aclapp=new adminacl();
                 $aclapp->setUser($sAppuser);
                 $sTable.='<tr>'
-                .'<td>'.icon::get('user') .'<strong>'. $sAppuser.'</strong><br>'.implode(', ', $aclapp->getGroups()).'</td>'
-                .'<td>'.yesno($aclapp->canView($sApp)).'</td>'
-                .'<td>'.yesno($aclapp->canEdit($sApp)).'</td>'
-                .'<td>'.yesno($aclapp->isAppAdmin($sApp)).'</td>'
-                .'</tr>'
+                .'  <td>'.icon::get('user') .'<strong>'. $sAppuser.'</strong><br>'.implode(', ', $aclapp->getGroups()).'<br></td>'
+                .'  <td>'.yesno($aclapp->canView($sApp)).'</td>'
+                .'  <td>'.yesno($aclapp->canEdit($sApp)).'</td>'
+                .'  <td>'.yesno($aclapp->isAppAdmin($sApp)).'</td>'
+                .'</tr>'."\n\n"
             ;
 
             }
-            $sPerms.='<h5 class="text-primary">'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</h5>'
-                .($sTable
-                    ? '<table class="table"><thead><tr>
-                    <th>{{user}}</th><th>{{perms.view}}</th><th>{{perms.edit}}</th><th>{{perms.admin}}</th>
-                    </tz></thead><tbody>'.$sTable.'</tbody></table>'
-                    : icon::get('close').' {{perms.none}}'
+            $sPerms.=($sTable
+                    ? '<tr><th><h5 class="text-primary">'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</h5></th><th>{{perms.view}}</th><th>{{perms.edit}}</th><th>{{perms.admin}}</th></tr>'
+                        .''.$sTable.''
+                    : '<tr><td>'.icon::get('close').' {{perms.none}}</td></tr>'
                 )
                 ;
-    
         }
     }
 
@@ -116,20 +113,17 @@ if (!isset($aSettings['acl'])){
  
             <tr>
                 <td>{{users.app_permissions}}</td>
-                <td>'.$sPerms.'</td>
+                <td><table class="table">'.$sPerms.'</table></td>
             </tr>
 
-            
             </tbody></table>'
+            
             /*
-            .'<br>'
-            // .'<pre>'.print_r($aSettings['acl'], 1).'</pre>'
-            . $renderAdminLTE->getButton([
-                'type' => 'secondary',
-                'text' => icon::get('back') . '{{back}}',
-                'onclick' => 'history.back();',
-                ])
-                */
+            . '<form id="frmEditObject" class="form-horizontal" action="?" method="POST">'
+            .' <textarea cols="40" rows="30" style="width: 100%">'.file_get_contents(__DIR__.'/../config/settings.php').'</textarea>'
+            . '</form>'
+            */
+
             ,
             // 'variant' => '',
         ))

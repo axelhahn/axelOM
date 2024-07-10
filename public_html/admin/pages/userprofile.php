@@ -27,7 +27,7 @@ foreach ($adminmetainfos->getApps(1) as $sApp => $aAppData){
     $appmeta=new appmetainfos($sAppRootDir.'/'.$sApp);
     if ($acl->canView($sApp)){
         $sPerms.='<tr>'
-            .'<td>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</td>'
+            .'<td><a href="?app='.$sApp.'&page=home">'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</a></td>'
             .'<td>'.yesno($acl->canView($sApp)).'</td>'
             .'<td>'.yesno($acl->canEdit($sApp)).'</td>'
             .'<td>'.yesno($acl->isAppAdmin($sApp)).'</td>'
@@ -46,7 +46,7 @@ $sPerms=$sPerms
 
 $s=''
     . $renderAdminLTE->getCallout([
-        'type' => 'info',
+        'type' => 'gray',
         'text' => icon::get('user') . '{{userprofile.banner}}',
         ]).'<br><br>'
 

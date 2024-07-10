@@ -36,7 +36,7 @@
     <script src="../vendor/bootstrap-select/1.13.18/js/bootstrap-select.min.js"></script>
 
     <!-- Adminlte -->
-    <link rel="stylesheet" href="{{DIR_ADMINLTE}}/css/adminlte.min.css?v=3.2.0">
+    <link rel="stylesheet" href="{{DIR_ADMINLTE}}/css/adminlte.min.css">
 
     <link rel="stylesheet" href="{{DIR_ADMINLTEPLUGINS}}/summernote/summernote-bs4.min.css">
     <link rel="stylesheet" href="{{DIR_ADMINLTEPLUGINS}}/dropzone/dropzone.css" type="text/css" />
@@ -46,35 +46,34 @@
 
 </head>
 
-<body class="hold-transition {{PAGE_SKIN}} {{PAGE_LAYOUT}}">
-    <div class="wrapper">
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary {{PAGE_SKIN}} {{PAGE_LAYOUT}}">
+    <div class="app-wrapper">
 
         {{NAVI_TOP}}
 
-        <aside class="main-sidebar elevation-4 sidebar-dark-gray">
+        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
         
 
             {{BRAND}}
 
-            <div class="sidebar">
+            <div class="sidebar-wrapper">
                 {{NAVI_LEFT}}
             </div>
 
         </aside>
 
-        <div class="content-wrapper px-4 py-2">
+        <main class="app-main">
 
 
-            <div class="content-header">
+            <div class="app-content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-6">
+                        <div class="col-sm-8">
                             {{PAGE_HEADER_LEFT}}
-
                             <!-- <h1 class="m-0">Starter Page</h1> -->
                         </div>
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
+                        <div class="col-sm-4">
+                            <ol class="breadcrumb float-sm-end">
                                 {{PAGE_HEADER_RIGHT}}                                
                                 <!--
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -86,34 +85,24 @@
                 </div>
             </div>
 
-
-
-            <div class="content">
+            <div class="app-content">
                 <div class="container-fluid">
                     {{PAGE_BODY}}
                 </div>
             </div>
 
-        </div>
+        </main>
 
+        <footer class="app-footer">
 
-        <aside class="control-sidebar control-sidebar-dark">
-
-            <div class="p-3">
-                <h5>Title</h5>
-                <p>Sidebar content</p>
-            </div>
-        </aside>
-
-
-        <footer class="main-footer">
-
-            <div class="float-right d-none d-sm-inline">
+            <div class="float-end d-none d-sm-inline">
                 {{PAGE_FOOTER_RIGHT}}
             </div>
 
             {{PAGE_FOOTER_LEFT}}
         </footer>
+
+        <div class="sidebar-overlay"></div>
     </div>
 
     <script>{{INJECT_JS}}</script>

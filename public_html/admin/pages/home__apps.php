@@ -24,7 +24,7 @@ $TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</
 $s=''
     . ($appmeta->getApphint() && $appmeta->getApphint() 
         ? $renderAdminLTE->getCallout(array (
-            'type' => 'info',
+            'type' => '',
             'text' => $appmeta->getApphint(),
             )).'<br><br>'
         : '')
@@ -34,7 +34,7 @@ $s=''
                 'type' => '',
                 'shadow' => '',
                 'icon' => icon::getclass('objects'),
-                'iconbg' => 'secondary',
+                'iconbg' => '',
                 'text' => '{{home.objecttypes}}',
                 'number' => (count($appmeta->getObjects()) ?? 0)
                     . ($acl->isAdmin()
@@ -99,7 +99,7 @@ foreach($appmeta->getObjects() as $sObj=>$aObjData){
 $s.=$renderAdminLTE->addRow($sBoxes);
 
 $sContextbar = $renderAdminLTE->getCallout([
-    'type' => 'primary',
+    'type' => '',
     'title' => icon::get('more').'{{more}}',
     'text' => ''
         .($acl->canEdit($sTabApp) 

@@ -105,7 +105,7 @@ if(!$bDbTableOk){
 $sMainContent .= ''
 . ($appmeta->getApphint() && $appmeta->getApphint() 
     ? $renderAdminLTE->getCallout(array (
-        'type' => 'info',
+        'type' => 'gray',
         'text' => $appmeta->getApphint() . ' -> <strong>' . $appmeta->getObjectHint($sObject).'</strong>',
     )).'<br>'
     : '');
@@ -129,7 +129,7 @@ $sMainContent.= $renderAdminLTE->addRow(
             'title' => icon::get('properties').'{{properties}}',
             'text' => $sProperties .'<hr>'
                 .$renderAdminLTE->getButton([
-                    'type' => '',
+                    'class' => 'btn-outline-dark',
                     'text' => icon::get('code').'{{raw}}',
                     'onclick' => '$(\'#objattributes\').toggleClass(\'hidden\');',
                 ]). '<br><br>'.$sCfgdata,
@@ -140,11 +140,11 @@ $sMainContent.= $renderAdminLTE->addRow(
 );
 
 $sContextbar .= $renderAdminLTE->getCallout([
-        'type' => 'primary',
+        'type' => '',
         'title' => icon::get('items').'{{items}}',
         'text' => '<h3>' . $o->count() . '</h3><hr>'
             .$renderAdminLTE->getButton([
-                'type' => '',
+                'class' => 'btn-outline-dark',
                 'text' => icon::get('edit').' {{edit}}',
                 'onclick' => 'document.location.href=\''.$sObjectUrl.'\';',
             ]),

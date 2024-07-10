@@ -17,7 +17,7 @@ $TITLE='{{home.welcome}}';
 
 $s=''
     . $renderAdminLTE->getCallout([
-        'type' => 'info',
+        'type' => '',
         'text' => '{{home.banner}}',
         ]).'<br><br>'
     . $renderAdminLTE->addRow(
@@ -26,7 +26,7 @@ $s=''
                 'type' => '',
                 'shadow' => '',
                 'icon' => icon::getclass('apps'),
-                'iconbg' => 'info',
+                'iconbg' => '',
                 'text' => '{{home.apps}}',
                 'number' => (count($adminmetainfos->getApps()) ?? 0 )
                     . ($acl->isAdmin()
