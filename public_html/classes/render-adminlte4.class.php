@@ -9,9 +9,9 @@ require_once 'htmlelements.class.php';
  * 
  * ______________________________________________________________________
  * 
- * RENDERER FOR ADNINLTE template https://adminlte.io
- * its docs: https://adminlte.io/docs/3.2/
- *           https://adminlte.io/themes/v3/index3.html
+ * RENDERER FOR ADNINLTE 4 (beta) template https://adminlte.io
+ * its docs: https://marlonluan.github.io/adminlte4/dist/pages/index.html
+ *           https://getbootstrap.com/docs/5.3/getting-started/introduction/
  * 
  * This is a php class to render
  * - grid layout
@@ -27,6 +27,7 @@ require_once 'htmlelements.class.php';
  * 2024-05-10  <axel.hahn@unibe.ch>  add support for bootstrap-select in getFormSelect
  * 2024-05-18  <axel.hahn@unibe.ch>  add variable types
  * 2024-07-04  <axel.hahn@unibe.ch>  added type declarations
+ * 2024-07-10  <axel.hahn@unibe.ch>  WIP start using AdminLTE 4.0.0 beta (using Bootstrap 5)
  * ======================================================================
  */
 class renderadminlte
@@ -40,6 +41,9 @@ class renderadminlte
             'values' => [
                 // https://adminlte.io/themes/v3/pages/UI/general.html
                 '' => 'no value',
+                /*
+                    no more colors in v4 ...
+
                 'indigo' => 'indigo',
                 'lightblue' => '',
                 'navy' => '',
@@ -51,6 +55,7 @@ class renderadminlte
                 'lime' => '',
                 'teal' => '',
                 'olive' => '',
+                */
 
                 'black' => 'black',
                 'dark' => 'dark gray',
@@ -627,7 +632,7 @@ class renderadminlte
 
             // special menu entry: hamburger menu item (label is "=")
             case '=':
-                return '<li class="nav-item"><a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a></li>';
+                return '<li class="nav-item"> <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button"> <i class="fas fa-bars"></i> </a>';
                 break;
 
             // special menu entry: hamburger menu item (label is "|")
@@ -797,7 +802,7 @@ class renderadminlte
     public function getSidebarNavigation(
         array $aNavItems,
         array $aUlOptions = [
-            'class' => 'nav nav-pills nav-sidebar flex-column nav-flat_ nav-child-indent',
+            'class' => 'nav sidebar-menu nav-flat__ flex-column',
             'data-widget' => 'treeview',
             'role' => 'menu',
             'data-accordion' => 'false'
@@ -837,7 +842,11 @@ class renderadminlte
      */
     public function addCol(string $sContent, int $iCols = 6, string $sFloat = ''): string
     {
-        return $this->addWrapper('div', ['class' => 'col-md-' . $iCols, 'style' => 'float:' . $sFloat], $sContent);
+        $aAttr=['class' => 'col-md-' . $iCols];
+        if($sFloat) {
+            $aAttr['style'] = "float: $sFloat";
+        }
+        return $this->addWrapper('div', $aAttr, $sContent);
     }
 
     // ----------------------------------------------------------------------
@@ -1036,16 +1045,22 @@ class renderadminlte
 
     /**
      * get html code for a badge
+     * Badges can be used as part of links or buttons to provide a counter.
+     * https://getbootstrap.com/docs/5.3/components/badge/
+     * 
+     * INFO: AdminLTE v4: "bgcolor" was removed
+     * 
+     * css classes for rounded or round pill:
+     * - rounded-pill
+     * - rounded-circle
      * 
      * Examples
-     * <span class="badge badge-danger navbar-badge">3</span>
-     * <span title="3 New Messages" class="badge badge-warning">3</span>
-     * <span class="right badge badge-danger">New</span>
-     * <span class="badge badge-danger float-right">$350</span>
+     * <span class="badge text-bg-primary">Primary</span>
+     * <span class="badge text-bg-secondary">Secondary</span>
+     * <span class="badge text-bg-success">Success</span>
      * 
      * @param array $aOptions  hash with keys for all options
-     *                          - bgcolor - background color (without prefix "bg")
-     *                          - class   - css class
+     *                          - class   - css class; eg position-absolute top-0 start-100 translate-middle badge rounded-pill
      *                          - id      - optional: id attribute
      *                          - text    - visible text
      *                          - title   - optional: title attribute
@@ -1058,8 +1073,7 @@ class renderadminlte
         $aElement = [];
         $aElement['class'] = 'badge'
             . $this->_addClassValue($aOptions['class'], '')
-            . $this->_addClassValue($aOptions['type'], 'badge-')
-            . $this->_addClassValue($aOptions['bgcolor'], 'bg-')
+            . $this->_addClassValue($aOptions['type'], 'text-bg-')
         ;
         if ($aOptions['id']) {
             $aElement['id'] = $aOptions['id'];
@@ -1074,9 +1088,12 @@ class renderadminlte
      * Get a button.
      * You can use any other key that are not named here. Those keys will be rendered 
      * as additional html attributes without modification.
-     * https://adminlte.io/themes/v3/pages/UI/buttons.html
+     * https://marlonluan.github.io/adminlte4/dist/pages/UI/general.html
+     * https://getbootstrap.com/docs/5.3/components/buttons/
      * 
-     * <button type="button" class="btn btn-block btn-default">Default</button>
+     * @example
+     * <button type="button" class="btn btn-primary mb-2">Primary</button>
+     * 
      * @param array $aOptions  hash with keys for all options
      *                          - type  - one of [none]|danger|dark|info|primary|secondary|success|warning
      *                          - size  - one of [none]|lg|sm|xs|flat
@@ -1357,6 +1374,7 @@ class renderadminlte
     // ----------------------------------------------------------------------
     // 
     // PUBLIC FUNCTIONS :: CONTENT - FORM
+    // https://getbootstrap.com/docs/5.0/forms/overview/
     // 
     // ----------------------------------------------------------------------
 
@@ -1372,7 +1390,7 @@ class renderadminlte
      */
     public function getHorizontalFormElement(string $sInput, string $sLabel = '', string $sId = '', string $sHint=''): string
     {
-        return '<div class="form-group row">'
+        return '<div class="row mb-3">'
             . '<label for="' . $sId . '" class="col-sm-2 col-form-label">' . $sLabel . '</label>'
             . '<div class="col-sm-10">'
             . ($sHint 
@@ -1457,10 +1475,15 @@ class renderadminlte
                     $this->_tag('input', $aElement, '', false) . $this->_tag('label', ['for' => $sFormid, 'label' => $sLabel], '')
                 );
                 break;
+
             case 'hidden':
                 $aElement['title'] = $aElement['title'] ?? $sHint;
                 return $this->_tag('input', $aElement, '', false);
                 break;
+
+            case 'range':
+                $aElement['class'] = str_replace('form-control ', 'form-range', $aElement['class']);
+                $aElement['title'] = $aElement['title'] ?? $sHint;
             default:
                 return $this->getHorizontalFormElement(
                     $sPrepend . $this->_tag('input', $aElement, '', false) . $sAppend,
