@@ -30,7 +30,6 @@ use Exception, PDO, PDOException;
 // for relation table
 require_once 'pdo-db-attachments.class.php';
 require_once 'pdo-db-relations.class.php';
-require_once 'pdo-db-base.constants.php';
 
 /**
  * class for basic CRUD actions

@@ -18,6 +18,8 @@ namespace axelhahn;
 
 use Exception, PDO, PDOException;
 
+require_once 'pdo-db-base.constants.php';
+
 /**
  * Class for a single PDO connection
  *
@@ -82,14 +84,14 @@ class pdo_db
         ],
         'mysql' => [
             "gettables" => 'SHOW TABLES;',
-            "getcreate" => 'SHOW CREATE TABLE %s"',
+            "getcreate" => "SHOW CREATE TABLE `%s`;",
             'tableexists' => "SHOW TABLES LIKE '%s';",
 
             'specialties' => [
                 // replacements
                 'AUTOINCREMENT' => 'AUTO_INCREMENT',
                 'DATETIME' => 'TIMESTAMP',
-                'INTEGER' => 'INT',
+                'INTEGER' => 'INT(11)',
 
                 'createAppend' => 'CHARACTER SET utf8 COLLATE utf8_general_ci',
 
@@ -201,13 +203,13 @@ class pdo_db
 
         // echo '<pre>'.print_r($aOptions, 1).'</pre>';
         if (!$aOptions || !is_array($aOptions)) {
-            $this->_log('error', '[DB]', __METHOD__, 'To init a database you need an array as parameter.');
+            $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, 'To init a database you need an array as parameter.');
             return false;
         }
 
         $sDsn = '';
         if (!isset($aOptions['dsn'])) {
-            $this->_log('error', '[DB]', __METHOD__, 'No key [dsn] was found in the options.');
+            $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, 'No key [dsn] was found in the options.');
             return false;
         } else {
             $sDsn = $aOptions['dsn'];
@@ -227,7 +229,7 @@ class pdo_db
             }
 
         } catch (PDOException $e) {
-            $this->_log('error', '[DB]', __METHOD__, 'Failed to initialize the database connection. PDO ERROR: ' . $e->getMessage());
+            $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, 'Failed to initialize the database connection. PDO ERROR: ' . $e->getMessage());
             return false;
         }
         return true;
@@ -428,7 +430,7 @@ class pdo_db
             $aLastQuery['time'] = number_format((float) (microtime(true) - $_timestart) / 1000, 3);
         } catch (PDOException $e) {
             $aLastQuery['error'] = 'PDO ERROR: ' . $e->getMessage();
-            $this->_log('error', $_table, __METHOD__, "{'.$_table.'} Query [$sSql] failed: " . $aLastQuery['error'] . ' See $DB->queries().');
+            $this->_log(PB_LOGLEVEL_ERROR, $_table, __METHOD__, "{'.$_table.'} Query [$sSql] failed: " . $aLastQuery['error'] . ' See $DB->queries().');
             $this->_aQueries[] = $aLastQuery;
             $this->_iLastDBError = (count($this->_aQueries) - 1);
 
@@ -460,19 +462,19 @@ class pdo_db
 
         $this->_wd(__METHOD__);
         if (!$this->db) {
-            $this->_log('warning', '[DB]', __METHOD__, 'Cannot dump. Database was not set yet.');
+            $this->_log(PB_LOGLEVEL_WARN, '[DB]', __METHOD__, 'Cannot dump. Database was not set yet.');
             return false;
         }
         $_sDriver = $this->driver();
         if (!isset($this->_aSql[$_sDriver])) {
-            $this->_log('warning', '[DB]', __METHOD__, 'Cannot dump. Unknown database driver "' . $_sDriver . '".');
+            $this->_log(PB_LOGLEVEL_WARN, '[DB]', __METHOD__, 'Cannot dump. Unknown database driver "' . $_sDriver . '".');
             return false;
         }
 
         // ----- get all tables
         $_aTableList = count($aTables) ? $aTables : $this->showTables();
         if (!$_aTableList || !count($_aTableList)) {
-            $this->_log('warning', '[DB]', __METHOD__, 'Cannot dump. No tables were found.');
+            $this->_log(PB_LOGLEVEL_WARN, '[DB]', __METHOD__, 'Cannot dump. No tables were found.');
             return false;
         }
         // ----- read each table
@@ -540,16 +542,16 @@ class pdo_db
     {
         $this->_wd(__METHOD__);
         if (!$this->db) {
-            $this->_log('warning', '[DB]', __METHOD__, 'Cannot import. Database was not set yet.');
+            $this->_log(PB_LOGLEVEL_WARN, '[DB]', __METHOD__, 'Cannot import. Database was not set yet.');
             return false;
         }
         if (!file_exists($sFile)) {
-            $this->_log('error', '[DB]', __METHOD__, 'Cannot import. Given file does nt extist [' . $sFile . '].');
+            $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, 'Cannot import. Given file does not extist [' . $sFile . '].');
             return false;
         }
         $aResult = json_decode(file_get_contents($sFile), true);
         if (!$aResult) {
-            $this->_log('warning', '[DB]', __METHOD__, 'Cannot import. No data in file.');
+            $this->_log(PB_LOGLEVEL_WARN, '[DB]', __METHOD__, 'Cannot import. No data in file.');
             return false;
         }
 
@@ -559,10 +561,13 @@ class pdo_db
 
             // (1) if table exists then skip creation
             if ($this->tableExists($sTablename)) {
-                $this->_log('info', '[DB]', __METHOD__, 'Table [' . $sTablename . '] already exists. Skipping.');
+                $this->_log(PB_LOGLEVEL_INFO, '[DB]', __METHOD__, 'Table [' . $sTablename . '] already exists. Skipping.');
             } else {
                 $sSql = $aTable['create'];
-                $this->makeQuery($sSql);
+                if(!$this->makeQuery($sSql)){
+                    $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, 'Creation of missing able failed.');
+                    return false;
+                }
             }
 
             // (2) insert data item by item
