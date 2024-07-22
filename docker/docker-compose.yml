@@ -18,7 +18,7 @@ services:
     build:
       context: .
       dockerfile: ./containers/web-server/Dockerfile
-    image: "php:8.2-apache"
+    image: "php:8.3-apache"
     container_name: 'addons-server'
     ports:
       - '${APP_PORT}:80'
