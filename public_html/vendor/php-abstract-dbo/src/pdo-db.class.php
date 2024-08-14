@@ -573,8 +573,12 @@ class pdo_db
             // (2) insert data item by item
             foreach ($aTable['data'] as $aRow) {
 
+                $aData=[];
+                foreach($aRow as $k => $v){
+                    $aData[$k] = $v === "" ? null : $v;
+                }
                 $sSql = 'INSERT INTO `' . $sTablename . '` (' . implode(',', array_keys($aRow)) . ') VALUES (:' . implode(', :', array_keys($aRow)) . ');';
-                $this->makeQuery($sSql, $aRow);
+                $this->makeQuery($sSql, $aData);
             }
         }
         return true;

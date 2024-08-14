@@ -382,7 +382,7 @@ class pdo_db_base
             $this->_aItem[$sKey] = $aData['dummyvalue'];
         }
         foreach (array_keys($this->_aProperties) as $sKey) {
-            $this->_aItem[$sKey] = false;
+            $this->_aItem[$sKey] = NULL;
         }
         $this->_aRelations = isset($this->_aRelations) ? [] : NULL;
         return true;
@@ -1572,7 +1572,16 @@ class pdo_db_base
         $bReturn = true;
         foreach (array_keys($aNewValues) as $sKey) {
             if (!isset($this->_aDefaultColumns[$sKey])) {
-                $bReturn = $bReturn && $this->set($sKey, $aNewValues[$sKey]);
+
+                $bDoSet=true;
+                if(!$aNewValues[$sKey]){
+                    if (!preg_match('/(text|char)/i', $this->_aProperties[$sKey]['create'])){
+                        $bDoSet=false;
+                    }
+                }
+                if($bDoSet){
+                    $bReturn = $bReturn && $this->set($sKey, $aNewValues[$sKey]);
+                }
             }
         }
         // return $this->save();
