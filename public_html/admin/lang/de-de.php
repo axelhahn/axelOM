@@ -102,6 +102,7 @@ return [
 
     // ----- page :: tools
     "tools.manage_backups" => "Backups verwalten",
+    "tools.output" => "Ausgabe",
 
     // ----- debug box
     "debug.title" => "Debug-Infos",
@@ -152,6 +153,7 @@ return [
     "more"=>"Mehr",
     "new"=>"Neu",
     "no_items_found"=>"Keine Eintr&auml;ge gefunden.",
+    "optimize"=> "Optimiere Datenbank",
     "properties"=> "Eigenschaften",
     "raw"=> "Raw",
     "relations"=> "Verknüpfungen",

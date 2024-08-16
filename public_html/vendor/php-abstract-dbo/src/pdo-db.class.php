@@ -74,6 +74,13 @@ class pdo_db
             "getcreate" => 'SELECT sql FROM sqlite_master WHERE name = "%s" ',
             'tableexists' => "SELECT name FROM sqlite_schema WHERE type ='table' AND name = '%s';",
 
+            'optimize' => [
+                'db' => [
+                    'VACUUM'
+                ],
+                'table' => [],
+            ],
+
             'specialties' => [
                 'createAppend' => '',
 
@@ -86,6 +93,13 @@ class pdo_db
             "gettables" => 'SHOW TABLES;',
             "getcreate" => "SHOW CREATE TABLE `%s`;",
             'tableexists' => "SHOW TABLES LIKE '%s';",
+
+            'optimize' => [
+                'db' => [],
+                'table' => [
+                    'OPTIMIZE TABLE `%s`',
+                ]
+            ],
 
             'specialties' => [
                 // replacements
@@ -444,6 +458,58 @@ class pdo_db
     }
 
     /**
+     * Optimize database.
+     * The performed actions for it depend on the database type.
+     * @return bool|array
+     */
+    function optimize(): bool|array
+    {
+        $this->_wd(__METHOD__);
+        if (!$this->db) {
+            $this->_log(PB_LOGLEVEL_WARN, '[DB]', __METHOD__, 'Cannot optimize. Database was not set yet.');
+            return false;
+        }
+        $_sDriver = $this->driver();
+        if (!isset($this->_aSql[$_sDriver])) {
+            $this->_log(PB_LOGLEVEL_WARN, '[DB]', __METHOD__, 'Cannot optimize. Unknown database driver "' . $_sDriver . '".');
+            return false;
+        }
+
+        $aResults = [];
+
+        if ($this->_aSql[$_sDriver]['optimize']['db']) {
+            $aResults['db'] = [];
+            foreach ($this->_aSql[$_sDriver]['optimize']['db'] as $sSqlTemplate) {
+                $sSql = $sSqlTemplate;
+                $this->_wd(__METHOD__ . ' Optimizing DB - ' . $sSql);
+                $result = $this->db->query($sSql);
+                $aResults['db'] = [
+                    'sql' => $sSql,
+                    'result' => $result->fetchAll(PDO::FETCH_ASSOC),
+                ];
+            }
+        }
+
+        if ($this->_aSql[$_sDriver]['optimize']['table']) {
+            $_aTableList = $this->showTables();
+            foreach ($_aTableList as $sTablename) {
+                $aResults['table__' . $sTablename] = [];
+                foreach ($this->_aSql[$_sDriver]['optimize']['table'] as $sSqlTemplate) {
+
+                    $sSql = sprintf($sSqlTemplate, $sTablename);
+                    $this->_wd(__METHOD__ . ' Optimizing table ' . $sTablename . ' - ' . $sSql);
+                    $result = $this->db->query($sSql);
+                    $aResults['table__' . $sTablename][] = [
+                        'sql' => $sSql,
+                        'result' => $result->fetchAll(PDO::FETCH_ASSOC),
+                    ];
+                }
+            }
+        }
+        return $aResults;
+    }
+
+    /**
      * Dump a database to an array.
      * Optional it can write a json file to disk
      * 
@@ -564,7 +630,7 @@ class pdo_db
                 $this->_log(PB_LOGLEVEL_INFO, '[DB]', __METHOD__, 'Table [' . $sTablename . '] already exists. Skipping.');
             } else {
                 $sSql = $aTable['create'];
-                if(!$this->makeQuery($sSql)){
+                if (!$this->makeQuery($sSql)) {
                     $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, 'Creation of missing able failed.');
                     return false;
                 }
@@ -573,8 +639,8 @@ class pdo_db
             // (2) insert data item by item
             foreach ($aTable['data'] as $aRow) {
 
-                $aData=[];
-                foreach($aRow as $k => $v){
+                $aData = [];
+                foreach ($aRow as $k => $v) {
                     $aData[$k] = $v === "" ? null : $v;
                 }
                 $sSql = 'INSERT INTO `' . $sTablename . '` (' . implode(',', array_keys($aRow)) . ') VALUES (:' . implode(', :', array_keys($aRow)) . ');';

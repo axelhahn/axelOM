@@ -10,6 +10,7 @@
  * ADMIN USERS :: Overview of all users and their permissions
  * 
  */
+include "inc_functions.php";
 
 if(!$acl->isAdmin()){
     include('error403.php');
@@ -99,7 +100,7 @@ if (!isset($aSettings['acl'])){
 
     $s.=''
 
-        .$renderAdminLTE->getCard(array (
+        .$renderAdminLTE->getCard([
             'type' => '',
             'title' => '',
             'text' => ''
@@ -117,6 +118,7 @@ if (!isset($aSettings['acl'])){
             </tr>
 
             </tbody></table>'
+            . editorInit()
             
             /*
             . '<form id="frmEditObject" class="form-horizontal" action="?" method="POST">'
@@ -126,7 +128,7 @@ if (!isset($aSettings['acl'])){
 
             ,
             // 'variant' => '',
-        ))
+        ])
 
     ;
 

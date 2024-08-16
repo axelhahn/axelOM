@@ -101,7 +101,8 @@ return [
     "search.no_objects_hint" => "This application has no objects yet.<br>There is no data to search in.",
 
     // ----- page :: tools
-    "tools.manage_backups" => "Backups verwalten",
+    "tools.manage_backups" => "Manage backups",
+    "tools.output" => "Output",
 
     // ----- debug box
     "debug.title" => "Debug information",
@@ -152,6 +153,7 @@ return [
     "more"=>"More",
     "new"=>"New",
     "no_items_found"=>"No items found.",
+    "optimize"=> "Optimize database",
     "properties"=> "Properties",
     "raw"=> "Raw",
     "relations"=> "Relations",

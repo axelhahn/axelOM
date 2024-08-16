@@ -24,6 +24,8 @@ $sBackuppath=dirname(dirname(__DIR__)).'/apps/'.$sTabApp.'/data/';
 // $sBaseAppUrl = '?page=tools&app='.$sTabApp;
 // $sBaseUrl    = '?page=tools&app='.$sTabApp;
 
+$TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> :: {{tools}}' ;
+
 if($sTabApp){
 
     if(!$acl->isAppAdmin($sTabApp)){
@@ -47,6 +49,7 @@ if($sTabApp){
 
         switch ($sAction) {
             case 'backup':
+                $TITLE.=' :: {{backup}}';
                 $sBackupfile=$sBackuppath.'/'.$sTabApp.'-'.$oDB->driver().'-'.date('U').'.json';
                 $aDumpdata=$oDB->dump();
                 if(isset($aDumpdata)){
@@ -97,23 +100,41 @@ if($sTabApp){
                 die();
                 */
 
-                $sOutAction.= $renderAdminLTE->getButton([
-                    'type' => 'dark',
-                    'text' => icon::get('back') . '{{back}}',
-                    'onclick' => 'location.reload();',
-                ]).'<br><hr>'
-                    . "<pre>".htmlentities(file_get_contents($sBackupfile))."</pre>";
+                $sOutAction.= htmlentities(file_get_contents($sBackupfile));
+                break;
+            case 'optimize':
+                $TITLE.=' :: {{optimize}}';
+                // $oDB->setDebug(1);                
+                $sOutAction.=print_r($oDB->optimize(), 1);
+                // $oDB->setDebug(0);
                 break;
             default:
                 addMsg('error', '{{msgerr.action_not_implemented}}: ['.$sAction.']');
         }
     }
 
+    if($sOutAction){
+        $BODY=$renderAdminLTE->getCard([
+            'type' => 'info',
+            'variant' => 'outline',
+            // 'tb-remove' => 1,
+            // 'tb-collapse' => 1,
+            'title' => '{{tools.output}}',
+            'tools' => '',
+            'text' => ''
+                .$renderAdminLTE->getButton([
+                    'type' => 'dark',
+                    'text' => icon::get('back') . '{{back}}',
+                    'onclick' => 'location.reload();',
+                ]).'<br><hr>'                
+                ."<pre>$sOutAction</pre>"
+        ]);
+        return true;
+    }
+
     // ----------------------------------------------------------------------
     // APP HOME :: Show backups of an app
     // ----------------------------------------------------------------------
-
-    $TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> :: {{tools}}' ;
     
     $s=''
         // 
@@ -170,8 +191,29 @@ if($sTabApp){
         : '';
 
     $s .= ''
-        . ( $sOutAction ? '<pre>'.$sOutAction.'</pre>' : '')
-        .''
+        .$renderAdminLTE->getCard([
+            'type' => '',
+            'variant' => 'outline',
+            // 'tb-remove' => 1,
+            // 'tb-collapse' => 1,
+            // 'title' => '{{tools.manage_backups}}',
+            'tools' => '',
+            'text' => ''
+                // backup button:
+                . $renderAdminLTE->getButton([
+                    'text' => icon::get('backup').'<br>{{backup}}',
+                    'onclick' => 'httprequest(\'POST\', location.href , {\'action\': \'backup\'})',
+                ])
+                . ' '
+                . $renderAdminLTE->getButton([
+                    'text' => icon::get('optimize').'<br>{{optimize}}',
+                    'onclick' => 'httprequest(\'POST\', location.href , {\'action\': \'optimize\'})',
+                ])                    
+                . ' '
+                . '<br>'
+                    
+            // 'footer' => '&copy; Axel',
+        ])
         .$renderAdminLTE->getCard([
         'type' => 'info',
         'variant' => 'outline',
@@ -181,29 +223,31 @@ if($sTabApp){
         'tools' => '',
         'text' => ''
             // backup button:
+            /*
             . $renderAdminLTE->getButton([
                     'type' => 'success',
                     'text' => icon::get('backup').'{{backup}}',
                     'onclick' => 'httprequest(\'POST\', location.href , {\'action\': \'backup\'})',
                 ]) . '<br><br>'
-                
+            */  
             . $sTable
         // 'footer' => '&copy; Axel',
     ]);
 
 
+    $sContextbar = '';
+    /*
     $sContextbar = $renderAdminLTE->getCallout([
         'type' => '',
         'title' => icon::get('more').'{{more}}',
-        'text' => '<h3>TODO</h3>'
+        'text' => ''
             . $renderAdminLTE->getButton([
-                'class' => 'btn-outline-success',
+                'class' => 'btn',
                 'text' => icon::get('optimize').'{{optimize}}',
                 'onclick' => 'httprequest(\'POST\', location.href , {\'action\': \'optimize\'})',
             ]) . '<br><br>'
-
-
     ]);
+    */
 }
 
 

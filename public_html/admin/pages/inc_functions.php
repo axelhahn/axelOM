@@ -134,3 +134,47 @@ function initClass($oDB, $sObject){
     }
     return $o;
 }
+
+function editorInit(string $sFile=''){
+    $sRelPath='../vendor/textarea-code-editor';
+    static $iIdCounter;
+    if(!isset($iIdCounter)){
+        $iIdCounter=0;
+    }
+
+    $iIdCounter++;
+    $sIdBase="editor-$iIdCounter";
+
+
+    $sReturn="
+        <div class=\"editor-holder\">
+		<textarea id=\"$sIdBase\" rows=\"1\" spellcheck=\"false\" class=\"editor allow-tabs\"><?php
+echo \"hello\";</textarea>
+		<pre><code id=\"$sIdBase-out\" class=\"syntax-highight html\"></code></pre>
+        </div>
+    ";
+
+    if($iIdCounter==1){
+        $sReturn="
+            <!-- Demo CSS (No need to include it into your project) -->
+            <link rel=\"stylesheet\" href=\"$sRelPath/css/style_ah.css\">
+            <!--
+            <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/foundation/6.8.1/css/foundation.min.css\" integrity=\"sha512-QuI0HElOtzmj6o/bXQ52phfzjVFRAhtxy2jTqsp85mdl1yvbSQW0Hf7TVCfvzFjDgTrZostqgM5+Wmb/NmqOLQ==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\" />
+            -->
+
+            $sReturn
+
+            <!--
+            <script src=\"https://raw.githubusercontent.com/emmetio/textarea/master/emmet.min.js\"></script>
+            <script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js\" integrity=\"sha512-6yoqbrcLAHDWAdQmiRlHG4+m0g/CT/V9AGyxabG8j7Jk8j3r3K6due7oqpiRMZqcYe9WM2gPcaNNxnl2ux+3tA==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\"></script>
+            -->
+            <script src=\"//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/highlight.min.js\"></script>
+            <!-- Script JS -->
+            <script src=\"$sRelPath/js/script_ah.js\"></script>
+
+        ";
+    }
+
+    return $sReturn;
+
+}

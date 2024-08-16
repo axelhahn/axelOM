@@ -98,7 +98,19 @@ foreach($appmeta->getObjects() as $sObj=>$aObjData){
 }
 $s.=$renderAdminLTE->addRow($sBoxes);
 
-$sContextbar = $renderAdminLTE->getCallout([
+$sContextbar = ''
+    .$renderAdminLTE->getCallout([
+        'type' => '',
+        'title' => icon::get('objects').' {{home.objecttypes}}',
+        'text' => '<h3>' . (count($appmeta->getObjects()) ?? 0) . '</h3>'
+            . icon::get('database').' <strong>'.preg_replace('/:.*/', '', $appmeta->getDbsettings()['dsn'] ?? '').'</strong><br>'
+            . ($acl->isAppAdmin($sTabApp) 
+                ? str_replace(';', '<br>', preg_replace('/^.*:/', '', $appmeta->getDbsettings()['dsn'] ?? ''))
+                : ''
+            )
+        ,
+    ])
+    .$renderAdminLTE->getCallout([
     'type' => '',
     'title' => icon::get('more').'{{more}}',
     'text' => ''

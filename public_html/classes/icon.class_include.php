@@ -12,12 +12,13 @@ return [
 
     // form buttons
 
-    'new' => 'fa-solid fa-wand-magic-sparkles',
+    'abort' => 'fa-solid fa-angles-left',
     'back' => 'fa-solid fa-angles-left',
     'backup'=> 'fa-solid fa-floppy-disk',
-    'edit' => 'fa-solid fa-pen',
     'delete' => 'fa-solid fa-trash-can',
-    'abort' => 'fa-solid fa-angles-left',
+    'edit' => 'fa-solid fa-pen',
+    'new' => 'fa-solid fa-wand-magic-sparkles',
+    'optimize' => 'fa-solid fa-bolt-lightning',
     'restore' => 'fa-solid fa-file-import',
     'save' => 'fa-solid fa-paper-plane',
 
