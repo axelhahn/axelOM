@@ -15,7 +15,7 @@ header("Pragma: no-cache");
 
 $iTimerStart=microtime(true);
 define("APP_NAME", 'axel :: OM');
-define("APP_VERSION", '0.0.13');
+define("APP_VERSION", '0.0.14');
 
 require_once('../classes/render-adminlte4.class.php');
 require_once('classes/adminmeta.class.php');
@@ -85,7 +85,9 @@ foreach(array_keys($adminmetainfos->getApps()) as $sApp){
             }
             if ($acl->isAppAdmin($sApp) ){
                 $aSidebarNav[]=['href'=>'#', 'label'=>'-'];
-                $aSidebarNav[]=['href'=>'?app='.$sTabApp.'&page=tools', 'label'=>'{{tools}}', 'icon'=>icon::getclass('tools')];
+                $aSidebarNav[]=['href'=>'?app='.$sTabApp.'&page=tools',  'label'=>'{{tools}}',      'icon'=>icon::getclass('tools')];
+                $aSidebarNav[]=['href'=>'?app='.$sTabApp.'&page=config', 'label'=>'{{nav.config}}', 'icon'=> icon::getclass('config')];
+        
             }
 
             $aTopnav[]=['href'=>'?app='.$sApp.'&page=home', 'label'=>$appmeta->getAppname(), 'icon'=>$appmeta->getAppicon() ?? icon::getclass('app'), 'class'=>'active' ];
@@ -103,6 +105,12 @@ if(!count($aSidebarNav)){
             'href'=>'?page=adminusers', 
             'label'=>'{{nav.users}}', 
             'icon'=> icon::getclass('users'),
+            'title'=> '',
+        ];
+        $aSidebarNav[]=[
+            'href'=>'?page=adminconfig', 
+            'label'=>'{{nav.config}}', 
+            'icon'=> icon::getclass('config'),
             'title'=> '',
         ];
         /*

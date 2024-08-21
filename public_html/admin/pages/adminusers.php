@@ -118,7 +118,6 @@ if (!isset($aSettings['acl'])){
             </tr>
 
             </tbody></table>'
-            . editorInit()
             
             /*
             . '<form id="frmEditObject" class="form-horizontal" action="?" method="POST">'

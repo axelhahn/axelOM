@@ -135,46 +135,77 @@ function initClass($oDB, $sObject){
     return $o;
 }
 
-function editorInit(string $sFile=''){
-    $sRelPath='../vendor/textarea-code-editor';
+/**
+ * Create a CodeMirror editor with php syntax highlighting.
+ * This function is idempotent. It will only include the necessary
+ * CSS and JS files once, no matter how often it is called.
+ * The editor ID is automatically generated and will be unique
+ * for each call to this function.
+ * 
+ * @param array $aOptions array with options. Keys are:
+ *                        - content {string} The initial content of the editor.
+ *                        - file    {string} The initial content of the editor loaded from given file
+ *                        - mime    {string} mode for syntax highlighting; default: "text/x-php"
+ *                        - theme   {string} Theme to use. See public_html/vendor/codemirror/6.65.7/theme/
+ * @return string The HTML code for the editor.
+ */
+function editorInit(array $aOptions = []): string
+{
     static $iIdCounter;
     if(!isset($iIdCounter)){
         $iIdCounter=0;
     }
+    $sCmBase="../vendor/codemirror/6.65.7";
 
     $iIdCounter++;
     $sIdBase="editor-$iIdCounter";
 
+    // ========== handle options
+    //
+    // --- theme: 
+    // $sTheme="material-palenight";
+    // $sTheme="nord";
+    $sTheme=$aOptions['theme'] ?? "neo";
 
-    $sReturn="
-        <div class=\"editor-holder\">
-		<textarea id=\"$sIdBase\" rows=\"1\" spellcheck=\"false\" class=\"editor allow-tabs\"><?php
-echo \"hello\";</textarea>
-		<pre><code id=\"$sIdBase-out\" class=\"syntax-highight html\"></code></pre>
-        </div>
-    ";
+    $sMode=$aOptions['mode'] ?? "php";
+    $sMime=$aOptions['mime'] ?? "text/x-php";
 
-    if($iIdCounter==1){
-        $sReturn="
-            <!-- Demo CSS (No need to include it into your project) -->
-            <link rel=\"stylesheet\" href=\"$sRelPath/css/style_ah.css\">
-            <!--
-            <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/foundation/6.8.1/css/foundation.min.css\" integrity=\"sha512-QuI0HElOtzmj6o/bXQ52phfzjVFRAhtxy2jTqsp85mdl1yvbSQW0Hf7TVCfvzFjDgTrZostqgM5+Wmb/NmqOLQ==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\" />
-            -->
-
-            $sReturn
-
-            <!--
-            <script src=\"https://raw.githubusercontent.com/emmetio/textarea/master/emmet.min.js\"></script>
-            <script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js\" integrity=\"sha512-6yoqbrcLAHDWAdQmiRlHG4+m0g/CT/V9AGyxabG8j7Jk8j3r3K6due7oqpiRMZqcYe9WM2gPcaNNxnl2ux+3tA==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\"></script>
-            -->
-            <script src=\"//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/highlight.min.js\"></script>
-            <!-- Script JS -->
-            <script src=\"$sRelPath/js/script_ah.js\"></script>
-
-        ";
+    $sContent=$aOptions['content'] ?? '';
+    if(isset($aOptions['file'])){
+        if (! $sContent=file_get_contents($aOptions['file'])){
+            $sContent='ERROR: '.$aOptions['file'].' not loaded/ not found.';
+        }
     }
 
+    $sReturn="";
+
+    if($iIdCounter==1){
+        $sReturn.='
+        <link rel="stylesheet" href="'.$sCmBase.'/codemirror.css">
+        <link rel="stylesheet" href="'.$sCmBase.'/theme/'.$sTheme.'.min.css">
+
+        <script src="'.$sCmBase.'/codemirror.js"></script>
+
+        <script src="'.$sCmBase.'/mode/clike/clike.min.js"></script>
+        ';
+    }
+
+    $sReturn.='
+    <script src="'.$sCmBase.'/mode/'.$sMode.'/'.$sMode.'.min.js"></script>
+    <textarea id="'.$sIdBase.'">'.$sContent.'</textarea>
+
+    <script>
+      window.onload = function() {
+        var myTextarea = document.getElementById("'.$sIdBase.'");
+        editor = CodeMirror.fromTextArea(myTextarea, {
+          theme: "'.$sTheme.'",
+          lineNumbers: true,
+          matchBrackets: true,
+          mode: "'.$sMime.'"
+        });
+      };
+    </script>
+    ';
     return $sReturn;
 
 }

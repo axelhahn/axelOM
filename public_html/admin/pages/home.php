@@ -19,5 +19,5 @@ if(!$sTabApp){
 
 } else {
 
-    include('home__apps.php');
+    include('home__app.php');
 }

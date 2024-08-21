@@ -128,6 +128,11 @@ $sContextbar = ''
                 'text' => icon::get('tools').'{{tools}}',
                 'onclick' => 'location.href=\'?app='.$appmeta->getId().'&page=tools\';',
             ]).'<br>'
+            .$renderAdminLTE->getButton([
+                'type' => '',
+                'text' => icon::get('config').'{{config}}',
+                'onclick' => 'location.href=\'?app='.$appmeta->getId().'&page=config\';',
+            ]).'<br>'
             : ''
         )
         ,

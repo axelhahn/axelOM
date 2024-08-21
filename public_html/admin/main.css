@@ -144,3 +144,6 @@ datalist {
 }
 
 #msgOtherChanges{display: none;}
+
+/** Codemirror **/
+div.CodeMirror {font-family: 'Courier New', Courier, monospace};
