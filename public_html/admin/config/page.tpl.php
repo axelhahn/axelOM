@@ -82,6 +82,7 @@
                             </ol>
                         </div>
                     </div>
+                    <div class="page-hint">{{PAGE_BANNER}}</div>
                 </div>
             </div>
 

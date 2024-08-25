@@ -192,7 +192,8 @@ function editorInit(array $aOptions = []): string
 
     $sReturn.='
     <script src="'.$sCmBase.'/mode/'.$sMode.'/'.$sMode.'.min.js"></script>
-    <textarea id="'.$sIdBase.'">'.$sContent.'</textarea>
+
+    <textarea id="'.$sIdBase.'" name="content">'.$sContent.'</textarea>
 
     <script>
       window.onload = function() {
@@ -207,5 +208,79 @@ function editorInit(array $aOptions = []): string
     </script>
     ';
     return $sReturn;
+
+}
+
+/**
+ * Create a AdminLTE Card with CodeMirror editor with php syntax highlighting.
+ * @param array $aOptions array with options. Keys are:
+ *                        - content {string} The initial content of the editor.
+ *                        - file    {string} The initial content of the editor loaded from given file
+ *                        - mime    {string} mode for syntax highlighting; default: "text/x-php"
+ *                        - theme   {string} Theme to use. See public_html/vendor/codemirror/6.65.7/theme/
+ *                        - url     {string} POST url of the form
+ * @return string The HTML code for the card with editor
+ */
+function editorInCard(array $aOptions = []): string
+{
+    $renderAdminLTE=new renderadminlte();
+    return $renderAdminLTE->getCard([
+        'type' => '',
+        'title' => $aOptions['title']??'',
+        'text' => ''
+        
+        // init form
+        .'
+        <form id="frmEditFile" action="'.$aOptions['url'].'" method="POST">
+
+        <input type="hidden" name="action" value="save">    
+        <input type="hidden" name="file" value="' . $aOptions['file'] . '">
+
+        '
+        . editorInit($aOptions)
+
+        // end form
+        
+        ,
+        'footer' => $renderAdminLTE->getButton([
+                'type' => 'primary',
+                'text' => icon::get('save') . '{{save}}',
+            ])
+            .'</form>',
+        // 'variant' => '',
+        ]);
+}
+
+function saveFile($sFile, $sContent){
+    $renderAdminLTE=new renderadminlte();
+    $sBackBtn='<hr>'.$renderAdminLTE->getButton([
+        'type' => 'secondary',
+        'text' => icon::get('back') . '{{back}}',
+        'onclick' => 'history.back();',
+    ]);
+
+    $sCurrent=file_get_contents($sFile);
+    
+    if($sCurrent==$sContent){
+        addMsg('info', '{{msginfo.filecontent_is_the_same}}');
+    } else {
+
+        file_put_contents("{$sFile}_new.php", $sContent);
+        exec("php -l '{$sFile}_new.php' ", $aOut, $rc);
+        unlink("{$sFile}_new.php");
+        if ($rc==0){
+            if (file_put_contents("$sFile", $sContent)){
+                addMsg('ok', '{{msgok.file_was_saved}}');
+            } else {
+                addMsg('error', '{{msgerr.file_was_not_saved}}'.$sBackBtn);
+            }    
+        } else {
+            addMsg('error', 
+                '{{msgerr.syntax_error}}<br>'
+                .'<pre>'.implode("\n",$aOut).'</pre>'
+                .$sBackBtn
+            );
+        }
+    }
 
 }

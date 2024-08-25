@@ -29,6 +29,8 @@ $sObjLabel= ''
 $TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> :: ' 
     . ''.($sObjLabel ? '  ' . $sObjLabel : '') .'';
 
+$BANNER=$appmeta->getApphint() . ' -> <strong>' . $appmeta->getObjectHint($sObject).'</strong>';
+
 // addMsg('ok', 'OK: I am a test');
 
 /**
@@ -73,13 +75,7 @@ if(is_string($o)) {
 
 $aAttributes = $o->getAttributes(true);
 
-$sMainContent = ''
-. ($appmeta->getApphint() && $appmeta->getApphint() 
-    ? $renderAdminLTE->getCallout(array (
-        'type' => 'gray',
-        'text' => $appmeta->getApphint() . ' -> <strong>' . $appmeta->getObjectHint($sObject).'</strong>',
-    )).'<br>'
-    : '');
+$sMainContent = '';
 
 // $sMainContent.='<pre>_POST = '.print_r($_POST, 1).'</pre>';
 

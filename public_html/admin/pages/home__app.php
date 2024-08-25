@@ -19,15 +19,10 @@ if(!$acl->canView($sTabApp)){
 
 $sContextbar='';
 
-$TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> :: {{home.backend}}' ;
+$TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> :: {{apphome.title}}' ;
+$BANNER=$appmeta->getApphint();
 
 $s=''
-    . ($appmeta->getApphint() && $appmeta->getApphint() 
-        ? $renderAdminLTE->getCallout(array (
-            'type' => '',
-            'text' => $appmeta->getApphint(),
-            )).'<br><br>'
-        : '')
     . $renderAdminLTE->addRow(
         $renderAdminLTE->addCol(
             $renderAdminLTE->getInfobox(array (

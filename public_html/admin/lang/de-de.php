@@ -30,6 +30,17 @@ return [
     "home.objecttypes"=> "Anzahl Objekte",
     "home.items"=> "Eintr&auml;ge",
 
+    // ----- page :: app home
+    "apphome.title" => "Backend",
+
+    // ----- page :: configuration
+    "globalconfig.title" => "Globale Konfiguration",
+    "globalconfig.banner" => "Bearbeite die globale Konfiguration dieses Backends: Sprache, User mit Rollen und mehr",
+
+    // ----- page :: app config
+    "config.title" => "Applikations-Konfiguration",
+    "config.banner" => "Bearbeiten der Konfiguration der Applikation: Metadaten, Datenbank-Verbuindung, Objekte.",
+
     // ----- page :: about
     "about.title" => "&Uuml;ber dieses Backend",
     "about.text" => '
@@ -66,7 +77,7 @@ return [
 
     // ----- page :: users list
     "users.title" => "Benutzer",
-    "users.subtitle" => "Liste der Benutzer und Berechtigungen",
+    "users.banner" => "Liste der Benutzer und Berechtigungen",
     "users.info" => "Die Berechtigungen sind in der config/settings.php gespeichert.",
     "users.noacl" => "Es ist keine ACL konfiguriert. Es gibt daher keine Berechtigungen.<br>Das Backend ist offen mit vollen Admin-Berechtigungen.",
     "users.global_admins" => "Globale Administratoren",
@@ -219,4 +230,12 @@ return [
     "msgok.tools_backup_created" => "OK: Backup wurde angelegt",
     "msgok.tools_backup_restored" => "OK: Backup wurde wiederhergestellt.",
     "msgok.tools_file_deleted" => "OK: Datei wurde gel&ouml;scht.",
+
+    // ----- messages save a config file
+    "msgerr.file_was_not_saved" => "FEHLER: Die Datei konnte nicht gespeichert werden.",
+    "msgerr.missing_filename" => "FEHLER: Der Dateiname fehlt. Daten k&ouml;nnen nicht gespeichert werden.",
+    "msginfo.filecontent_is_the_same" => "SKIP: Der Inhalt ist unver&auml;ndert. Die wird nicht gespeichert.",
+    "msgok.file_was_saved" => "OK: Die Datei wurde gespeichert.",
+
+    "msgerr.syntax_error" => "SYNTAX-FEHLER gefunden. Die Datei wurde daher noch nicht gespeichert. Gehe zur&uuml;ck, um den Fehler zu korrigieren.<br>Details:",
 ];

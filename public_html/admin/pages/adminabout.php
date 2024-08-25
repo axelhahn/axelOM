@@ -14,17 +14,10 @@
 
 $sContextbar='';
 $TITLE=icon::get('about') . '{{about.title}}';
+$BANNER='{{home.banner}}';
 
 $sPerms='';
 $s='';
-
-
-$s.=''
-. $renderAdminLTE->getCallout([
-    'type' => 'gray',
-    'text' => '{{home.banner}}',
-    ]).'<br><br>'
-    ;
 
 
 $s.=$renderAdminLTE->getCard(array (

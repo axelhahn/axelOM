@@ -19,6 +19,7 @@ if(!$acl->isAdmin()){
 
 $sContextbar='';
 $TITLE=icon::get('users') . '{{users.title}}';
+$BANNER='{{users.banner}}';
 
 $sPerms='';
 $s='';
@@ -30,12 +31,6 @@ function yesno($bValue){
         ;
 }
 
-$s.=''
-. $renderAdminLTE->getCallout([
-    'type' => 'gray',
-    'text' => '{{users.subtitle}}',
-    ]).'<br><br>'
-    ;
 
 if (!isset($aSettings['acl'])){
     $s.=$renderAdminLTE->getCard(array (

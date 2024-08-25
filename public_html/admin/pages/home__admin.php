@@ -14,12 +14,9 @@
 
 $sContextbar='';
 $TITLE='{{home.welcome}}';
+$BANNER='{{home.banner}}';
 
 $s=''
-    . $renderAdminLTE->getCallout([
-        'type' => '',
-        'text' => '{{home.banner}}',
-        ]).'<br><br>'
     . $renderAdminLTE->addRow(
         $renderAdminLTE->addCol(
             $renderAdminLTE->getInfobox(array (

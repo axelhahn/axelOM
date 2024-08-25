@@ -16,6 +16,8 @@ global $aTopMsg; $aTopMsg=[];
 
 /**
  * add a message to the top of the page
+ * @see renderMsg()
+ * 
  * @param string $sType the type of message
  * @param string $sMsg the message
  * @return void
@@ -27,6 +29,8 @@ function addMsg($sType, $sMsg){
 
 /**
  * render the messages to the top of the page
+ * @see addMsg()
+ * 
  * @return string
  */
 function renderMsg(){

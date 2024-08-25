@@ -15,7 +15,7 @@ header("Pragma: no-cache");
 
 $iTimerStart=microtime(true);
 define("APP_NAME", 'axel :: OM');
-define("APP_VERSION", '0.0.14');
+define("APP_VERSION", '0.0.15');
 
 require_once('../classes/render-adminlte4.class.php');
 require_once('classes/adminmeta.class.php');
@@ -171,6 +171,7 @@ if(!file_exists($sIncfile)){
 }
 $BODY="WARNING: $sIncfile did not set \$BODY";
 $TITLE="WARNING: $sIncfile did not set \$TITLE";
+$BANNER="WARNING: $sIncfile did not set \$BANNER";
 $JS_BODYEND="";
 
 include($sIncfile);
@@ -288,9 +289,10 @@ $sBreadcrumb='<a href="?page=home">{{nav.home}}</a>'.$sBcSpacer
 
 
 $aReplace['{{PAGE_BODY}}']=$BODY;
-$aReplace['{{PAGE_HEADER_LEFT}}']='<h2 class="text-gray">'.$TITLE.'</h2>';
+$aReplace['{{PAGE_HEADER_LEFT}}']='<h2 class="page-title">'.$TITLE.'</h2>';
 $aReplace['{{PAGE_HEADER_RIGHT}}']=$sBreadcrumb;
-$aReplace['{{JS_BODY_END}}']=$JS_BODYEND ? $JS_BODYEND : '';
+$aReplace['{{PAGE_BANNER}}']=$BANNER;
+$aReplace['{{JS_BODY_END}}']=$JS_BODYEND ?: '';
 
 // simple translate
 foreach([

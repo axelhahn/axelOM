@@ -13,6 +13,7 @@
 
 $sContextbar='';
 $TITLE=icon::get('user') . $acl->getUserDisplayname();
+$BANNER='{{userprofile.banner}}';
 
 $sPerms='';
 
@@ -45,12 +46,7 @@ $sPerms=$sPerms
     ;
 
 $s=''
-    . $renderAdminLTE->getCallout([
-        'type' => 'gray',
-        'text' => icon::get('user') . '{{userprofile.banner}}',
-        ]).'<br><br>'
-
-    .$renderAdminLTE->getCard(array (
+    .$renderAdminLTE->getCard([
         'type' => '',
         'title' => '',
         'text' => ''
@@ -83,7 +79,7 @@ $s=''
             ])
         ,
         // 'variant' => '',
-    ))
+    ])
 
 ;
 

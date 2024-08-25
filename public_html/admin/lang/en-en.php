@@ -30,6 +30,17 @@ return [
     "home.objecttypes"=> "Object types",
     "home.items"=> "Items",
 
+    // ----- page :: app home
+    "apphome.title" => "Backend",
+
+    // ----- page :: configuration
+    "globalconfig.title" => "Global Configuration",
+    "globalconfig.banner" => "Edit global configuration of this backend: language, users with its roles and more",
+
+    // ----- page :: app config
+    "config.title" => "Application configuration",
+    "config.banner" => "Edit configuration of this application: meta data, database connnection, objects.",
+
     // ----- page :: about
     "about.title" => "About this backend",
     "about.text" => '
@@ -66,7 +77,7 @@ return [
 
     // ----- page :: users list
     "users.title" => "Users",
-    "users.subtitle" => "List of users and their permissions",
+    "users.banner" => "List of users and their permissions",
     "users.info" => "The permissions are stored in config/settings.php.",
     "users.noacl" => "No ACL is configured yet. The backend is open with full admin access.",
     "users.global_admins" => "Global administrators",
@@ -220,5 +231,12 @@ return [
     "msgok.tools_backup_created" => "OK: Backupwas created.",
     "msgok.tools_backup_restored" => "OK: Backup was restored.",
     "msgok.tools_file_deleted" => "OK: File was deleted.",
+
+    // ----- messages save a config file
+    "msgerr.file_was_not_saved" => "ERROR: File was not saved.",
+    "msgerr.missing_filename" => "ERROR: Missing filename.",
+    "msginfo.filecontent_is_the_same" => "SKIP: File content is unchanged. The file was not saved again.",
+    "msgok.file_was_saved" => "OK: File was saved.",
+    "msgerr.syntax_error" => "SYNTAX-ERROR was found. The file was not saved yet. Go back to fix the syntax.<br>Details:",
 
 ];

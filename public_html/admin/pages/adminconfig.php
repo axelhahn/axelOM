@@ -12,45 +12,53 @@
  */
 include "inc_functions.php";
 
-if(!$acl->isAdmin()){
+if (!$acl->isAdmin()) {
     include('error403.php');
     return false;
 }
 
-$sContextbar='';
-$TITLE=icon::get('Config') . '{{globalconfig.title}}';
+$sContextbar = '';
+$TITLE = icon::get('config') . '{{globalconfig.title}}';
+$BANNER='{{globalconfig.banner}}';
 
-$sFile=__DIR__.'/../config/settings.php';
+$sFile = __DIR__ . '/../config/settings.php';
 
-$s=''. $renderAdminLTE->getCallout([
-    'type' => 'gray',
-    'text' => '{{globalconfig.subtitle}}',
-    ]).'<br><br>'
+// ---------- handle POST
 
-    .$renderAdminLTE->getCard([
-        'type' => '',
-        'title' => "EDIT $sFile",
-        'text' => ''
-        
-        // init form
-        . editorInit(['file'=>$sFile])
+if (isset($_POST['action'])) {
 
-        .'<hr>'
-        // end form
-        
-        ,
-        'footer' => 'TODO: <button class="btn btn-primary">Save</button>',
-        // 'variant' => '',
+    switch ($_POST['action']) {
+        case 'save':
+            $sFile = $_POST['file'];
+            $sContent = $_POST['content'];
+            if ($sFile) {
+                saveFile($sFile, $sContent);
+            } else {
+                addMsg('error', '{{msgerr.missing_filename}}');
+            }
+            break;;
+
+        default:
+            header('http/1.0 400 Bad Request');
+            addMsg('error', 'OOPS: POST action [' . htmlentities($_POST['action']) . '] is not handled (yet). :-/');
+    }
+}
+
+// ---------- MAIN
+
+$s = ''
+    . editorInCard([
+        'url' => '?page=adminconfig',
+        'title' => icon::get('config') . "./config/settings.php",
+        'file' => $sFile
     ])
-
 ;
 
+// ---------- output
 
-
-
-$BODY=$renderAdminLTE->addRow(
+$BODY = $renderAdminLTE->addRow(
     $renderAdminLTE->addCol(
-        $s, 
+        renderMsg() . $s,
         12
-        )
+    )
 );

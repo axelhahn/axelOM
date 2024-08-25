@@ -24,7 +24,8 @@ $sBackuppath=dirname(dirname(__DIR__)).'/apps/'.$sTabApp.'/data/';
 // $sBaseAppUrl = '?page=tools&app='.$sTabApp;
 // $sBaseUrl    = '?page=tools&app='.$sTabApp;
 
-$TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> :: {{tools}}' ;
+$TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> :: '. icon::get('tools').'{{tools}}' ;
+$BANNER=$appmeta->getApphint().' -> <strong>{{tools}}</strong>';
 
 if($sTabApp){
 
@@ -136,16 +137,7 @@ if($sTabApp){
     // APP HOME :: Show backups of an app
     // ----------------------------------------------------------------------
     
-    $s=''
-        // 
-        . ($appmeta->getApphint() && $appmeta->getApphint() 
-            ? $renderAdminLTE->getCallout(array (
-                'type' => 'gray',
-                'text' => $appmeta->getApphint().' -> <strong>{{tools}}</strong>',
-              )).'<br>'
-            : '')
-
-    ;
+    $s='';
 
     $sTable = '';
     foreach (glob($sBackuppath."/*json") as $file) {

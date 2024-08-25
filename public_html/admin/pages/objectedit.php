@@ -30,6 +30,8 @@ $sObjLabel= ''
 
 $TITLE=''.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().' ' 
     . '<strong>'.($sObjLabel ? '  ' . $sObjLabel : '') .'</strong> ';
+$BANNER='{{home.banner}}';
+
 
 // addMsg('ok', 'OK: I am a test');
 

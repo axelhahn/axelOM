@@ -18,15 +18,42 @@ if(!$acl->isAppAdmin()){
 }
 
 $sContextbar='';
-$TITLE=icon::get('Config') . '{{config.title}}';
+$TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> :: ' 
+    . icon::get('config') . '{{config.title}}';
+$BANNER='{{config.banner}}';
 
 $sFile=__DIR__.'/../../apps/'.$sTabApp.'/config/objects.php';
 
-$s=''. $renderAdminLTE->getCallout([
-    'type' => 'gray',
-    'text' => '{{config.subtitle}}',
-    ]).'<br><br>'
+// ---------- handle POST
 
+if (isset($_POST['action'])) {
+
+    switch ($_POST['action']) {
+        case 'save':
+            $sFile = $_POST['file'];
+            $sContent = $_POST['content'];
+            if ($sFile) {
+                saveFile($sFile, $sContent);
+            } else {
+                addMsg('error', '{{msgerr.missing_filename}}');
+            }
+            break;;
+
+        default:
+            header('http/1.0 400 Bad Request');
+            addMsg('error', 'OOPS: POST action [' . htmlentities($_POST['action']) . '] is not handled (yet). :-/');
+    }
+}
+
+
+$s=''
+    . editorInCard([
+        'url' => "?app=$sTabApp&page=config",
+        'title' => icon::get('config') . "./apps/$sTabApp/config/objects.php",
+        'file' => $sFile
+    ])
+
+    /*
     .$renderAdminLTE->getCard([
         'type' => '',
         'title' => "EDIT $sFile",
@@ -42,7 +69,7 @@ $s=''. $renderAdminLTE->getCallout([
         'footer' => 'TODO <button class="btn btn-primary">Save</button>',
         // 'variant' => '',
     ])
-
+    */
 ;
 
 
@@ -50,7 +77,7 @@ $s=''. $renderAdminLTE->getCallout([
 
 $BODY=$renderAdminLTE->addRow(
     $renderAdminLTE->addCol(
-        $s, 
+        renderMsg() . $s, 
         12
         )
 );
