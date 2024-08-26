@@ -77,16 +77,9 @@ li.nav-item .active i {color:var(--iconcolor);}
 .bg-navy {background-color: #001f3f !important;}.bg-navy, .bg-navy > a {color: #fff !important;}
 .page-title {color: #904070;}
 .page-hint {
-	background: linear-gradient(rgba(255,255,255,0), #fff); 
 	color: #d72; 
 	font-size: 120%; 
-	border-bottom: #def 2px solid; 
-	border-radius: 0.5em;
-	margin-bottom: 1em;
-	padding: 0 0.2em 0;
 }
-
-
 
 
 a .fix-nolabel{margin-top: -0.5em;}

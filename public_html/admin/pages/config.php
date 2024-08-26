@@ -50,7 +50,8 @@ $s=''
     . editorInCard([
         'url' => "?app=$sTabApp&page=config",
         'title' => icon::get('config') . "./apps/$sTabApp/config/objects.php",
-        'file' => $sFile
+        'file' => $sFile,
+        'readonly' => $aSettings['editor']['readonly']['appsettings'] ?? false
     ])
 
     /*

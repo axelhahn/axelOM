@@ -20,7 +20,15 @@ return [
     // language of backnd ui
     'lang' => 'en-en',
     // 'lang' => 'de-de',
-    
+
+    // do not edit configurations in web ui    
+    'editor' => [
+        'readonly'=>[
+            'globalsettings' => true,
+            'appsettings' => true,
+        ],
+    ],
+
     // if "acl" is missing or empty --> sets admin user for everything
     /*
     'acl'=>[

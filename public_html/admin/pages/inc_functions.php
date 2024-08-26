@@ -170,6 +170,8 @@ function editorInit(array $aOptions = []): string
     $sMode=$aOptions['mode'] ?? "php";
     $sMime=$aOptions['mime'] ?? "text/x-php";
 
+    $bReadonly=$aOptions['readonly'] ?? false;
+
     $sContent=$aOptions['content'] ?? '';
     if(isset($aOptions['file'])){
         if (! $sContent=file_get_contents($aOptions['file'])){
@@ -202,6 +204,7 @@ function editorInit(array $aOptions = []): string
           theme: "'.$sTheme.'",
           lineNumbers: true,
           matchBrackets: true,
+          '.($bReadonly ? 'readOnly: true,' : '').'
           mode: "'.$sMime.'"
         });
       };
@@ -214,19 +217,23 @@ function editorInit(array $aOptions = []): string
 /**
  * Create a AdminLTE Card with CodeMirror editor with php syntax highlighting.
  * @param array $aOptions array with options. Keys are:
- *                        - content {string} The initial content of the editor.
- *                        - file    {string} The initial content of the editor loaded from given file
- *                        - mime    {string} mode for syntax highlighting; default: "text/x-php"
- *                        - theme   {string} Theme to use. See public_html/vendor/codemirror/6.65.7/theme/
- *                        - url     {string} POST url of the form
+ *                        - content  {string} The initial content of the editor.
+ *                        - file     {string} The initial content of the editor loaded from given file
+ *                        - mime     {string} mode for syntax highlighting; default: "text/x-php"
+ *                        - readonly {bool}   flag: readonly or changes can be saved?
+ *                        - theme    {string} Theme to use. See public_html/vendor/codemirror/6.65.7/theme/
+ *                        - url      {string} POST url of the form
  * @return string The HTML code for the card with editor
  */
 function editorInCard(array $aOptions = []): string
 {
+    $bReadonly=$aOptions['readonly'] ?? false;
     $renderAdminLTE=new renderadminlte();
-    return $renderAdminLTE->getCard([
+    return ''
+        .$renderAdminLTE->getCard([
         'type' => '',
-        'title' => $aOptions['title']??'',
+        'title' => ($aOptions['title'] ?? '')
+            .($bReadonly ? ' ({{readonly}})' : ''),
         'text' => ''
         
         // init form
@@ -242,7 +249,9 @@ function editorInCard(array $aOptions = []): string
         // end form
         
         ,
-        'footer' => $renderAdminLTE->getButton([
+        'footer' => $bReadonly 
+            ? '' 
+            : $renderAdminLTE->getButton([
                 'type' => 'primary',
                 'text' => icon::get('save') . '{{save}}',
             ])

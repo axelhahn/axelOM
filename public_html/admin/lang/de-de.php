@@ -167,6 +167,7 @@ return [
     "optimize"=> "Optimiere Datenbank",
     "properties"=> "Eigenschaften",
     "raw"=> "Raw",
+    "readonly"=> "nur lesbar",
     "relations"=> "Verknüpfungen",
     "reload"=> "Neu laden",
     "reload_page"=> "Seite neu laden",

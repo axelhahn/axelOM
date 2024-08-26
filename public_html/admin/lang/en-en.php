@@ -167,6 +167,7 @@ return [
     "optimize"=> "Optimize database",
     "properties"=> "Properties",
     "raw"=> "Raw",
+    "readonly"=> "readonly",
     "relations"=> "Relations",
     "reload"=> "Reload",
     "reload_page"=> "Reload page",

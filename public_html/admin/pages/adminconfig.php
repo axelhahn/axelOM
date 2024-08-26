@@ -50,7 +50,8 @@ $s = ''
     . editorInCard([
         'url' => '?page=adminconfig',
         'title' => icon::get('config') . "./config/settings.php",
-        'file' => $sFile
+        'file' => $sFile,
+        'readonly' => $aSettings['editor']['readonly']['globalsettings'] ?? false
     ])
 ;
 
