@@ -148,4 +148,8 @@ datalist {
 #msgOtherChanges{display: none;}
 
 /** Codemirror **/
-div.CodeMirror {font-family: 'Courier New', Courier, monospace; font-size: 0.8em; height: 30em;};
+div.CodeMirror {
+	font-family: 'Courier New', Courier, monospace; font-size: 0.8em; height: 30em;
+	resize: vertical;
+	/*overflow: auto !important;*/
+};
