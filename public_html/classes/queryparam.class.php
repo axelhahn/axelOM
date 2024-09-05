@@ -1,44 +1,53 @@
 <?php
+
 /**
- * ======================================================================
+ * Wrapping class to access $_GET|$_POST|$_SESSION variables with validation 
+ * of a value
  * 
- * This is a php class to get safe values from $_GET|$_POST|$_SESSION
- * - grid layout
- * - navigation
- * - widgets and forms
+ * @example
+ * Ensure that https://example.com/?page=<VALUE> will be accepted only if 
+ * <VALUE> matches /^[a-z]*$/
+ * <code>queryparam::get('page', '/^[a-z]*$/');</code>
  * 
- * ----------------------------------------------------------------------
- * 2024-05-18  <axel-hahn.de>  add variable types
- * ======================================================================
+ * Ideas:
+ * - add more type validation
+ * - add regex param with chars to remove eg /[^a-z]/ to keep only lowercase letters
+ * 
+ * Axel <axel.hahn@unibe.ch>
+ * 2024-08-29  Axel php8 only; added variable types; short array syntax
  */
-class queryparam{
+
+class queryparam
+{
 
     /**
-     * return value of a a given scope variable (e.g. $_GET|$_POST|$_SESSION) if it exists.
+     * Get value of a a given scope variable (e.g. $_GET|$_POST|$_SESSION) if it exists.
      * It will return NULLL if the value does not match an optional regex or type.
      * 
+     * @param array   $aScope        array of scope variables
      * @param string  $sVarname      name of post or get variable (POST has priority)
      * @param string  $sRegexMatch   set a regex that must match
      * @param string  $sType         force type: false|int
-     * @return mixed NULL|mixed
+     * @return mixed NULL|value
      */
-    static public function getvar(array $aScope, string $sVarname, string $sRegexMatch='', string $sType='') :mixed {
+    static public function getvar(array $aScope, string $sVarname, string $sRegexMatch = '', string $sType = ''): mixed
+    {
         // check if it exist
-        if(!isset($aScope[$sVarname])){
+        if (!isset($aScope[$sVarname])) {
             return NULL;
         }
-        
+
         $return = $aScope[$sVarname];
-        
+
         // verify regex
-        if ($sRegexMatch && !preg_match($sRegexMatch,$return)){
+        if ($sRegexMatch && !preg_match($sRegexMatch, $return)) {
             return NULL;
         }
-        
+
         // force given type
-        switch ($sType){
-            case 'int': 
-                $return=(int)$return;
+        switch ($sType) {
+            case 'int':
+                $return = (int) $return;
                 break;
         }
         return $return;
@@ -53,7 +62,7 @@ class queryparam{
      * @param string  $sType         force type: false|int
      * @return mixed NULL|value
      */
-    static public function get(string $sVarname, string $sRegexMatch='', string $sType='') :mixed
+    static function get(string $sVarname, string $sRegexMatch = '', string $sType = ''): mixed
     {
         return self::getvar($_GET, $sVarname, $sRegexMatch, $sType);
     }
@@ -66,23 +75,21 @@ class queryparam{
      * @param string  $sType         force type: false|int
      * @return mixed NULL|value
      */
-    static public function getorpost(string $sVarname, string $sRegexMatch='', string $sType='') :mixed {
+    static function getorpost(string $sVarname, string $sRegexMatch = '', string $sType = ''): mixed
+    {
         // $this->logAdd(__METHOD__."($sVarname, $sRegexMatch, $sType) start");
-        
+
         // check if it exist
-        if(!isset($_POST[$sVarname]) && !isset($_GET[$sVarname])){
+        if (!isset($_POST[$sVarname]) && !isset($_GET[$sVarname])) {
             // $this->logAdd(__METHOD__."($sVarname) $sVarname does not exist");
             return false;
         }
-        
+
         // set it to POST or GET variable
-        $aScope = isset($_POST[$sVarname]) && $_POST[$sVarname]
-                ? $_POST[$sVarname] 
-                : ((isset($_GET[$sVarname]) && $_GET[$sVarname])
-                    ? $_GET[$sVarname] 
-                    : false
-                  )
-            ;
+        $aScope = isset($_POST[$sVarname])
+            ? $_POST
+            : $_GET
+        ;
         return self::getvar($aScope, $sVarname, $sRegexMatch, $sType);
 
     }
@@ -92,9 +99,10 @@ class queryparam{
      * @param string  $sVarname      name of post variable
      * @param string  $sRegexMatch   set a regex that must match
      * @param string  $sType         force type: false|int
-     * @return mixed
+     * @return mixed NULL|value
      */
-    static public function post(string $sVarname, string $sRegexMatch='', string $sType='') :mixed {
+    static function post(string $sVarname, string $sRegexMatch = '', string $sType = ''): mixed
+    {
         return self::getvar($_POST, $sVarname, $sRegexMatch, $sType);
     }
 
