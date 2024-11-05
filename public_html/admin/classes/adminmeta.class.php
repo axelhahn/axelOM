@@ -21,22 +21,24 @@
 
  * ----------------------------------------------------------------------
  * 2024-05-18        <axel>  add variable types
+ * 2024-11-05        <axel>  enhance variable types
  * ======================================================================
  */
 
-class adminmetainfos {
+class adminmetainfos
+{
 
     /**
      * Root directory of all apps
      * @var string
      */
-    protected $_sAppsRootDir = false;
+    protected string $_sAppsRootDir = '';
 
     /**
      * Array of all apps
      * @var array
      */
-    protected $_aAppObjects = [];
+    protected array $_aAppObjects = [];
 
     // --------------------------------------------------------------
     // METHODS
@@ -46,14 +48,13 @@ class adminmetainfos {
      * Constructor
      * 
      * @param string $sAppsRootDir    root directory of all apps to set
-     * @return boolean
      */
-    public function __construct($sAppsRootDir=false) {
+    public function __construct(string $sAppsRootDir = '')
+    {
         $this->_sAppsRootDir = ($sAppsRootDir && is_dir($sAppsRootDir))
             ? $sAppsRootDir
-            : __DIR__."/../../apps"
+            : __DIR__ . "/../../apps"
         ;
-        return true;
     }
 
 
@@ -62,7 +63,8 @@ class adminmetainfos {
      * 
      * @return string
      */
-    public function getAppRootDir(){
+    public function getAppRootDir(): string
+    {
         return $this->_sAppsRootDir;
     }
 
@@ -73,16 +75,18 @@ class adminmetainfos {
      * @param bool $bScanConfigs
      * @return array
      */
-    public function getApps($bScanConfigs=false) {
-        $aReturn=[];
-        foreach(glob($this->_sAppsRootDir."/*") as $sFileEntry){
-            if (is_dir($sFileEntry) && file_exists($sFileEntry.'/config/objects.php')){
-                $sAppName=basename($sFileEntry);
-                $aReturn[$sAppName]=$bScanConfigs ? include($sFileEntry.'/config/objects.php') : 1;
-            };
+    public function getApps(bool $bScanConfigs = false): array
+    {
+        $aReturn = [];
+        foreach (glob($this->_sAppsRootDir . "/*") as $sFileEntry) {
+            if (is_dir($sFileEntry) && file_exists($sFileEntry . '/config/objects.php')) {
+                $sAppName = basename($sFileEntry);
+                $aReturn[$sAppName] = $bScanConfigs ? include($sFileEntry . '/config/objects.php') : 1;
+            }
+            ;
         }
-    
-        $this->_aAppObjects=$aReturn;
+
+        $this->_aAppObjects = $aReturn;
         return $aReturn;
     }
 
