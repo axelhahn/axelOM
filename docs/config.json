@@ -11,7 +11,7 @@
         "auto_landing": false,
         "date_modified": false,
         "jump_buttons": true,
-        "edit_on_github": "https://github.com/axelhahn/axelOM/tree/main/docs/",
+        "edit_on_github_": "https://github.com/axelhahn/axelOM/tree/main/docs/",
         "edit_on_": {
             "name": "Gitlab",
             "basepath": "https://git-repo.iml.unibe.ch/iml-open-source/docker-php-starterkit/tree/master/docs"
