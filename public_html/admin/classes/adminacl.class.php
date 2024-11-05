@@ -21,6 +21,7 @@
 
  * ----------------------------------------------------------------------
  * 2024-06-12        <axel>  first lines
+ * 2024-11-05        <axel>  update PHPDOC, short syntax
  * ======================================================================
  */
 
@@ -28,7 +29,7 @@ class adminacl
 {
 
     /**
-     * current userid
+     * Current userid
      * @var string
      */
     protected string $_sUser = '';
@@ -45,7 +46,7 @@ class adminacl
     protected array $_aGroups = [];
 
     /**
-     * configuration data from config/settings.php
+     * Configuration data from config/settings.php
      * @var array
      */
     protected array $_aConfig = [];
@@ -62,9 +63,6 @@ class adminacl
 
     /**
      * Constructor
-     * 
-     * @param string $sAppsRootDir    root directory of all apps to set
-     * @return boolean
      */
     public function __construct()
     {
@@ -74,15 +72,13 @@ class adminacl
         $this->_aConfig = $aCfg['acl'] ?? [];
 
         $this->_detectUser();
-        // echo "detected user: " . $this->getUser(); echo "<pre><hr>config:"; print_r($this->_aConfig); 
-        // echo 'Groups:'; print_r($this->_aGroups);
-        // die();
     }
 
 
     /**
      * Detect a user from $_SERVER environment. Which field to read is in key acl->userfield
      * and then set its groups
+     * 
      * @return bool
      */
     protected function _detectUser(): bool
@@ -145,6 +141,7 @@ class adminacl
     /**
      * Simulate another login. This will set the given user.
      * This feature is usable for global admins only
+     * 
      * @param string $sUser  new username
      * @return bool
      */
@@ -175,7 +172,8 @@ class adminacl
     // ----------------------------------------------------------------------
 
     /**
-     * return current userid
+     * Get current userid
+     * 
      * @return string
      */
     public function getUser(): string
@@ -184,7 +182,8 @@ class adminacl
     }
 
     /**
-     * return human readable username
+     * Get human readable username
+     * 
      * @return string
      */
     public function getUserDisplayname(): string
@@ -193,7 +192,8 @@ class adminacl
     }
 
     /**
-     * get a list of current groups
+     * Get a list of current groups as array
+     * 
      * @return array
      */
     public function getGroups(): array
@@ -206,7 +206,8 @@ class adminacl
     // ----------------------------------------------------------------------
 
     /**
-     * check if the user is member of a given group - or global admin
+     * Check if the user is member of a given group - or global admin
+     * 
      * @param string $sWantedGroup  name of group to check
      * @return bool
      */
@@ -216,7 +217,8 @@ class adminacl
     }
 
     /**
-     * return boolean if user is global admin
+     * Get boolean if user is global admin
+     * 
      * @return bool
      */
     public function isAdmin(): bool
@@ -225,29 +227,42 @@ class adminacl
     }
 
     /**
-     * return boolean if user is global admin
-     * @param string  $sAppname  appname to check
+     * Get boolean if user is admin of the current or given app
+     * 
+     * @param string  $sAppname  appname to check; if emtpy, use current app
      * @return bool
      */
     public function isAppAdmin(string $sAppname = ''): bool
     {
-        $sAppname = $sAppname ? $sAppname : $this->_sApp;
+        $sAppname = $sAppname ?: $this->_sApp;
         return $this->isAdmin()
             || array_search($sAppname . '_admin', $this->_aGroups) !== false
         ;
     }
 
+    /**
+     * Get boolean if the user can edit the current or given app
+     * 
+     * @param string  $sAppname  appname to check; if emtpy, use current app
+     * @return bool
+     */
     public function canEdit(string $sAppname = ''): bool
     {
-        $sAppname = $sAppname ? $sAppname : $this->_sApp;
+        $sAppname = $sAppname ?: $this->_sApp;
         return $this->isAppAdmin($sAppname)
             || array_search($sAppname . '_manager', $this->_aGroups) !== false
         ;
     }
 
+    /**
+     * Return boolean if the user can view the current or given app
+     * 
+     * @param string  $sAppname  appname to check; if emtpy, use current app
+     * @return bool
+     */
     public function canView(string $sAppname = ''): bool
     {
-        $sAppname = $sAppname ? $sAppname : $this->_sApp;
+        $sAppname = $sAppname ?: $this->_sApp;
         return $this->canEdit($sAppname)
             || array_search($sAppname, $this->_aGroups) !== false
         ;
