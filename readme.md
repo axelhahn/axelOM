@@ -35,11 +35,16 @@ This project is work in progess.
 
 ## Screenshots
 
-Home page: list all available apps:
+**Home** page: list all available apps.
+On the left side is a global menu to see users and permissions and global configuration.
 
 ![Home](docs/images/webui_start_list_apps.png)
 
-List all items of an object in a selected app to add / edit / delete entries:
+In the user management you can list all users and their permissions for each app.
+
+![Users and permissions](docs/images/webui_start_list_users.png)
+
+After selecting an app on top you see the app specific objects. For each object you can list its entries and edit them.
 
 ![List avaulable items of an object](docs/images/webui_show_owbjects_of_app.png)
 
