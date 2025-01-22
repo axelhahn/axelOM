@@ -134,7 +134,6 @@ class pdo_db
      *                                        - options
      *                          - showdebug {bool} enable debug? default: false
      *                          - showerrors {bool} enable error messages? default: false
-     * @return boolean
      */
     public function __construct(array $aOptions = [])
     {
@@ -156,7 +155,7 @@ class pdo_db
             $aDefaults = $aOptions['db'];
         }
 
-        return $this->setDatabase($aDefaults);
+        $this->setDatabase($aDefaults);
     }
 
     // ----------------------------------------------------------------------
