@@ -1015,6 +1015,9 @@ class pdo_db_base
      */
     public function relFlush(): bool
     {
+        if (!$this->_pdo->tableExists("pdo_db_relations")) {
+            return true;
+        }
         $sSql = 'DELETE FROM `pdo_db_relations` WHERE `from_table`="' . $this->_table . '" OR `to_table`="' . $this->_table . '"';
         return is_array($this->makeQuery($sSql));
     }
@@ -1574,7 +1577,7 @@ class pdo_db_base
             if (!isset($this->_aDefaultColumns[$sKey])) {
 
                 $bDoSet=true;
-                if(!$aNewValues[$sKey]){
+                if($aNewValues[$sKey]===false){
                     if (!preg_match('/(text|char)/i', $this->_aProperties[$sKey]['create'])){
                         $bDoSet=false;
                     }
