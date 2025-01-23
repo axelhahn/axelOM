@@ -25,7 +25,7 @@ $BANNER=$appmeta->getApphint();
 $s=''
     . $renderAdminLTE->addRow(
         $renderAdminLTE->addCol(
-            $renderAdminLTE->getInfobox(array (
+            $renderAdminLTE->getInfobox([
                 'type' => '',
                 'shadow' => '',
                 'icon' => icon::getclass('objects'),
@@ -43,7 +43,7 @@ $s=''
                     ,
                 // 'progressvalue' => 70,
                 // 'progresstext' => '70% Increase in 30 Days',
-                ))
+                ])
             , 4
         )
     )
