@@ -15,7 +15,7 @@ header("Pragma: no-cache");
 
 $iTimerStart=microtime(true);
 define("APP_NAME", 'axel :: OM');
-define("APP_VERSION", '0.0.16');
+define("APP_VERSION", '0.0.17');
 
 require_once('../classes/render-adminlte4.class.php');
 require_once('classes/adminmeta.class.php');
@@ -100,7 +100,7 @@ foreach(array_keys($adminmetainfos->getApps()) as $sApp){
 // no app is active? --> get sidebar nav for general backend
 if(!count($aSidebarNav)){
     $aSidebarNav[]=['href'=>'?page=home', 'label'=>'{{nav.home}}', 'icon'=>icon::getclass('home')];
-    if($acl->isAdmin()){
+    if($acl->isGlobalAdmin()){
         $aSidebarNav[]=[
             'href'=>'?page=adminusers', 
             'label'=>'{{nav.users}}', 
