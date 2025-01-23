@@ -26,7 +26,6 @@ return [
     "home.banner" => "Backend zum Bearbeiten der Objekte verschiedener Applikationen.",
     "home.apps" => "Anzahl Applikationen",
     "home.objects" => "Objekte",
-    "home.backend" => "Backend",
     "home.objecttypes"=> "Anzahl Objekte",
     "home.items"=> "Eintr&auml;ge",
 
@@ -86,8 +85,6 @@ return [
     // ----- page :: object
     "object.welcome" => "Willkommen!",
     "object.lets_create_first_item" => "Lass uns einen allerersten Eintrag erstellen!",
-
-    "object.tdname" => "Name",
 
     "object.tablecheck" => "DB Tabellen-Check",
     "object.tablecheck_update_required" => "Die Objekt-Konfiguration wurde geändert. DieDatenbank muss aktualisiert werden.",
@@ -178,7 +175,6 @@ return [
     "select_relation_item"=> "Verkn&uuml;pfung w&auml;hlen",
     "tdactions"=> "Aktionen",
     "tools"=> "Werkzeuge",
-    "user"=> "Benutzer",
     "view"=> "Ansehen",
 
     // ----- messages

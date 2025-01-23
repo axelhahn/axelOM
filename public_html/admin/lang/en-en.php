@@ -26,7 +26,6 @@ return [
     "home.banner" => "Backend to edit objects of multiple applications.",
     "home.apps" => "Count of apps",
     "home.objects" => "Objects",
-    "home.backend" => "Backend",
     "home.objecttypes"=> "Object types",
     "home.items"=> "Items",
 
@@ -86,8 +85,6 @@ return [
     // ----- page :: object
     "object.welcome" => "Welcome!",
     "object.lets_create_first_item" => "Create your first item!",
-
-    "object.tdname" => "Name",
 
     "object.tablecheck" => "DB table check",
     "object.tablecheck_update_required" => "The object configuration was changed. The database structure needs an update.",
@@ -178,7 +175,6 @@ return [
     "select_relation_item"=> "Select related item",
     "tdactions" => "Actions",
     "tools"=> "Tools",
-    "user"=> "User",
     "view"=> "View",
 
     // ----- messages
