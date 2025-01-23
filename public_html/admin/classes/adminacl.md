@@ -37,7 +37,6 @@ return [
         // 'displayname'=>['givenName', '_surname'],
         'displayname'=>false,
 
-
         // ---------- GROUPS
         'groups'=>[
 
@@ -49,7 +48,7 @@ return [
                 ],
             ],
 
-            // ----- "myapp"
+            // ----- "myapp 1"
             'myapp1'=>[
                 'admin'=>[],
                 'manager'=>[
@@ -61,7 +60,7 @@ return [
                     
             ],
 
-            // ----- "myapp"
+            // ----- "myapp 2"
             'myapp2'=>[
                 'admin'=>[],
                 'manager'=>[],
@@ -84,7 +83,22 @@ return [
     * "manager" (for editors)
     * and other named groups (=read access).
 
-The set groupname for apps has [APPID] + underscore as prefix, eg. "myapp1_moderator".
+The set groupname for apps has [APPID] + underscore as prefix, eg. "myapp1_manager".
+
+```mermaid
+flowchart TD
+    Start((Start))
+    HasAcl{ACL was<br>defined?}
+    NoAcl[For dev environment:<br><br>superuser<br>global admin]
+    gloablAdmin[production:<br><br>define global admins]
+    appPerms[per app:<br><br>define app admins, managers, viewers]
+    otherUsers[Other, undetected users:<br><br>user is nobody, group @anonymous]
+
+    Start-->HasAcl
+    HasAcl -->|No| NoAcl
+    HasAcl -->|Yes| gloablAdmin --> appPerms --> otherUsers
+
+```
 
 ## Methods
 
@@ -107,21 +121,21 @@ if ($acl->canView("myapp1")){
 
 To implement limited access:
 
-* isAdmin() - check if the current user is global admin
-* isAppAdmin([APPID]) - check if the current user has admin permission for current app. Only admin users can
+* `isGlobalAdmin()` - check if the current user is global admin
+* `isAppAdmin([APPID])` - check if the current user has admin permission for current app. Only admin users can
   * repair tables
   * backup / restore
-* canEdit([APPID]) - check if the user has "moderator" or admin permission
-* canView([APPID]) - check if the current user has "viewer" permission
-* is([GROUPNAME]) - check if a group explicitly was set
+* `canEdit([APPID])` - check if the user has "moderator" or admin permission
+* `canView([APPID])` - check if the current user has "viewer" permission
+* `is([GROUPNAME])` - check if a group explicitly was set
 
 ### Other getter
 
-* getuser() - string - get detected user id
-* getUserDisplayname() - string - get a readable name
-* getGroups() - array - get a list of detected groups.
+* `getuser()` - string - get detected user id
+* `getUserDisplayname()` - string - get a readable name
+* `getGroups()` - array - get a list of detected groups.
 
 ### Setter
 
-* setapp([APPID]) - set an appid - then you can call the getters for permission infos without app.
-* setuser([NEWUSER]) - switch user context; this is possible as global admin only
+* `setapp([APPID])` - set an appid - then you can call the getters for permission infos without app.
+* `setuser([NEWUSER])` - switch user context; this is possible as global admin only
