@@ -22,6 +22,7 @@
  * ----------------------------------------------------------------------
  * 2024-06-12        <axel>  first lines
  * 2024-11-05        <axel>  update PHPDOC, short syntax
+ * 2025-01-23        <axel>  rename isAdmin to isGlobalAdmin
  * ======================================================================
  */
 
@@ -68,7 +69,7 @@ class adminacl
     {
 
         // read config
-        $aCfg = include (__DIR__ . '/../config/settings.php');
+        $aCfg = include(__DIR__ . '/../config/settings.php');
         $this->_aConfig = $aCfg['acl'] ?? [];
 
         $this->_detectUser();
@@ -147,7 +148,7 @@ class adminacl
      */
     function setUser(string $sUser): bool
     {
-        if ($this->isAdmin()) {
+        if ($this->isGlobalAdmin()) {
             $this->_sUser = $sUser;
             $this->_detectGroups();
             return true;
@@ -182,7 +183,8 @@ class adminacl
     }
 
     /**
-     * Get human readable username
+     * Get human readable username.
+     * If no displayname is configured, the username will be returned
      * 
      * @return string
      */
@@ -221,7 +223,7 @@ class adminacl
      * 
      * @return bool
      */
-    public function isAdmin(): bool
+    public function isGlobalAdmin(): bool
     {
         return array_search('admin', $this->_aGroups) !== false;
     }
@@ -235,7 +237,7 @@ class adminacl
     public function isAppAdmin(string $sAppname = ''): bool
     {
         $sAppname = $sAppname ?: $this->_sApp;
-        return $this->isAdmin()
+        return $this->isGlobalAdmin()
             || array_search($sAppname . '_admin', $this->_aGroups) !== false
         ;
     }
