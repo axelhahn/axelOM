@@ -137,6 +137,8 @@ input.form-control[required]{ border-right: 0.3em solid var(--requiredColor); ba
 	width: 95%;
 }
 
+.height10em{min-height: 10em;}
+
 datalist {
 	display: flex;
 	flex-direction: column;
