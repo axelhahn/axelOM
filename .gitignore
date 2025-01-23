@@ -1,0 +1,2 @@
+public_html/protected/data/*.sqlite3
+public_html/admin/config/settings.php

@@ -43,6 +43,10 @@ if (count($appmeta->getObjects())){
     if($q && preg_match('/../', $q)){
         $iHits=0;
 
+        $sSearchFor='';
+        foreach(explode(" ", $q) as $word){
+            $sSearchFor.=($sSearchFor ? ' & ' : '') . '<code>&quot;'.htmlentities($word).'&quot;</code>';
+        }
         // loop over all objects of the app and search in them
         foreach($appmeta->getObjects() as $sObj=>$aObjData){
 
@@ -58,12 +62,12 @@ if (count($appmeta->getObjects())){
                 $sWhere='';
                 $iCounter=0;
                 $aData=[];
-                $sSearchFor='';
+                // $sSearchFor='';
                 foreach(explode(" ", $q) as $word){
                     $iCounter++;
                     $sIndex='word'.$iCounter;
                     $aData[$sIndex]='%'.$word.'%';
-                    $sSearchFor.=($sSearchFor ? ' & ' : '') . '<code>&quot;'.htmlentities($word).'&quot;</code>';
+                    // $sSearchFor.=($sSearchFor ? ' & ' : '') . '<code>&quot;'.htmlentities($word).'&quot;</code>';
 
                     $sWhere2='';
                     $sWhere.=($sWhere ? ' AND ' : '');
@@ -96,7 +100,7 @@ if (count($appmeta->getObjects())){
             }
         }
         $sContent=$sContent 
-        ? "<h3>✅ {{search.results_for}}   $sSearchFor</h3>"
+        ? "<h3>✅ {{search.results_for}}  $sSearchFor</h3>"
             ."{{search.hits}}: <strong>$iHits</strong><br>"
             .($iHits > 25 ? '💡 {{search.hint_and_condition}}' : '')
             .$sContent

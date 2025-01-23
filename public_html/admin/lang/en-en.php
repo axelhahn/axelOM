@@ -26,7 +26,6 @@ return [
     "home.banner" => "Backend to edit objects of multiple applications.",
     "home.apps" => "Count of apps",
     "home.objects" => "Objects",
-    "home.backend" => "Backend",
     "home.objecttypes"=> "Object types",
     "home.items"=> "Items",
 
@@ -86,8 +85,6 @@ return [
     // ----- page :: object
     "object.welcome" => "Welcome!",
     "object.lets_create_first_item" => "Create your first item!",
-
-    "object.tdname" => "Name",
 
     "object.tablecheck" => "DB table check",
     "object.tablecheck_update_required" => "The object configuration was changed. The database structure needs an update.",
@@ -178,7 +175,6 @@ return [
     "select_relation_item"=> "Select related item",
     "tdactions" => "Actions",
     "tools"=> "Tools",
-    "user"=> "User",
     "view"=> "View",
 
     // ----- messages
@@ -186,6 +182,7 @@ return [
 
     "msgerr.no_or_invalid_object_name" => "No or an invalid object name was given.",
     "msgerr.no_or_invalid_object_name2" => "Please check the url or start again from HOME.",
+    "msgerr.app_hint_missing"=>"[No key 'hint' in app config]",
     "msgerr.class_file_missing"=>"Class file does not exist",
     "msgerr.class_file_missing2"=>"The file was not found",
     "msgerr.class_not_initialized"=>"Unable to initialize class",

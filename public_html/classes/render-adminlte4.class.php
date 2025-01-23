@@ -628,18 +628,15 @@ class renderadminlte
             // special menu entry: horizontal bar (label is "-")
             case '-':
                 return '<div class="dropdown-divider"></div>';
-                break;
 
             // special menu entry: hamburger menu item (label is "=")
             case '=':
                 return '<li class="nav-item"> <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button"> <i class="fas fa-bars"></i> </a>';
-                break;
 
             // special menu entry: hamburger menu item (label is "|")
             // requires css: .navbar-nav li.divider{border-left: 1px solid rgba(0,0,0,0.2);}
             case '|':
                 return '<li class="divider"></li>';
-                break;
         }
 
         $aChildren = isset($aLink['children']) && is_array($aLink['children']) && count($aLink['children']) ? $aLink['children'] : false;
@@ -842,8 +839,8 @@ class renderadminlte
      */
     public function addCol(string $sContent, int $iCols = 6, string $sFloat = ''): string
     {
-        $aAttr=['class' => 'col-md-' . $iCols];
-        if($sFloat) {
+        $aAttr = ['class' => "col-md-$iCols"];
+        if ($sFloat) {
             $aAttr['style'] = "float: $sFloat";
         }
         return $this->addWrapper('div', $aAttr, $sContent);
@@ -907,7 +904,7 @@ class renderadminlte
     }
 
     /**
-     * get information a parameter keys of a component
+     * get information for a parameter key of a given component
      * @param  string  $sComponent  id of the component
      * @param  string  $sKey        key in the options array
      * @return array|bool
@@ -956,7 +953,7 @@ class renderadminlte
      */
     protected function _addClassValue(string $sValue, string $sPrefix = ''): string
     {
-        return $sValue ? ' ' . $sPrefix . $sValue : '';
+        return $sValue ? " $sPrefix$sValue" : '';
     }
 
     /**
@@ -1388,13 +1385,13 @@ class renderadminlte
      * @param string $sHint An optional hint to be displayed below the input element.
      * @return string The generated HTML for the horizontal form element.
      */
-    public function getHorizontalFormElement(string $sInput, string $sLabel = '', string $sId = '', string $sHint=''): string
+    public function getHorizontalFormElement(string $sInput, string $sLabel = '', string $sId = '', string $sHint = ''): string
     {
         return '<div class="row mb-3">'
             . '<label for="' . $sId . '" class="col-sm-2 col-form-label">' . $sLabel . '</label>'
             . '<div class="col-sm-10">'
-            . ($sHint 
-                ? '<div class="text-navy hint">' . $sHint . '</div>' 
+            . ($sHint
+                ? '<div class="text-navy hint">' . $sHint . '</div>'
                 : '')
             . $sInput
             . '</div>'
@@ -1474,16 +1471,14 @@ class renderadminlte
                     ['class' => 'form-check'],
                     $this->_tag('input', $aElement, '', false) . $this->_tag('label', ['for' => $sFormid, 'label' => $sLabel], '')
                 );
-                break;
 
             case 'hidden':
-                $aElement['title'] = $aElement['title'] ?? $sHint;
+                $aElement['title'] ??= $sHint;
                 return $this->_tag('input', $aElement, '', false);
-                break;
 
             case 'range':
                 $aElement['class'] = str_replace('form-control ', 'form-range', $aElement['class']);
-                $aElement['title'] = $aElement['title'] ?? $sHint;
+                $aElement['title'] ??= $sHint;
             default:
                 return $this->getHorizontalFormElement(
                     $sPrepend . $this->_tag('input', $aElement, '', false) . $sAppend,
@@ -1516,17 +1511,17 @@ class renderadminlte
         $aElement['class'] = ''
             . 'form-control '
             . ((isset($aOptions['type']) && $aOptions['type'] == 'html') ? 'summernote ' : '')
-            . (isset($aOptions['class']) ? $aOptions['class'] : '')
+            . ($aOptions['class'] ?? '')
         ;
         $sFormid = (isset($aOptions['id'])
             ? $aOptions['id']
-            : (isset($aOptions['name']) ? $aOptions['name'] : 'field') . '-' . md5(microtime(true))
+            : ($aOptions['name'] ?? 'field') . '-' . md5(microtime(true))
         );
         $sLabel = isset($aOptions['label']) ? $aOptions['label'] : '';
         $sHint = isset($aOptions['hint']) ? $aOptions['hint'] : '';
         $aElement['id'] = $sFormid;
 
-        $value = isset($aOptions['value']) ? $aOptions['value'] : '';
+        $value = $aOptions['value'] ?? '';
 
         foreach (['_infos', 'label', 'debug', 'type', 'value'] as $sDeleteKey) {
             if (isset($aElement[$sDeleteKey])) {
@@ -1584,7 +1579,7 @@ class renderadminlte
         );
         $aElement['id'] = $sFormid;
         $sLabel = isset($aOptions['label']) ? $aOptions['label'] : '';
-        $sHint = isset($aOptions['hint']) ? $aOptions['hint'] : '';
+        $sHint = $aOptions['hint'] ?? '';
 
         $sOptionTags = '';
         foreach ($aOptions['options'] as $aField) {
@@ -1622,7 +1617,7 @@ class renderadminlte
      * @param array $aOptions  hash with keys for all options
      *                           - tabs {array} key=tab label; value=content
      * @param bool  $asArray   optional flag: return hash with keys or as string
-     * @retunr bool|string|array
+     * @return bool|string|array
      */
     public function getTabbedContent(array $aOptions, bool $asArray = false): bool|string|array
     {
@@ -1636,15 +1631,15 @@ class renderadminlte
             $iTabCounter++;
         }
 
-        $id = 'tab-content-' . $iTabCounter;
+        $id = "tab-content-$iTabCounter";
         $iCounter = 0;
 
         $sTabs = '';
         $sContent = '';
         foreach ($aOptions['tabs'] as $sLabel => $sTabContent) {
             $iCounter++;
-            $sTabId = $id . '-tabitem-' . $iCounter . '-tab';
-            $sContentId = $id . '-tabitem-' . $iCounter . '-content';
+            $sTabId = "$id-tabitem-$iCounter-tab";
+            $sContentId = "$id-tabitem-$iCounter-content";
 
             $sTabs .= $this->_tag(
                 'li',
@@ -1655,7 +1650,7 @@ class renderadminlte
                         'class' => 'nav-link' . ($iCounter == 1 ? ' active' : ''),
                         'id' => $sTabId,
                         'data-toggle' => 'tab',
-                        'href' => '#' . $sContentId,
+                        'href' => "#$sContentId",
                         'role' => 'tab',
                         'aria-controls' => 'custom-tabs-one-profile',
                         'aria-selected' => ($iCounter == 1 ? true : false),
@@ -1675,8 +1670,91 @@ class renderadminlte
 
         return $asArray
             ? ['tabs' => $sTabs, 'content' => $sContent]
-            : $sTabs . $sContent
+            : "$sTabs$sContent"
         ;
+    }
+
+    // ----------------------------------------------------------------------
+    // 
+    // PUBLIC FUNCTIONS :: CONTENT - Bootstrap 5
+    // 
+    // ----------------------------------------------------------------------
+
+    /**
+     * Get html for bootstrap 5 accordeon
+     * https://getbootstrap.com/docs/5.3/components/accordion/
+     * 
+     * It returns false if argument has no key "tabs"
+     * 
+     * @param array $aOptions  hash with keys for all options
+     *                           - tabs {array} key=tab label; value=content
+     * @return bool|string
+     */
+    public function getBsAccordeon(array $aOptions): bool|string
+    {
+        static $iTabCounter;
+        if (!isset($aOptions['tabs']) || !is_array($aOptions['tabs'])) {
+            return false;
+        }
+        if (!isset($iTabCounter)) {
+            $iTabCounter = 1;
+        } else {
+            $iTabCounter++;
+        }
+
+        $sContent = '';
+        $iContentCounter = 0;
+        $sAccordeonId = "accordeon-$iTabCounter";
+
+        foreach ($aOptions['tabs'] as $sLabel => $sTabContent) {
+
+            $iContentCounter++;
+            $sContentId = "accordeon-$iTabCounter-item-$iContentCounter";
+            $sContent .= $this->_tag(
+                'div',
+                [
+                    'class' => 'accordion-item',
+                ],
+
+                $this->_tag(
+                    'h2',
+                    [
+                        'class' => 'accordion-header'
+                    ],
+                    $this->_tag(
+                        'button',
+                        [
+                            'class' => 'accordion-button',
+                            'type' => 'button',
+                            'data-bs-toggle' => 'collapse',
+                            'data-bs-target' => "#$sContentId",
+                            'aria-expanded' => 'true',
+                            'aria-controls' => 'collapseOne',
+                        ],
+                        $sLabel
+                    )
+                )
+                . $this->_tag(
+                    'div',
+                    [
+                        'id' => $sContentId,
+                        'class' => 'accordion-collapse collapse' . ($iContentCounter == 1 ? ' show' : ''),
+                        'data-bs-parent' => "#$sAccordeonId",
+                    ],
+                    $this->_tag(
+                        'div',
+                        [
+                            'class' => 'accordion-body'
+                        ],
+                        $sTabContent
+                    )
+                )
+            );
+        }
+
+        $sContent = $this->_tag('div', ['class' => 'accordion'], $sContent);
+
+        return $sContent;
     }
 
 }

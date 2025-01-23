@@ -12,7 +12,7 @@
  */
 include "inc_functions.php";
 
-if(!$acl->isAdmin()){
+if(!$acl->isGlobalAdmin()){
     include('error403.php');
     return false;
 }

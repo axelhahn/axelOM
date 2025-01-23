@@ -76,20 +76,22 @@ function dosearch(){
 }
 
 /**
+ * 
  * TODO: beautify
  * - Example POST method implementation:
  *   https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
  * - Parse Javascript fetch in PHP
  *   https://stackoverflow.com/questions/35091757/parse-javascript-fetch-in-php
- * @param {string}  method  http method
+ * 
+ * @param {string}  method  http method; eg. GET, POST, PUT, ...
  * @param {string}  url     url to request
  * @param {json}    data    request body as key -> value in a JSON
- * @param {string}  idOut   optional: id of output element in DOM
+ * @param {string}  idOut   optional: id of output element in DOM; default: write response in browser
  * @return void
  */
 async function httprequest(method="GET", url = "", data = {}, idOut = null) {
 
-    console.log("httprequest("+method+", "+url+", "+data+", "+idOut+")");
+    // console.log("httprequest("+method+", "+url+", "+data+", "+idOut+")");
 
     if(method=="POST" || method=="PUT"){
       var fd = new FormData();

@@ -26,7 +26,7 @@ $s=''
                 'iconbg' => '',
                 'text' => '{{home.apps}}',
                 'number' => (count($adminmetainfos->getApps()) ?? 0 )
-                    . ($acl->isAdmin()
+                    . ($acl->isGlobalAdmin()
                         ? '<span style="float: right">'.$renderAdminLTE->getButton([
                             'type' => 'success',
                             'text' => icon::get('new').'{{new}} :: TODO',
@@ -65,6 +65,7 @@ foreach ($adminmetainfos->getApps(1) as $sApp => $aAppData){
                 'type' => '',
                 'title' => '<a href="?app='.$sApp.'&page=home">' .icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</a>',
                 'text' => $sBoxContent,
+                'class' => 'height10em'
                 // 'variant' => '',
             )),
             3
