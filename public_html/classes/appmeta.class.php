@@ -252,7 +252,7 @@ class appmetainfos {
      * @return string
      */
     public function getApphint() :string {
-        return $this->getConfig('hint');
+        return $this->getConfig('hint') ?: '{{msgerr.app_hint_missing}}';
     }
 
     // --------------------------------------------------------------
