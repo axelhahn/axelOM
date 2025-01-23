@@ -129,7 +129,7 @@ function initClass($oDB, $sObject){
     if (!$o = new $sClassname($oDB)) {
         return renderError(
             '{{msgerr.class_not_initialized}} [' . $sClassname . ']',
-            '{{msgerr.class_not_initialize2d}}: [' . $sClassfile . ']',
+            '{{msgerr.class_not_initialized2}}: [' . $sClassfile . ']',
         );
     }
     return $o;
