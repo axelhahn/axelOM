@@ -32,7 +32,7 @@ $s=''
                 'iconbg' => '',
                 'text' => '{{home.objecttypes}}',
                 'number' => (count($appmeta->getObjects()) ?? 0)
-                    . ($acl->isAdmin()
+                    . ($acl->isGlobalAdmin()
                         ? '<span style="float: right">'.$renderAdminLTE->getButton([
                             'type' => 'success',
                             'text' => icon::get('new').'{{new}} :: TODO',
@@ -87,6 +87,7 @@ foreach($appmeta->getObjects() as $sObj=>$aObjData){
                     . ($appmeta->getObjectHint($sObj) ? $appmeta->getObjectHint($sObj).'<br>' : '')
                     . '{{home.items}}: '.$sItems,
                 // 'variant' => '',
+                'class' => 'height10em'
             ]),
             3
         );
