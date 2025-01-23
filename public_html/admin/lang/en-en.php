@@ -186,6 +186,7 @@ return [
 
     "msgerr.no_or_invalid_object_name" => "No or an invalid object name was given.",
     "msgerr.no_or_invalid_object_name2" => "Please check the url or start again from HOME.",
+    "msgerr.app_hint_missing"=>"[No key 'hint' in app config]",
     "msgerr.class_file_missing"=>"Class file does not exist",
     "msgerr.class_file_missing2"=>"The file was not found",
     "msgerr.class_not_initialized"=>"Unable to initialize class",

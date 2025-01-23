@@ -186,6 +186,7 @@ return [
 
     "msgerr.no_or_invalid_object_name" => "Es wurde kein oder ein ung&&uuml;ltiger Objektnamen angegeben.",
     "msgerr.no_or_invalid_object_name2" => "Pr&uuml;fen Sie den Objektnamen in der URL oder beginnen Sie von der Startseite.",
+    "msgerr.app_hint_missing"=>"[Kein Key 'hint' in der App-Konfiguration gefunden]",
     "msgerr.class_file_missing"=>"Class-Datei existiert nicht.",
     "msgerr.class_file_missing2"=>"Die Datei wurde nicht gefunden",
     "msgerr.class_not_initialized"=>"Initialisierung der Klasse fehlgeschlagen",
