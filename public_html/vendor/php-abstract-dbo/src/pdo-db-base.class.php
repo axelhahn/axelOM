@@ -1,5 +1,4 @@
 <?php
-
 /**
  * ======================================================================
  * 
@@ -19,9 +18,9 @@
  * Licence: GNU GPL 3.0
  * ----------------------------------------------------------------------
  * 2023-08-26  0.1  ah  first lines
+ * 2025-01-26  ___  ah  last changes
  * ======================================================================
  */
-
 
 namespace axelhahn;
 
@@ -62,7 +61,6 @@ class pdo_db_base
      * @var bool
      */
     protected bool $_bChanged = false;
-
 
     /**
      * hash for a single announcement item with related data to
@@ -937,13 +935,14 @@ class pdo_db_base
         }
 
         if (
-            is_array($this->makeQuery(
-                'UPDATE `pdo_db_relations` SET to_id = :to_id WHERE id = :id',
-                [
-                    'id' => $this->_aRelations['_targets'][$sRelKey]['_relid'],
-                    'to_id' => $iItemvalue,
-                ]
-            )
+            is_array(
+                $this->makeQuery(
+                    'UPDATE `pdo_db_relations` SET to_id = :to_id WHERE id = :id',
+                    [
+                        'id' => $this->_aRelations['_targets'][$sRelKey]['_relid'],
+                        'to_id' => $iItemvalue,
+                    ]
+                )
             )
         ) {
             return true;
@@ -1249,11 +1248,11 @@ class pdo_db_base
                 $aLookup = $this->_aProperties[$sAttr]['lookup'];
 
                 // verify lookup data
-                if(!isset($aLookup['columns'])) {
-                    $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . '(' . $sAttr . ')', 'No key [columns] in lookup for object key '.$sAttr.' to define labels for dropdown.<br>Suggestion: add<br>"columns" => "label"');
-                    return false;                            
+                if (!isset($aLookup['columns'])) {
+                    $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . '(' . $sAttr . ')', 'No key [columns] in lookup for object key ' . $sAttr . ' to define labels for dropdown.<br>Suggestion: add<br>"columns" => "label"');
+                    return false;
                 }
-                if(!isset($aLookup['value'])) {
+                if (!isset($aLookup['value'])) {
                     $aLookup['value'] = 'id';
                     // $this->_log(PB_LOGLEVEL_ERROR, __METHOD__ . '(' . $sAttr . ')', 'No key [value] in lookup for object key '.$sAttr.' to define values for dropdown.<br>Suggestion: add<br>"value" => "id"<br>in<pre>'.print_r($aLookup, 1).'</pre>');
                     // return false;                            
@@ -1270,10 +1269,10 @@ class pdo_db_base
                 ]
                 */
 
-                $sSql = 'SELECT ' . implode(',', $aLookup['columns']).', '.$aLookup['value']
+                $sSql = 'SELECT ' . implode(',', $aLookup['columns']) . ', ' . $aLookup['value']
                     . ' FROM ' . $aLookup['table']
                     . (isset($aLookup['where']) && $aLookup['where'] ? ' WHERE ' . $aLookup['where'] : '')
-                    .' ORDER BY ' . implode(' ASC ,', $aLookup['columns']).' ASC'
+                    . ' ORDER BY ' . implode(' ASC ,', $aLookup['columns']) . ' ASC'
                     . ''
                 ;
                 // echo "DEBUG: sSql = $sSql<br>";
@@ -1511,34 +1510,87 @@ class pdo_db_base
             $_bValError = false;
             $_bValOK = true;
 
-            // echo "-- validation for attribute '$sKey2Set' => '$value'<br>";
+            $_bRequired = $this->_aProperties[$sKey2Set]['required'] ?? false;
+            $_sValidate = $this->_aProperties[$sKey2Set]['validate_is'] ?? false;
+            $_sCreate = strtolower($this->_aProperties[$sKey2Set]['create']);
 
-            if (isset($this->_aProperties[$sKey2Set]['validate_is'])) {
-                $sFunc = $this->_aProperties[$sKey2Set]['validate_is'];
-                // echo "Check $sFunc($value) ... ";
-                switch ($sFunc) {
-                    case 'string':
-                        // echo "found<br>";
-                        $_bValOK = $_bValOK && is_string($value);
-                        $_bValError = $_bValError || !is_string($value);
-                        break;
+            // empty values coming from forms -> set it to NULL
+            if ($value === "") {
+                switch ($_sCreate) {
+                    case 'date':
+                    case 'datetime':
+                    case 'int':
                     case 'integer':
-                        $_bValOK = $_bValOK && ctype_digit(strval($value));
-                        $_bValError = $_bValError || !ctype_digit(strval($value));
+                    case 'num':
+                    case 'real':
+                    case 'timestamp':
+                        $value = NULL;
                         break;
-                    default:
-                        echo "ERROR: [$sFunc] is not supported yet.<br>";
+                        ;
                 }
-            } else {
-                // echo "Skip 'validate_is'<br>";
             }
 
-            if (isset($this->_aProperties[$sKey2Set]['validate_regex'])) {
-                // echo "Check Regex ".$this->_aProperties[$sKey2Set]['validate_regex']."<br>";
-                $_bValOK = $_bValOK && preg_match($this->_aProperties[$sKey2Set]['validate_regex'], $value);
-                $_bValError = $_bValError || !preg_match($this->_aProperties[$sKey2Set]['validate_regex'], $value);
-            } else {
-                // echo "Skip 'validate_regex'<br>";
+            // set a validation by given db type
+            switch ($_sCreate) {
+                case 'date':
+                    $_sValidate = $_sValidate ?: 'date';
+                    break;
+                    ;
+
+                case 'datetime':
+                case 'timestamp':
+                    $_sValidate = $_sValidate ?: 'datetime';
+                    break;
+                    ;
+
+                case 'int':
+                case 'integer':
+                case 'num':
+                    $_sValidate = $_sValidate ?: 'integer';
+                    break;
+                    ;
+            }
+
+            // echo "-- validation for attribute '$sKey2Set' => '$value'<br>";
+            if ($_bRequired && is_null($value)) {
+                $this->_log(PB_LOGLEVEL_ERROR, __METHOD__, "{$this->_table} value for $sKey2Set is reqired.");
+                return false;
+            }
+            if ($_bRequired || !is_null($value)) {
+
+                if ($_sValidate) {
+                    // echo "Check $sFunc($value) ... ";
+                    switch ($_sValidate) {
+                        case 'string':
+                            $_bValOK = $_bValOK && is_string($value);
+                            $_bValError = $_bValError || !is_string($value);
+                            break;
+                        case 'integer':
+                            $_bValOK = $_bValOK && ctype_digit(strval($value));
+                            $_bValError = $_bValError || !ctype_digit(strval($value));
+                            break;
+                        case 'date':
+                            $_bValOK = $_bValOK && strtotime($value);
+                            $_bValError = $_bValError || !strtotime($value);
+                            break;
+                        case 'datetime':
+                            $_bValOK = $_bValOK && strtotime($value);
+                            $_bValError = $_bValError || !strtotime($value);
+                            break;
+                        default:
+                            throw new Exception(__METHOD__ . " - ERROR: The key [$sKey2Set] cannot be validated with [$_sValidate] - this type is not supported yet.");
+                    }
+                } else {
+                    // echo "Skip 'validate_is'<br>";
+                }
+
+                if (isset($this->_aProperties[$sKey2Set]['validate_regex'])) {
+                    // echo "Check Regex ".$this->_aProperties[$sKey2Set]['validate_regex']."<br>";
+                    $_bValOK = $_bValOK && preg_match($this->_aProperties[$sKey2Set]['validate_regex'], $value);
+                    $_bValError = $_bValError || !preg_match($this->_aProperties[$sKey2Set]['validate_regex'], $value);
+                } else {
+                    // echo "Skip 'validate_regex'<br>";
+                }
             }
 
             // echo "--> OK: " .($_bValOK ? 'true':'false')." | Error: ".($_bValError ? 'true':'false')."<br>";
@@ -1555,10 +1607,10 @@ class pdo_db_base
                 return true;
             } else {
                 echo "SKIP '$sKey2Set' => '$value' -- validation failed<br>";
-                $this->_log(PB_LOGLEVEL_WARN, __METHOD__, '{' . $this->_table . '} value for ' . $sKey2Set . ' was not set because validaten failed');
+                $this->_log(PB_LOGLEVEL_ERROR, __METHOD__, '{' . $this->_table . '} value for ' . $sKey2Set . ' was not set because validaten failed');
             }
         } else {
-            throw new Exception(__METHOD__ . " - ERROR: The key [$sKey2Set] cannot be set for [" . $this->_table . "].");
+            throw new Exception(__METHOD__ . " - ERROR: The unknown key [$sKey2Set] cannot be set for [" . $this->_table . "].");
         }
         return false;
     }
@@ -1576,13 +1628,13 @@ class pdo_db_base
         foreach (array_keys($aNewValues) as $sKey) {
             if (!isset($this->_aDefaultColumns[$sKey])) {
 
-                $bDoSet=true;
-                if($aNewValues[$sKey]===false){
-                    if (!preg_match('/(text|char)/i', $this->_aProperties[$sKey]['create'])){
-                        $bDoSet=false;
+                $bDoSet = true;
+                if ($aNewValues[$sKey] === false) {
+                    if (!preg_match('/(text|char)/i', $this->_aProperties[$sKey]['create'])) {
+                        $bDoSet = false;
                     }
                 }
-                if($bDoSet){
+                if ($bDoSet) {
                     $bReturn = $bReturn && $this->set($sKey, $aNewValues[$sKey]);
                 }
             }
