@@ -96,6 +96,9 @@ return [
     "object.inactive_has_a_link_already" => "Deactivated: it is linked already",
     "object.inactive_current_item" => "Deactivated: current item",
 
+    "object.attachment_preview" => "Preview",
+    "object.attachment-fix-app-config-in-attachments-key" => "No preview available.<br>Check the config in [app]/config/objects.php - section 'attachments'.<br>'baseurl' must be set and 'basedir' must point to an existing directory.",
+
     "object.add_relation_to" => "Add relation to",
     "object.relations_locked" => "The object was changed. That's why the relations were disabled. Save the object and edit it again, to change the relations.",
 
