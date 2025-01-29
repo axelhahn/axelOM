@@ -543,6 +543,32 @@ if ($bShowEdit) {
             */
 
         }
+
+        // hooks and callbacks
+        if(method_exists($o, 'hookActions')){
+            $aHooks=$o->hookActions();
+            if($aHooks['backend_preview']){
+                // echo '<pre>'.print_r($appmeta->getConfig('attachments'), 1).'</pre>';
+                $sMyBaseUrl=$appmeta->getConfig('attachments')['baseurl']??false;
+                $sMyBaseDir=$appmeta->getConfig('attachments')['basedir']??false;
+
+                if($sMyBaseUrl && $sMyBaseDir && is_dir($sMyBaseDir)){
+                    $o->setUrlBase($sMyBaseUrl);
+                    $o->setUploadDir($sMyBaseDir);
+    
+                    // $sMyBaseUrl=dirname(preg_replace('/\?.*/', '', $_SERVER['REQUEST_URI']));                
+                    // $sAppDir=str_replace('//', '/', "$sMyBaseUrl/apps/$sTabApp");
+                    $sForm.= '<h3>{{object.attachment_preview}}</h3>'
+                        //. $o->{$aHooks['backend_preview']}(['baseurl'=>$sAppDir]);
+                        . $o->{$aHooks['backend_preview']}();
+                    ;   
+                } else {
+                    addMsg('error', '{{object.attachment-fix-app-config-in-attachments-key}}');
+                }
+
+            }
+        }
+
         // $sForm.='<pre>relations: '.print_r($o->relRead(), 1).'</pre>';
         $sFooter .= ''
             . ($iItems
@@ -756,11 +782,11 @@ if ($bShowEdit) {
             if(isset($aRelations['_targets'])){
                 foreach($aRelations['_targets'] as $sRelKey=>$aRelation) {
 
-                    $sTargetLabel=isset($aRelation['_target']['label']) 
-                        ? $aRelation['_target']['label']
-                        : (isset($aRelation['_target']['displayname']) 
-                            ? $aRelation['_target']['displayname'] 
-                            : ($sRelObjectname ?? '?')
+                    $sTargetLabel=$aRelation['_target']['label']
+                        ??($aRelation['_target']['displayname']
+                            ??($aRelation['_target']['filename'] 
+                                ??($sRelObjectname ?? '?') 
+                            )
                         )
                         ;
                     $sBtnEdit=$renderAdminLTE->getButton([
