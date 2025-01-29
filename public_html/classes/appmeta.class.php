@@ -198,7 +198,7 @@ class appmetainfos {
     }
 
     /**
-     * Get full path of application config or an entry (see config.php in app dir)
+     * Get full config or a given entry
      * @param string $sKey  optional: config key; if not set, the whole config is returned
      * @return mixed
      */
