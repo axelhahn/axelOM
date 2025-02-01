@@ -74,7 +74,7 @@ You can extend the detected form element with the `attr` key. Or you can force t
 ### lookup
 
 The lookup is a lookup to a single item of another object type.
-Your property must be an integer and is used as foreign key to the lookup table.
+Your property must be an `integer` and is used as foreign key to the lookup table.
 
 In the lookup key you define with the keys
 
@@ -87,12 +87,31 @@ In the lookup key you define with the keys
 | bootstrap-select | {bool} | false | optional: if true or 1 the select will enable the bootstrap-select plugin (= a searchable select box) |
 | where | {string} | "" | optional: set a where clause to the lookup table; default: show all values |
 
+Example:
+
+(1) Lookup to a table `objaddontypes` which has a column `label` to be show as selection value.
+
 ```php
         'type'=> [
             'create' => 'integer',
             'lookup'=> [
                 'table' => 'objaddontypes', 
                 'columns' => ['label'], 
+                'bootstrap-select' => true,
+            ]
+        ],
+```
+
+(2) Lookup to a download file.
+The tablename is `pdo_db_attachments` that has a column `filename`.
+
+
+```php
+        'image_main'=> [
+            'create' => 'integer',
+            'lookup'=> [
+                'table' => 'pdo_db_attachments', 
+                'columns' => ['filename'], 
                 'bootstrap-select' => true,
             ]
         ],
