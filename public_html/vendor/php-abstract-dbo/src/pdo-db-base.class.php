@@ -18,7 +18,7 @@
  * Licence: GNU GPL 3.0
  * ----------------------------------------------------------------------
  * 2023-08-26  0.1  ah  first lines
- * 2025-01-30  ___  ah  last changes
+ * 2025-02-02  ___  ah  last changes
  * ======================================================================
  */
 
@@ -483,7 +483,6 @@ class pdo_db_base
         $Where[] = "1=1";
 
         $this->new();
-        $this->_bChanged = false;
 
         foreach ($aColumns as $skey => $value) {
 
@@ -493,6 +492,7 @@ class pdo_db_base
                 $this->set($skey, $value); // pre defined fields on new object
             }
         }
+        $this->_bChanged = false;
 
         // search fetches 2 items.
         // 1 is needed to apply value and a 2nd for detection of multiple values
@@ -513,9 +513,9 @@ class pdo_db_base
             );
         }
 
-        // var_dump($result); die();
         if (isset($result[0])) {
             $this->_aItem = $result[0];
+
             // read relation while loading object?
             if ($bReadRelations) {
                 $this->_relRead();
@@ -629,6 +629,20 @@ class pdo_db_base
         if ($iId) {
             if ($this->relDeleteAll($iId)) {
 
+                if(method_exists($this, 'hookDelete')){
+                    if($iId){
+                        $this->read($iId);
+                    }
+                    if(!$this->{'hookDelete'}()) {
+                        $this->_log(
+                            PB_LOGLEVEL_ERROR,
+                            __METHOD__,
+                            "[$this->_table]->hookDelete() failed."
+                        );
+                        return false;
+                    };
+                }
+    
                 $sSql = 'DELETE from `' . $this->_table . '` WHERE `id`=:id';
                 $aData = [
                     'id' => $iId,
@@ -1140,6 +1154,7 @@ class pdo_db_base
             $this->read($iId, true);
         }
 
+        // echo 'Relations: <pre>'.print_r($this->_aRelations, 1).'</pre>'; 
         $bOK = true;
         if (isset($this->_aRelations['_targets'])) {
             foreach (array_keys($this->_aRelations['_targets']) as $sRelKey) {

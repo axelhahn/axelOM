@@ -125,6 +125,7 @@ return [
     "debug.query" => "Query",
     "debug.error" => "Fehler",
     "debug.logs" => "Logs",
+    "debug.log_level" => "Level",
     "debug.log_table" => "Tabelle",
     "debug.log_method" => "Methode",
     "debug.log_message" => "Meldung",
@@ -213,10 +214,7 @@ return [
     // ----- messages file upload
     "msgerr.fileupload_no_dir"=> "FEHLER: Das Upload-Verzeichnis existiert nicht. Der Upload ist untersagt.",
     "msgerr.fileupload_wrong_id" => "FEHLER: Das Upload-Handling wurde nicht gestartet - die Objekt ID wurde nicht gefunden #",
-    "msgerr.fileupload_move_failed" => "FEHLER: Die hochgeladene Datei konnte nicht verschoben werden.",
-    "msgerr.fileupload_not_added_in_database" => "FEHLER: Die gespeicherte Datei konnte nicht in der Datenbanktabelle pdo_db_attachments gespeichert werden",
 
-    "msgok.fileupload_stored_as"      => "OK: Datei wurde gespeichert als",
     "msgok.fileupload_object_created" => "OK: Attachment-Object wurde angelegt als",
     "msgok.fileupload_and_relation"   => "OK: Der Upload war erfolgreich und die Relation wurde erstellt.",
 

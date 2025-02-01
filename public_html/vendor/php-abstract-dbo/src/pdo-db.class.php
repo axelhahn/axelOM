@@ -9,7 +9,7 @@
  * Licence: GNU GPL 3.0
  * ----------------------------------------------------------------------
  * 2023-08-26  0.1  ah  first lines
- * 2025-01-26  ___  ah  last changes
+ * 2025-02-02  ___  ah  last changes
  * ======================================================================
  */
 
@@ -173,7 +173,7 @@ class pdo_db
     public function _wd(string $s, string $sTable = ''): bool
     {
         if ($this->_bDebug) {
-            $sMsg = "DEBUG: ' . ($sTable ? '{' . $sTable . '}' : '') . '  - ' . $s";
+            $sMsg = "DEBUG: ".  ($sTable ? "{ $sTable } - " : '') . " $s";
             echo $this->_bHtml
                 ? "<div style=\"color: #888; background: #f8f8f8;\">$sMsg</div>"
                 : "$sMsg\n"
@@ -322,7 +322,7 @@ class pdo_db
      */
     public function error(): string
     {
-        if ($this->_iLastError !== false) {
+        if ($this->_iLastError >=0 ) {
             return $this->_aLogmessages[$this->_iLastError]['message'];
         }
         return '';

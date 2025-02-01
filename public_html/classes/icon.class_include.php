@@ -30,7 +30,7 @@ return [
 
     'home' => 'fa-solid fa-house',
     'app' => 'fa-solid fa-box-archive',
-    'object' => 'fa-solid fa-cube',
+    // 'object' => 'fa-solid fa-cube',
 
     'adminuser' => 'fa-solid fa-user-tie',
     'user' => 'fa-solid fa-user',

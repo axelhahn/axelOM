@@ -26,6 +26,10 @@ $sObjLabel= ''
     . (isset($aObjdata['icon']) ? icon::get($aObjdata['icon']) : '')
     . ($aObjdata['label'] ?? '');
 
+if($sObject=="pdo_db_attachments"){
+    $sObjLabel=icon::get('file') . ' {{files}}';
+}
+
 $TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> :: ' 
     . ''.($sObjLabel ? '  ' . $sObjLabel : '') .'';
 
@@ -89,6 +93,17 @@ if (isset($_POST['action'])) {
     }
 
     if ($acl->canEdit($sTabApp)){
+
+        // --- special action for attachments
+        if($sObject=="pdo_db_attachments"){
+            $sMyBaseDir=$appmeta->getConfig('attachments')['basedir']??false;
+            if(!$sMyBaseDir || !is_dir($sMyBaseDir)){
+                addMsg('error', '{{object.attachment-fix-app-config-in-attachments-key}}');
+            } else {
+                $o->setUploadDir($sMyBaseDir);
+            }
+        }
+        // --- 
 
         switch ($_POST['action']) {
             case 'new':
@@ -193,43 +208,34 @@ if (isset($_POST['action'])) {
                 // print_r($_FILES['file'] );
                 require_once __DIR__ . '/../../vendor/php-abstract-dbo/src/pdo-db-attachments.class.php';
                 $oFile=new axelhahn\pdo_db_attachments($oDB);
-                foreach($_FILES as $aFile){
-                    $target_file=$sUploadpath . basename($aFile["name"]);
-                    if($aFile['error']==0){
-                        if (move_uploaded_file($aFile["tmp_name"], $target_file)) {
-                            $out.= "{{msgok.fileupload_stored_as}} ".$target_file. PHP_EOL;
-                            $oFile->new();
-                            $oFile->setItem([
-                                'filename'=>$aFile["name"],
-                                'mime'=>$aFile["type"],
-                                'description'=>'',
-                                'size'=>$aFile["size"],
-                                'width'=>NULL,
-                                'height'=>NULL,
-                            ]);
-                            if($oFile->save()){
-                                $sTargetId=$oFile->id();
-                                $sTargetObj='pdo_db_attachments';
-                                $out.= "{{msgok.fileupload_object_created}} #".$sTargetId. PHP_EOL;
-                                if ($o->relCreate($sTargetObj, $sTargetId)){
-                                    $out.= '{{msgok.relation_was_created}} ' . $sTargetObj . ':'.$sTargetId. ':-)'. PHP_EOL;
-                                } else {
-                                    header('503 Service Unavailable', true, 503);
-                                    $out.= '{{msgerr.relation_was_not_created}} [' . $sTargetObj . ':'.$sTargetId. '] :-('. PHP_EOL;
-                                    die($out);
-                                }
+
+                // $sMyBaseUrl=$appmeta->getConfig('attachments')['baseurl']??false;
+                $sMyBaseDir=$appmeta->getConfig('attachments')['basedir']??false;
+
+                if(!$sMyBaseDir || !is_dir($sMyBaseDir)){
+                    addMsg('error', '{{object.attachment-fix-app-config-in-attachments-key}}');
+                } else {
+                    $oFile->setUploadDir($sMyBaseDir);
+    
+                    foreach($_FILES as $aFile){
+                        if ($sTargetId = $oFile->uploadFile($aFile)){
+                            $sTargetObj='pdo_db_attachments';
+                            $out.= "{{msgok.fileupload_object_created}} #".$sTargetId. PHP_EOL;
+                            if ($o->relCreate($sTargetObj, $sTargetId)){
+                                $out.= '{{msgok.relation_was_created}} ' . $sTargetObj . ':'.$sTargetId. ':-)'. PHP_EOL;
                             } else {
                                 header('503 Service Unavailable', true, 503);
-                                $out.= '{{msgerr.fileupload_not_added_in_database}}:-('. PHP_EOL;
+                                $out.= '{{msgerr.relation_was_not_created}} [' . $sTargetObj . ':'.$sTargetId. ']: '. $oDB->error() . PHP_EOL;
                                 die($out);
                             }
-                
                         } else {
                             header('503 Service Unavailable', true, 503);
-                            die('{{msgerr.fileupload_move_failed}}: ' . $aFile["error"]);
+                            $out.= '{{msgerr.relation_was_not_created}} upload failed: '. $oDB->error() .print_r($aFile, 1). PHP_EOL;
+                            die($out);
                         }
                     }
                 }
+
                 die("{{msgok.fileupload_and_relation}}");
                 // break;;
 
