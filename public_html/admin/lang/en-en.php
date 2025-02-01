@@ -125,6 +125,7 @@ return [
     "debug.query" => "Query",
     "debug.error" => "Error",
     "debug.logs" => "Logs",
+    "debug.log_level" => "Level",
     "debug.log_table" => "Table",
     "debug.log_method" => "Method",
     "debug.log_message" => "Messsage",
@@ -214,10 +215,7 @@ return [
     // ----- messages file upload
     "msgerr.fileupload_no_dir"=> "ERROR: Upload dir does not exist, upload forbidden",
     "msgerr.fileupload_wrong_id" => "ERROR: Upload handling was not started. Unable to get item #",
-    "msgerr.fileupload_move_failed" => "ERROR: Unable to move uploaded file",
-    "msgerr.fileupload_not_added_in_database" => "ERROR: failed store saved file in database table pdo_db_attachments ", 
 
-    "msgok.fileupload_stored_as"      => "OK: file was stored as",
     "msgok.fileupload_object_created" => "OK: attachment object was created as",
     "msgok.fileupload_and_relation"   => "OK: Upload war erfolgreich und Relation wurde erstellt.",
 

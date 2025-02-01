@@ -202,8 +202,8 @@ $sBreadcrumb='<a href="?page=home">{{nav.home}}</a>'.$sBcSpacer
                 $iQueries++;
                 $bIsError=isset($aQuery['error'])   && $aQuery['error'];
                 $sDB_DEBUG.='<tr'.($bIsError ? ' class="error"' : '').'>
-                <td>'.(isset($aQuery['records']) && $aQuery['records'] ? htmlentities($aQuery['records']) : '-').'</td>
                 <td>'.(isset($aQuery['time'])    && $aQuery['time']    ? htmlentities($aQuery['time'])    : '-').'</td>
+                <td>'.(isset($aQuery['records']) && $aQuery['records'] ? htmlentities($aQuery['records']) : '-').'</td>
                 <td>
                     <code>'.htmlentities($aQuery['sql']).'</code>
                     '.($bIsError 
@@ -227,6 +227,7 @@ $sBreadcrumb='<a href="?page=home">{{nav.home}}</a>'.$sBcSpacer
             */
             foreach($oDB->logs() as $aLogentry){
                 $sDB_LOG.='<tr class="'.$aLogentry['loglevel'].'">
+                    <td>'.$aLogentry['loglevel'].'</td>
                     <td>'.$aLogentry['table'].'</td>
                     <td>'.$aLogentry['method'].'</td>
                     <td>'.$aLogentry['message'].'</td>
@@ -241,6 +242,7 @@ $sBreadcrumb='<a href="?page=home">{{nav.home}}</a>'.$sBcSpacer
             '.icon::get('log').'{{debug.logs}}: <strong>'.count($oDB->logs()).'</strong>
             <table class="table table-striped">
             <tr>
+                <th>{{debug.log_level}}</th>
                 <th>{{debug.log_table}}</th>
                 <th>{{debug.log_method}}</th>
                 <th>{{debug.log_message}}</th>
@@ -253,8 +255,8 @@ $sBreadcrumb='<a href="?page=home">{{nav.home}}</a>'.$sBcSpacer
         '.icon::get('database').'{{debug.queries}}: <strong>'.$iQueries.'</strong>
         <table class="table table-striped">
         <tr>
-            <th>{{debug.records}}</th>
             <th>{{debug.time_ms}}</th>
+            <th>{{debug.records}}</th>
             <th>{{debug.query}}</th>
         </tr>
         '.$sDB_DEBUG.'</table>'
