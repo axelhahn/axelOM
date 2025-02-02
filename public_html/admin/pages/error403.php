@@ -14,12 +14,12 @@
 $TITLE='{{403.title}}';
 $BODY=''
     . '<i class="'.icon::getclass('403').'" style="font-size: 800%;"></i><br><br>'
-    . $renderAdminLTE->getAlert(array (
+    . $renderAdminLTE->getAlert([
             'type' => 'danger',
             'title' => '{{403.subtitle}}',
             'dismissible' => 0,
             'text' => '{{403.message}}',
-        )
+        ]
     )
     .'<br><br>'
     . $renderAdminLTE->getButton([

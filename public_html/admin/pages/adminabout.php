@@ -20,13 +20,13 @@ $sPerms='';
 $s='';
 
 
-$s.=$renderAdminLTE->getCard(array (
+$s.=$renderAdminLTE->getCard([
     'type' => '',
     'title' => '',
     'text' => '{{about.text}}'
     ,
     // 'variant' => '',
-));
+]);
 
 
 $BODY=$renderAdminLTE->addRow(
