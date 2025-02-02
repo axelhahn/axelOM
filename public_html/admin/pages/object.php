@@ -577,15 +577,24 @@ if ($bShowEdit) {
 
         // $sForm.='<pre>relations: '.print_r($o->relRead(), 1).'</pre>';
         $sFooter .= ''
-            . ($iItems
-                ? $renderAdminLTE->getButton([
-                    'type' => 'secondary',
-                    'text' => icon::get('abort') . '{{abort}}',
-                    'onclick' => 'location.href=\'' . $sBaseUrl . '\'; return false;',
+            . ($o->id()
+                ? 
+                    '<span style="float: right;">'
+                    .$renderAdminLTE->getButton([
+                        'class' => 'btn-danger',
+                        'text' => icon::get('delete') . '{{delete}}',
+                        'title' => '{{delete}}: '.$o->getLabel(),
+                        'onclick' => 'if(confirm(\'{{confirm_delete}}\n\n'.$o->getLabel().'\n\n?\')) httprequest(\'POST\', location.href , {\'action\': \'delete\', \'id\': \''.$o->id().'\'}); return false',
                     ])
-                    . ' '
-                : ''
-            )
+                    . '</span>'
+                    : ''
+                )
+            . $renderAdminLTE->getButton([
+                'type' => 'secondary',
+                'text' => icon::get('abort') . '{{abort}}',
+                'onclick' => 'location.href=\'' . $sBaseUrl . '\'; return false;',
+            ])
+            .' '
             . $renderAdminLTE->getButton([
                 'type' => 'primary',
                 'text' => icon::get('save') . '{{save}}',
