@@ -1431,6 +1431,10 @@ class renderadminlte
         $aElement['id'] = $sFormid;
 
         $sLabel = isset($aOptions['label']) ? $aOptions['label'] : '';
+        if ($aOptions['required']??false) {
+            $sLabel .= ' <span class="required">*</span>';
+        }
+
         $sHint = isset($aOptions['hint']) ? $aOptions['hint'] : '';
         $sPrepend = '';
         $sAppend = '';

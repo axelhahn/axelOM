@@ -94,7 +94,7 @@ if(!$bDbTableOk){
         'error', 
         '{{object.tablecheck_update_required}}<ul><li>'.implode('</li><li>', $aCheck['_result']['messages']).'</li></ul>'
         .$renderAdminLTE->getButton([
-            'type' => 'primary',
+            'type' => 'dark',
             'text' => icon::get('repair').'{{repair}}',
             'onclick' => 'httprequest(\'POST\', location.href , {\'action\': \'repair\'});',
 

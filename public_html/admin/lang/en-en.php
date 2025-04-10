@@ -32,6 +32,14 @@ return [
     // ----- page :: app home
     "apphome.title" => "Backend",
 
+    "newapp.title" => "Create new application",
+    "newapp.appname" => "Subdir (lowercase)",
+    "newapp.appname-placeholder" => "eg. myapp",
+    "newapp.icon" => "Icon class",
+    "newapp.label" => "Name of application",
+    "newapp.label-placeholder" => "eg. My Application",
+    "newapp.description" => "Description",
+
     // ----- page :: configuration
     "globalconfig.title" => "Global Configuration",
     "globalconfig.banner" => "Edit global configuration of this backend: language, users with its roles and more",
@@ -191,6 +199,10 @@ return [
     "msgerr.class_file_missing2"=>"The file was not found",
     "msgerr.class_not_initialized"=>"Unable to initialize class",
     "msgerr.class_not_initialized2"=>"Strange ... but the classfile was found",
+
+    // ----- messages new app
+    "msgerr.missing_appname" => "ERROR: No name for subdir was given.",
+    "msgerr.missing_label" => "Error: No app name was given.",
 
     // ----- messages item
 

@@ -1,15 +1,22 @@
 ## Property definition
 
+Default properties:
 
-| Key | type | default | description |
-| --- | --- | --- | --- |
-| create | {string} | - | Create statement for this property like<br>- integer<br>- varchar(32)<br>- varchar(4096) |
-| validate_is | {string} | - | Validation rule for this property <br>- "string" value must be a string<br>- "integer" value must be an integer|
-| validate_regex | {string} | - | if set a value must match this regular expression |
-| overview | {bool} | false | if true or 1 this property is shown in overview table of the admin. |
-| attr | {array} | - | Attributes to extend the detected form element |
-| force | {array} | - | Ignore autodetection and apply the given attributes |
-| lookup | {array} | - | this property is a lookup to another object. You can setup the lookup parameters here. |
+| Key            | type     | default | description |
+| ---            | ---      | ---   | --- |
+| create         | {string} | -     | Create statement for this property like<br>- integer<br>- varchar(32)<br>- varchar(4096) |
+| validate_is    | {string} | -     | Validation rule for this property <br>- "string" value must be a string<br>- "integer" value must be an integer|
+| validate_regex | {string} | -     | if set a value must match this regular expression |
+| index          | {bool}   | false | Create an index for this column |
+
+Custom properties:
+
+| Key            | type     | default | description |
+| ---            | ---      | ---   | --- |
+| overview       | {bool}   | false | if true or 1 this property is shown in overview table of the admin. |
+| attr           | {array}  | -     | Attributes to extend the detected form element |
+| force          | {array}  | -     | Ignore autodetection and apply the given attributes |
+| lookup         | {array}  | -     | this property is a lookup to another object. You can setup the lookup parameters here. |
 
 ### create
 
@@ -64,6 +71,11 @@ The validation is applied when using `$object->set(<KEY>, <VALUE>)` or `$object-
 The overview flag is for the list of object items in the overview table. If set to true or 1, the property will be shown in the overview table.
 
 If you have objects with many properties you can influence the visibility of wanted and unwanted properties.
+
+### index
+
+Set it it to true or 1 to create a database index for this column.
+The default is false.
 
 ### form element
 

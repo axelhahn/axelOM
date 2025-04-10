@@ -400,7 +400,7 @@ if ($iItems == 0) {
                     // .'<hr>'
                     .'{{object.tablecheck_edit_disabled}}<br>'
                     .$renderAdminLTE->getButton([
-                        'type' => 'primary',
+                        'type' => 'dark',
                         'text' => icon::get('config').'{{config}}',
                         'onclick' => 'location.href=\'' . $sObjEditUrl . '\';',
                     ]) . ' '
@@ -577,15 +577,24 @@ if ($bShowEdit) {
 
         // $sForm.='<pre>relations: '.print_r($o->relRead(), 1).'</pre>';
         $sFooter .= ''
-            . ($iItems
-                ? $renderAdminLTE->getButton([
-                    'type' => 'secondary',
-                    'text' => icon::get('abort') . '{{abort}}',
-                    'onclick' => 'location.href=\'' . $sBaseUrl . '\'; return false;',
+            . ($o->id()
+                ? 
+                    '<span style="float: right;">'
+                    .$renderAdminLTE->getButton([
+                        'class' => 'btn-danger',
+                        'text' => icon::get('delete') . '{{delete}}',
+                        'title' => '{{delete}}: '.$o->getLabel(),
+                        'onclick' => 'if(confirm(\'{{confirm_delete}}\n\n'.$o->getLabel().'\n\n?\')) httprequest(\'POST\', \''.$sBaseUrl.'\' , {\'action\': \'delete\', \'id\': \''.$o->id().'\'}); return false',
                     ])
-                    . ' '
-                : ''
-            )
+                    . '</span>'
+                    : ''
+                )
+            . $renderAdminLTE->getButton([
+                'type' => 'secondary',
+                'text' => icon::get('abort') . '{{abort}}',
+                'onclick' => 'location.href=\'' . $sBaseUrl . '\'; return false;',
+            ])
+            .' '
             . $renderAdminLTE->getButton([
                 'type' => 'primary',
                 'text' => icon::get('save') . '{{save}}',
@@ -842,10 +851,10 @@ if ($bShowEdit) {
             $sMainContent.= ''
                 .'<br><br><div id="msgOtherChanges">'
                     .'<br>'
-                    .$renderAdminLTE->getCallout(array (
+                    .$renderAdminLTE->getCallout([
                         'type' => 'danger',
                         'text' => '{{object.relations_locked}}',
-                    ))
+                    ])
                 .'</div>'
                 .'<div id="relations">'
                 .$renderAdminLTE->addRow(

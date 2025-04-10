@@ -18,7 +18,7 @@
  * Licence: GNU GPL 3.0
  * ----------------------------------------------------------------------
  * 2023-08-26  0.1  ah  first lines
- * 2025-02-02  ___  ah  last changes
+ * 2025-04-11  ___  ah  last changes: remove required star in label
  * ======================================================================
  */
 
@@ -87,6 +87,7 @@ class pdo_db_base
     protected array $_aDefaultColumns = [
         'id' => [
             'create' => 'INTEGER primary key autoincrement',
+            'index' => true,
             // 'extra' =>  'primary key autoincrement',
             // 'label' => 'ID',                    'descr' => '', 'type' => 'hidden',         'edit' => false,
             'dummyvalue' => 'automatic'
@@ -200,7 +201,7 @@ class pdo_db_base
 
 
     /**
-     * Create database table
+     * Create database table if it does not exist yet
      * @return bool
      */
     private function _createDbTable(): bool
@@ -246,9 +247,34 @@ class pdo_db_base
             );
             return false;
         }
+        $this->_createDbTableIndex();
         // echo __METHOD__ . ' created table ' . $this->_table . '<br>';
         return true;
 
+    }
+
+    /**
+     * Create database indexes for wanted columns
+     * (property 'index' must be set to true)
+     * 
+     * @return bool
+     */
+    protected function _createDbTableIndex():bool
+    {
+        foreach (array_merge($this->_aDefaultColumns, $this->_aProperties) as $sCol => $aData) {
+            if (($aData['index']??false) || ($aData['overview']??false) ) {
+                $sIndexType='';
+                $sIndexId = "IDX_{$this->_table}_$sCol";
+
+                $sqlIndex = "
+                    CREATE {$sIndexType}INDEX IF NOT EXISTS `$sIndexId`
+                    ON `{$this->_table}`
+                    ( `$sCol` )
+                ";
+                $this->makeQuery($sqlIndex);
+            }
+        }
+        return true;
     }
 
     /**
@@ -1380,10 +1406,18 @@ class pdo_db_base
      * - varchar with more than 1024 byte -> textarea
      * 
      * If attribute starts with 
+     *   - "color"    -> input with type color
      *   - "date"     -> input with type date
      *   - "datetime" -> input with type datetime-local
+     *   - "email"    -> input with type "email"
      *   - "html"     -> textarea with type "html"
-     *   - "number"   -> textarea with type "number"
+     *   - "month"    -> input with type "number"
+     *   - "number"   -> input with type "number"
+     *   - "password" -> input with type "password" !! DO NOT USE YET
+     *   - "tel"      -> input with type "tel"
+     *   - "time"     -> input with type "time"
+     *   - "url"      -> input with type "url"
+     *   - "week"     -> input with type "week"
      * 
      * @param  string  $sAttr  name of the property
      * @return array|bool
@@ -1399,11 +1433,22 @@ class pdo_db_base
             return false;
         }
 
+        // guess html form type by attribute name
+        // https://www.w3schools.com/html/html_form_input_types.asp
         $aColumnMatcher = [
-            ['regex' => '/^date/', 'tag' => 'input', 'type' => 'date'],
-            ['regex' => '/^datetime/', 'tag' => 'input', 'type' => 'datetime-local'],
-            ['regex' => '/^html/', 'tag' => 'textarea', 'type' => 'html'],
-            ['regex' => '/^number/', 'tag' => 'input', 'type' => 'number'],
+            ['regex' => '/^color/',    'tag' => 'input',    'type' => 'color'],
+            ['regex' => '/^date/',     'tag' => 'input',    'type' => 'date'],
+            ['regex' => '/^datetime/', 'tag' => 'input',    'type' => 'datetime-local'],
+            ['regex' => '/^email/',    'tag' => 'input',    'type' => 'email'],
+            ['regex' => '/^html/',     'tag' => 'textarea', 'type' => 'html'],
+            ['regex' => '/^month/',    'tag' => 'input',    'type' => 'month'],
+            ['regex' => '/^number/',   'tag' => 'input',    'type' => 'number'],
+            ['regex' => '/^password/', 'tag' => 'input',    'type' => 'password'], // TODO: add dummy password in value
+            ['regex' => '/^tel/',      'tag' => 'input',    'type' => 'tel'],
+            ['regex' => '/^time/',     'tag' => 'input',    'type' => 'time'],
+            ['regex' => '/^url/',      'tag' => 'input',    'type' => 'url'],
+            ['regex' => '/^week/',     'tag' => 'input',    'type' => 'week'],
+
         ];
 
         $aReturn = [];
@@ -1558,10 +1603,6 @@ class pdo_db_base
 
         $aReturn['name'] = $sAttr;
         $aReturn['label'] = isset($aReturn['label']) ? $aReturn['label'] : $sAttr;
-
-        if (isset($aReturn['required']) && $aReturn['required']) {
-            $aReturn['label'] .= ' <span class="required">*</span>';
-        }
 
         // DEBUG:
         // $aReturn['title']=$sAttr . ' --> '.(isset($aReturn['debug']) ? print_r($aReturn['debug'], 1) : 'NO DEBUG');

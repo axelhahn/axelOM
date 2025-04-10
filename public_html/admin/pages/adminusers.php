@@ -33,13 +33,13 @@ function yesno($bValue){
 
 
 if (!isset($aSettings['acl'])){
-    $s.=$renderAdminLTE->getCard(array (
+    $s.=$renderAdminLTE->getCard([
         'type' => '',
         'title' => '',
         'text' => '{{users.noacl}}'
         ,
         // 'variant' => '',
-    ));
+    ]);
 } else{
 
     $aUsers=[];
