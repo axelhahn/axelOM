@@ -9,6 +9,7 @@
  * 
  * ----------------------------------------------------------------------
  * 2024-05-18  <axel-hahn.de>  add variable types
+ * 2025-04-10  <axel-hahn.de>  fix static method
  * ======================================================================
  */
 
@@ -23,10 +24,10 @@ class icon{
      * @param string  $s   id or class of icon
      * @return string
      */
-    static public function get(string $s) :string {
+    public static function get(string $s) :string {
         global $_aIconClassData;
         return '<i class="'
-            .(isset($_aIconClassData[$s]) ? $_aIconClassData[$s] : $s )
+            .($_aIconClassData[$s] ?? $s)
             .'"></i>&nbsp;'
             ;
     }
@@ -36,7 +37,7 @@ class icon{
      * @param string  $s   id or class of icon
      * @return string
      */
-    static public function getclass(string $s) :string {
+    public static function getclass(string $s) :string {
         global $_aIconClassData;
         return $_aIconClassData[$s] ?? '';
     }

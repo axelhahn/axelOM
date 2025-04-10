@@ -44,3 +44,11 @@ This will return
 ```html
 <i class="fa-solid fa-database"></i>
 ```
+
+You can also get the classname with the static function `getclass(<KEY>)`;
+
+```php
+echo icon::getclass('database');
+```
+
+This returns `fa-solid fa-database`.
