@@ -32,6 +32,14 @@ return [
     // ----- page :: app home
     "apphome.title" => "Backend",
 
+    "newapp.title" => "Neue Applikation erstellen",
+    "newapp.appname" => "Verzeichnis (Kleinbuchstaben)",
+    "newapp.appname-placeholder" => "z.B. appname",
+    "newapp.icon" => "Icon CSS-Klasse",
+    "newapp.label" => "z.B. Neuw Applikation",
+    "newapp.label-placeholder" => "Name",
+    "newapp.description" => "Beschreibung",
+
     // ----- page :: configuration
     "globalconfig.title" => "Globale Konfiguration",
     "globalconfig.banner" => "Bearbeite die globale Konfiguration dieses Backends: Sprache, User mit Rollen und mehr",
@@ -191,6 +199,10 @@ return [
     "msgerr.class_file_missing2"=>"Die Datei wurde nicht gefunden",
     "msgerr.class_not_initialized"=>"Initialisierung der Klasse fehlgeschlagen",
     "msgerr.class_not_initialized2"=>"Komisch ... denn die PHP-Klassen-Datei wurde gefunden",
+
+    // ----- messages new app
+    "msgerr.missing_appname" => "FEHLER: Es wurde kein Verzeichnisname angegeben.",
+    "msgerr.missing_label" => "FEHLER: Es wurde kein Name der neuen Applikation angegeben.",
 
     // ----- messages item
     "msgerr.wrong_itemdata"=> "FEHLER: Die Eingabedaten sind ung&uuml;ltig und werden nicht gespeichert",

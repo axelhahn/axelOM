@@ -176,6 +176,11 @@ $(document).ready(function () {
       $(this).hide();
     });
 
+    // do not close on click inside modal window
+    $( '#overlay-text' ).on( 'click', function( event ) {
+      event.stopPropagation();
+    });
+
     // search field on top right
     $('#searchtop').click(function () {
       dosearch();
