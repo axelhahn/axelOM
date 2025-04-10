@@ -400,7 +400,7 @@ if ($iItems == 0) {
                     // .'<hr>'
                     .'{{object.tablecheck_edit_disabled}}<br>'
                     .$renderAdminLTE->getButton([
-                        'type' => 'primary',
+                        'type' => 'dark',
                         'text' => icon::get('config').'{{config}}',
                         'onclick' => 'location.href=\'' . $sObjEditUrl . '\';',
                     ]) . ' '
@@ -584,7 +584,7 @@ if ($bShowEdit) {
                         'class' => 'btn-danger',
                         'text' => icon::get('delete') . '{{delete}}',
                         'title' => '{{delete}}: '.$o->getLabel(),
-                        'onclick' => 'if(confirm(\'{{confirm_delete}}\n\n'.$o->getLabel().'\n\n?\')) httprequest(\'POST\', location.href , {\'action\': \'delete\', \'id\': \''.$o->id().'\'}); return false',
+                        'onclick' => 'if(confirm(\'{{confirm_delete}}\n\n'.$o->getLabel().'\n\n?\')) httprequest(\'POST\', \''.$sBaseUrl.'\' , {\'action\': \'delete\', \'id\': \''.$o->id().'\'}); return false',
                     ])
                     . '</span>'
                     : ''
@@ -851,10 +851,10 @@ if ($bShowEdit) {
             $sMainContent.= ''
                 .'<br><br><div id="msgOtherChanges">'
                     .'<br>'
-                    .$renderAdminLTE->getCallout(array (
+                    .$renderAdminLTE->getCallout([
                         'type' => 'danger',
                         'text' => '{{object.relations_locked}}',
-                    ))
+                    ])
                 .'</div>'
                 .'<div id="relations">'
                 .$renderAdminLTE->addRow(

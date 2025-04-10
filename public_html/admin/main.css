@@ -150,6 +150,8 @@ datalist {
 	width: 100%;
 }
 
+.display-none{display: none;}
+
 #msgOtherChanges{display: none;}
 
 /** Codemirror **/
