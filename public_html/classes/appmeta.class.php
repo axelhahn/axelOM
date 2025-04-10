@@ -125,7 +125,11 @@ class appmetainfos {
      * file
      * 
      * @param string $sNewAppdir  full path of application directory or app name
-     * @param array  $aConfig     config for the new application
+     * @param array  $aConfig     config for the new application with subkeys
+     *                            - label
+     *                            - icon
+     *                            - TODO: db (see PDO constructor parameters)
+     *                            - TODO: objects
      * @return boolean
      */
     public function create(string $sNewAppdir, array $aConfig=[]) :bool {
@@ -136,9 +140,11 @@ class appmetainfos {
                 mkdir($sNewAppdir.'/'.$sDir);
             }
 
-            file_put_contents($sNewAppdir.'/config/objects.php', "<?php return [
-                'label' => '".(isset($aConfig['label']) ? $aConfig['label'] : $sNewApp)."',
-                'icon' => '".(isset($aConfig['icon']) ? $aConfig['icon'] : 'fa fa-puzzle-piece')."',
+            file_put_contents("$sNewAppdir/config/objects.php", "<?php 
+            return [
+                'label' => '".($aConfig['label'] ?? $sNewApp)."',
+                'icon' => '".($aConfig['icon'] ?? 'fa fa-puzzle-piece')."',
+                'hint' => '".($aConfig['hint'] ?? '')."',
                 'db' => [
                     // see https://www.php.net/manual/de/pdo.construct.php
                     /*
@@ -152,14 +158,14 @@ class appmetainfos {
                     'password' => 'mypassword',
                     'options' => []
                     */
-                    ".(isset($aConfig['label']) ? $aConfig['label'] : $sNewApp)."
                 ],
                 'objects' => [
                     // 'objproducts'               => ['label' => 'Products',              'icon' => 'fa fa-puzzle-piece'],
                     // 'objprogramminglanguages'   => ['label' => 'Programming languages', 'icon' => 'fa fa-puzzle-piece'],
                 ]
 
-            ];?>");
+            ];
+            ");
 
             $this->set($sNewAppdir);
             return true;
