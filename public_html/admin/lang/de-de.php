@@ -106,6 +106,7 @@ return [
 
     "object.attachment_preview" => "Vorschau",
     "object.attachment-fix-app-config-in-attachments-key" => "Vorschau ist nicht verfügbar.<br>Prüfen Sie die Config in [app]/config/objects.php - Sektion 'attachments'.<br>'baseurl' muss gesetzt sein und 'basedir' auf ein existierendes Verzeichnis zeigen.",
+    "object.object_preview" => "Vorschau des Objekts",
 
     "object.add_relation_to" => "Relation hinzuf&uuml;gen zu",
     "object.relations_locked" => "Das Objekt wurde bearbeitet. Die Verknüpfungen sind daher gesperrt. Speichern Sie zunächst das Objekt und bearbeiten Sie es erneut, um die Verknüpfungen zu ändern.",
