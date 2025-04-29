@@ -76,6 +76,8 @@ function dosearch(){
 }
 
 /**
+ * Make an http request with given method, url, form data.
+ * The response can be shown in a given dom id or in the full browser window.
  * 
  * TODO: beautify
  * - Example POST method implementation:
@@ -93,42 +95,42 @@ async function httprequest(method="GET", url = "", data = {}, idOut = null) {
 
     // console.log("httprequest("+method+", "+url+", "+data+", "+idOut+")");
 
-    if(method=="POST" || method=="PUT"){
-      var fd = new FormData();
-      for(var key in data){
-        fd.append(key,data[key]);
-      }        
+    if (method == "POST" || method == "PUT") {
+        var fd = new FormData();
+        for (var key in data) {
+            fd.append(key, data[key]);
+        }
     } else {
-      var fd = null;
+        var fd = null;
     }
 
     // Default options are marked with *
     const response = await fetch(url, {
-      method: method, // *GET, POST, PUT, DELETE, etc.
-      mode: "cors", // no-cors, *cors, same-origin
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", // include, *same-origin, omit
-      headers: {
-        // "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-        // 'Content-Type': 'multipart/form-data',
-      },
-      redirect: "follow", // manual, *follow, error
-      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: fd, // body data type must match "Content-Type" header
+        method: method, // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, *cors, same-origin
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin", // include, *same-origin, omit
+        headers: {
+            // "Content-Type": "application/json",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+            // 'Content-Type': 'multipart/form-data',
+        },
+        redirect: "follow", // manual, *follow, error
+        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: fd, // body data type must match "Content-Type" header
     });
     // return response.json(); // parses JSON response into native JavaScript objects
 
     var responsebody = await response.text();
     if (idOut) {
-      $('#'+idOut).html(responsebody);
+        document.getElementById(idOut).innerHTML = responsebody;
     } else {
-      document.open();
-      document.write(responsebody);
-      document.close();
+        document.open();
+        document.write(responsebody);
+        document.close();
     }
 
-  }
+}
 
 
 // // save left menu status
