@@ -15,7 +15,7 @@ header("Pragma: no-cache");
 
 $iTimerStart=microtime(true);
 define("APP_NAME", 'axel :: OM');
-define("APP_VERSION", '0.0.18');
+define("APP_VERSION", '0.0.19');
 
 require_once('../classes/render-adminlte4.class.php');
 require_once('classes/adminmeta.class.php');
