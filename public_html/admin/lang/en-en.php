@@ -61,26 +61,38 @@ return [
         Without the inclusion of other products, development takes much longer.<br>
         My thanks go to the developers of the following projects:
         <ul>
-            <li><a href="https://adminlte.io/">AdminLTE</a> - Bootstrap Admin Template
+            <li><a href="https://adminlte.io/" target="_blank">AdminLTE</a> - Bootstrap Admin Template
                 <ul>
-                <li><a href="https://summernote.org/">Summernote</a> - Summmernote (HTML-Editor)</li>
-                <li><a href="https://github.com/snapappointments/bootstrap-select">Bootstrap-Select plugin</a></li>
+                <li><a href="https://summernote.org/" target="_blank">Summernote</a> - Summmernote (HTML-Editor)</li>
+                <li><a href="https://github.com/snapappointments/bootstrap-select" target="_blank">Bootstrap-Select plugin</a></li>
                 </ul>
-            <li><a href="https://jquery.com/">jQuery</a></li>
-            <li><a href="https://fontawesome.com/">Fontawesome</a> (Icons)</li>
-            <li><a href="https://os-docs.iml.unibe.ch/adminlte-renderer/">AdminLTE-Renderer - class</a> (Institut for Medical Education; University of Bern)</li>
-            <li><a href="https://github.com/axelhahn/php-abstract-dbo">php-abstract-dbo </a> - Axels Abstract PDO class (Axel Hahn)</li>
+            <li><a href="https://jquery.com/" target="_blank">jQuery</a></li>
+            <li><a href="https://fontawesome.com/" target="_blank">Fontawesome</a> (Icons)</li>
+            <li><a href="https://os-docs.iml.unibe.ch/adminlte-renderer/" target="_blank">AdminLTE-Renderer - class</a> (Institut for Medical Education; University of Bern)</li>
+            <li><a href="https://github.com/axelhahn/php-abstract-dbo" target="_blank">php-abstract-dbo </a> - Axels Abstract PDO class (Axel Hahn)</li>
         </ul>
         ',
 
     // ----- page :: errors
     "403.title" => "403 :: Access denied",
+    "403.banner" => "Access denied",
     "403.subtitle" => "You have no permissions for this page.",
     "403.message" => "The backend has different access levels.<br>You have no permissions for this page and the access is denied.",
 
     "404.title" => "404 :: Page not found",
+    "404.banner" => "Page not found",
     "404.subtitle" => "The requested page was not found.",
-    "404.message" => "Check the url. Go back to the last page or start again from home page.",
+    "404.message" => "Check the url. The url parameter page=... is wrong. Go back to the last page or start again from home page.",
+
+    "404-app.title" => "404 :: Page not found",
+    "404-app.banner" => "App is wrong",
+    "404-app.subtitle" => "The requested app was not found.",
+    "404-app.message" => "Check the url. The url parameter app=... is wrong. Select a known app in the naviation on top. Or go back to the last page or start again from home page.",
+
+    "404-obj.title" => "404 :: Page not found",
+    "404-obj.banner" => "Object is wrong",
+    "404-obj.subtitle" => "The requested object was not found.",
+    "404-obj.message" => "Check the url. The url parameter object=... is wrong. Select a known object in the naviation left. Or go back to the last page or start again from home page.",
 
     // ----- page :: users list
     "users.title" => "Users",

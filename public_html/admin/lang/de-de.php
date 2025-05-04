@@ -61,26 +61,38 @@ return [
         Ohne die Einbindung anderer Produkte w&auml;re die Entwickklung viel aufw&auml;ndiger.<br>
         (M)Ein Dankeschön an die Entwickler der Tools
         <ul>
-            <li><a href="https://adminlte.io/">AdminLTE</a> - Bootstrap Admin Template
+            <li><a href="https://adminlte.io/" target="_blank">AdminLTE</a> - Bootstrap Admin Template
                 <ul>
-                <li><a href="https://summernote.org/">Summernote</a> - Summmernote (HTML-Editor)</li>
-                <li><a href="https://github.com/snapappointments/bootstrap-select">Bootstrap-Select Plugin</a></li>
+                <li><a href="https://summernote.org/" target="_blank">Summernote</a> - Summmernote (HTML-Editor)</li>
+                <li><a href="https://github.com/snapappointments/bootstrap-select" target="_blank">Bootstrap-Select Plugin</a></li>
                 </ul>
-            <li><a href="https://jquery.com/">jQuery</a></li>
-            <li><a href="https://fontawesome.com/">Fontawesome</a> (Icons)</li>
-            <li><a href="https://os-docs.iml.unibe.ch/adminlte-renderer/">AdminLTE-Renderer - Klasse</a> (Institut f&uuml;r Medizinische Lehre; Universit&auml;t Bern)</li>
-            <li><a href="https://github.com/axelhahn/php-abstract-dbo">php-abstract-dbo </a> - Axels Abstract PDO Klasse (Axel Hahn)</li>
+            <li><a href="https://jquery.com/" target="_blank">jQuery</a></li>
+            <li><a href="https://fontawesome.com/" target="_blank">Fontawesome</a> (Icons)</li>
+            <li><a href="https://os-docs.iml.unibe.ch/adminlte-renderer/" target="_blank">AdminLTE-Renderer - Klasse</a> (Institut f&uuml;r Medizinische Lehre; Universit&auml;t Bern)</li>
+            <li><a href="https://github.com/axelhahn/php-abstract-dbo" target="_blank">php-abstract-dbo </a> - Axels Abstract PDO Klasse (Axel Hahn)</li>
         </ul>
         ',
 
     // ----- page :: errors
     "403.title" => "403 :: Zugriff verweigert",
+    "403.banner" => "Zugriff verweigert",
     "403.subtitle" => "Für diese Seite fehlt die Berechtigung.",
     "403.message" => "Das Backend kennt unterschiedliche Berechtigungsstufen.<br>F&uuml;r diese Seite fehlt die Berechtigung und deshalb ist der Zugriff verweigert.",
 
     "404.title" => "404 :: Seite nicht gefunden",
+    "404.banner" => "404 :: Seite nicht gefunden",
     "404.subtitle" => "Die angeforderte Seite wurde nicht gefunden",
-    "404.message" => "Pr&uuml;fe die URL. Gehe zur letzten Seite zur&uuml;ck oder beginne von der Startseite.",
+    "404.message" => "Pr&uuml;fe die URL. Der Parameter page=... ist falsch. Gehe zur letzten Seite zur&uuml;ck oder beginne von der Startseite.",
+
+    "404-app.title" => "404 :: Seite nicht gefunden",
+    "404-app.banner" => "Applikationsname ist falsch",
+    "404-app.subtitle" => "Die angeforderte App wurde nicht gefunden",
+    "404-app.message" => "Pr&uuml;fe die URL. Der Parameter app=... ist falsch. W&auml;hle in der Navigation oben eine existierende App. Oder gehe zur letzten Seite zur&uuml;ck oder beginne von der Startseite.",
+
+    "404-obj.title" => "404 :: Seite nicht gefunden",
+    "404-obj.banner" => "Object ist falsch",
+    "404-obj.subtitle" => "Das angeforderte Objekt wurde nicht gefunden.",
+    "404-obj.message" => "Pr&uuml;fe die URL. Der Parameter object=... ist falsch. W&auml;hle in der Navigation links ein existierendes Objekt. Oder gehe zur letzten Seite zur&uuml;ck oder beginne von der Startseite.",
 
     // ----- page :: users list
     "users.title" => "Benutzer",
