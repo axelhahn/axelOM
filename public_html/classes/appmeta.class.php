@@ -287,7 +287,7 @@ class appmetainfos {
      * @return array
      */
     public function getObjects() :array {
-        return $this->getConfig('objects');
+        return $this->getConfig('objects')?:[];
     }
 
     /**
