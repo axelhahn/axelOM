@@ -121,18 +121,6 @@ $s=''
                 ])
             , 4
         )
-        .$renderAdminLTE->addCol(
-            $acl->isGlobalAdmin()
-                        ? '<span style="float: right">'.$renderAdminLTE->getButton([
-                            'type' => 'success',
-                            'text' => icon::get('new').'{{new}}',
-                            'onclick' => 'overlayDisplay(document.getElementById(\'frmNewApp\').innerHTML); return false;',
-                        ]).'</span>'
-                        : ''
-                        ,1
-        )
-
-
     )
     .'<br>
     <div id="frmNewApp" class="display-none">'
@@ -175,6 +163,21 @@ foreach ($adminmetainfos->getApps(1) as $sApp => $aAppData){
         );
     }
 }
+$sBoxes.=$renderAdminLTE->addCol(
+    $renderAdminLTE->getCard([
+        'type' => '',
+        // 'title' => '<a href="?app='.$sApp.'&page=home">' .icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</a>',
+        'text' => '<br><br><center>'.$renderAdminLTE->getButton([
+            'type' => '',
+            'text' => icon::get('new').'{{new}}',
+            'onclick' => 'overlayDisplay(document.getElementById(\'frmNewApp\').innerHTML); return false;',
+        ]).'</center>',
+        'class' => 'height10em'
+        // 'variant' => '',
+    ]),
+    3
+);
+
 $s.=$renderAdminLTE->addRow($sBoxes);
 
 
