@@ -30,7 +30,7 @@ $sUiLang=$aSettings['lang'] ?? "de-de";
 $sPage=queryparam::get('page', '/^[a-z]*$/');
 $sObject=queryparam::get('object', '/^[a-z\_]*$/');
 
-$sTabApp=queryparam::get('app', '/^[a-z\-]*$/');
+$sTabApp=queryparam::get('app', '/^[a-z\-0-9]*$/');
 if(!$sTabApp && !$sPage){
     // $sTabApp=array_key_first($aObjects);
     header('location: ?page=home');
@@ -58,13 +58,13 @@ $aSidebarNav=[];
 $aTopnavRight=[];
 $aObjects=[];
 
+$bAppFound=false;
 foreach(array_keys($adminmetainfos->getApps()) as $sApp){
     $appmeta=new appmetainfos($sAppRootDir.'/'.$sApp);
-
     if ($acl->canView($sApp)){
         if($sApp==$sTabApp){
             // tab is active
-
+            $bAppFound=true;
             $aSidebarNav[]=['href'=>'?page=home', 'label'=>'{{back}}', 'icon'=>icon::getclass('back')];
 
             $aSidebarNav[]=['href'=>'?app='.$sApp.'&page=home',          'label'=>'{{nav.home}} :: ' . $appmeta->getAppname(), 'icon'=>$appmeta->getAppicon() ? $appmeta->getAppicon() : icon::getclass('home')];
@@ -126,7 +126,7 @@ if(!count($aSidebarNav)){
 }
 
 // add search field
-if($sTabApp){
+if($bAppFound){
     $aTopnavRight[]=['label'=>'<input class="form-control form-control-sidebar fix-nolabel" type="search" id="searchtop" placeholder="{{search.placeholder}}" aria-label="Search">',];
 }
 $aTopnavRight[]=['href'=>'?page=userprofile', 'label'=>'' . $acl->getUserDisplayname(), 'icon'=>icon::getclass('user'), 'title'=> $acl->getUser()."\n- ".implode("\n- ",$acl->getGroups()), 'class'=>($sPage=='userprofile' ? 'active' : '') ];
@@ -146,23 +146,27 @@ for($i=0; $i<count($aSidebarNav); $i++){
 
 $appmeta=new appmetainfos($sAppRootDir.'/'.$sTabApp);
 
+// show page for missing app
+if($sTabApp && !$bAppFound){
+    $sPage="error404-wrong-app";
+} else if($sTabApp && ($_GET['object']??false) && !($sObject??false) ){
+    $sPage="error404-wrong-obj";
+}
+
 $aReplace['{{NAVI_TOP}}']=''
-. $renderAdminLTE->addWrapper(
+    . $renderAdminLTE->addWrapper(
     'nav', ['class'=>'app-header navbar navbar-expand bg-body'],
     $renderAdminLTE->addWrapper('div', [ 'class' => 'container-fluid' ],
         $renderAdminLTE->getTopNavigation($aTopnav, [], $aTopnavRight)
     )
     // add 2nd navbar if needed
-)
-;
+    );
 
 $aReplace['{{NAVI_LEFT}}']=''
     . $renderAdminLTE->addWrapper(
         'nav', ['class'=>'mt-2'],
         $renderAdminLTE->getSidebarNavigation($aSidebarNav)
     );
-
-
 
 // ---------- include page content
 $sIncfile='pages/'.$sPage.'.php';
