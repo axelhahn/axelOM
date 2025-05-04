@@ -18,6 +18,7 @@ if(!$acl->canView($sTabApp)){
 
 require_once('inc_functions.php');
 
+$sHomeAppUrl = '?app='.$sTabApp.'&page=home';
 $sBaseAppUrl = '?app='.$sTabApp.'&page=object';
 $sBaseUrl    = '?app='.$sTabApp.'&page=object&object=' . $sObject;
 
@@ -30,7 +31,10 @@ if($sObject=="pdo_db_attachments"){
     $sObjLabel=icon::get('file') . ' {{files}}';
 }
 
-$TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> :: ' 
+$TITLE='<strong>'
+    .'<a href="'.$sHomeAppUrl.'">'
+    .icon::get($appmeta->getAppicon()) . $appmeta->getAppname()
+    .'</a></strong> :: ' 
     . ''.($sObjLabel ? '  ' . $sObjLabel : '') .'';
 
 $BANNER=$appmeta->getApphint() . ' -> <strong>' . $appmeta->getObjectHint($sObject).'</strong>';
@@ -277,7 +281,17 @@ $iId = queryparam::get('id', false, 'int');
 if ($iId) {
     $bShowEdit = true;
     $o->read($iId, true);
-    $TITLE = '<a href="'.$sBaseUrl.'">'.$TITLE.'</a> :: '.$o->getLabel();
+    $TITLE='<strong>'
+    .'<a href="'.$sHomeAppUrl.'">'
+        .icon::get($appmeta->getAppicon()) . $appmeta->getAppname()
+    .'</a></strong>'
+    .' :: ' 
+    . '<a href="'.$sBaseUrl.'">'.($sObjLabel ? '  ' . $sObjLabel : '') .'</a>'
+    .' :: '
+    .$o->getLabel()
+    ;
+
+    // $TITLE = '<a href="'.$sBaseUrl.'">'.$TITLE.'</a> :: '.$o->getLabel();
 
 }
 $sRelobjectname=queryparam::get('newrel', '/[a-z\-]/');
