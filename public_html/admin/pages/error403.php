@@ -12,6 +12,8 @@
  */
 
 $TITLE='{{403.title}}';
+$BANNER='{{403.banner}}';
+
 $BODY=''
     . '<i class="'.icon::getclass('403').'" style="font-size: 800%;"></i><br><br>'
     . $renderAdminLTE->getAlert([
