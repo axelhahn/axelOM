@@ -34,7 +34,7 @@ if($sObject=="pdo_db_attachments"){
 $TITLE='<strong>'
     .'<a href="'.$sHomeAppUrl.'">'
     .icon::get($appmeta->getAppicon()) . $appmeta->getAppname()
-    .'</a></strong> :: ' 
+    .'</a></strong> ' .DELIM_TITLE
     . ''.($sObjLabel ? '  ' . $sObjLabel : '') .'';
 
 $BANNER=$appmeta->getApphint() . ' -> <strong>' . $appmeta->getObjectHint($sObject).'</strong>';
@@ -131,12 +131,15 @@ if (isset($_POST['action'])) {
             case 'edit':
                 $aItemData['id'] = queryparam::post('id', false, 'int');
                 $o->read($aItemData['id']);
-                $sBtnEdit=' ... '.$renderAdminLTE->getButton([
-                    'type' => 'dark',
-                    'text' => icon::get('edit') . '{{edit}}',
-                    'title' => '{{edit}}: '.$o->getLabel($aItemData),
-                    'onclick' => 'location.href=\'' . $sBaseUrl.'&id='.$aItemData['id'] . '\'',
-                ]);
+                $sBtnEdit=!($_GET['id']??false)
+                    ? ' ... '.$renderAdminLTE->getButton([
+                        'type' => 'dark',
+                        'text' => icon::get('edit') . '{{edit}}',
+                        'title' => '{{edit}}: '.$o->getLabel($aItemData),
+                        'onclick' => 'location.href=\'' . $sBaseUrl.'&id='.$aItemData['id'] . '\'',
+                    ])
+                    : ''
+                    ;
                 if ($o->setItem($aItemData)) {
                     if($o->hasChange()){
                         if (!$o->save()) {
@@ -285,9 +288,9 @@ if ($iId) {
     .'<a href="'.$sHomeAppUrl.'">'
         .icon::get($appmeta->getAppicon()) . $appmeta->getAppname()
     .'</a></strong>'
-    .' :: ' 
+    .DELIM_TITLE
     . '<a href="'.$sBaseUrl.'">'.($sObjLabel ? '  ' . $sObjLabel : '') .'</a>'
-    .' :: '
+    .DELIM_TITLE
     .$o->getLabel()
     ;
 
@@ -613,6 +616,12 @@ if ($bShowEdit) {
             . $renderAdminLTE->getButton([
                 'type' => 'primary',
                 'text' => icon::get('save') . '{{save}}',
+            ])
+            .' '
+            . $renderAdminLTE->getButton([
+                'type' => 'primary',
+                'onclick' => '$(\'#frmEditObject\').attr(\'action\', \''.$sBaseUrl.'&id='.$o->id().'\'); $(\'#frmEditObject\').submit(); return false;',
+                'text' => icon::get('save') . '{{save_and_continue}}',
             ])
             . '</form>'
             ;

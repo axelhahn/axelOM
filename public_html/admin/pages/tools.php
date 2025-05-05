@@ -23,8 +23,14 @@ $sBackuppath=dirname(dirname(__DIR__)).'/apps/'.$sTabApp.'/data/';
 
 // $sBaseAppUrl = '?page=tools&app='.$sTabApp;
 // $sBaseUrl    = '?page=tools&app='.$sTabApp;
+$sHomeAppUrl = '?app='.$sTabApp.'&page=home';
 
-$TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> :: '. icon::get('tools').'{{tools}}' ;
+$TITLE='<strong>'
+    .'<a href="'.$sHomeAppUrl.'">'
+    .icon::get($appmeta->getAppicon()) . $appmeta->getAppname()
+    .'</a></strong> ' .DELIM_TITLE
+    . icon::get('tools').'{{tools}}' ;
+
 $BANNER=$appmeta->getApphint().' -> <strong>{{tools}}</strong>';
 
 if($sTabApp){
@@ -50,7 +56,7 @@ if($sTabApp){
 
         switch ($sAction) {
             case 'backup':
-                $TITLE.=' :: {{backup}}';
+                $TITLE.=DELIM_TITLE . ' {{backup}}';
                 $sBackupfile=$sBackuppath.'/'.$sTabApp.'-'.$oDB->driver().'-'.date('U').'.json';
                 $aDumpdata=$oDB->dump();
                 if(isset($aDumpdata)){
@@ -104,7 +110,7 @@ if($sTabApp){
                 $sOutAction.= htmlentities(file_get_contents($sBackupfile));
                 break;
             case 'optimize':
-                $TITLE.=' :: {{optimize}}';
+                $TITLE.=DELIM_TITLE . ' {{optimize}}';
                 // $oDB->setDebug(1);                
                 $sOutAction.=print_r($oDB->optimize(), 1);
                 // $oDB->setDebug(0);

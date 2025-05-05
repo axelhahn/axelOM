@@ -18,8 +18,14 @@ if(!$acl->isAppAdmin()){
 }
 
 $sContextbar='';
-$TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> :: ' 
+$sHomeAppUrl = '?app='.$sTabApp.'&page=home';
+
+$TITLE='<strong>'
+    .'<a href="'.$sHomeAppUrl.'">'
+    .icon::get($appmeta->getAppicon()) . $appmeta->getAppname()
+    .'</a></strong> ' .DELIM_TITLE
     . icon::get('config') . '{{config.title}}';
+
 $BANNER='{{config.banner}}';
 
 $sFile=__DIR__.'/../../apps/'.$sTabApp.'/config/objects.php';

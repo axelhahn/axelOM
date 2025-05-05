@@ -196,6 +196,7 @@ return [
     "repair" => "Repair",
     "restore" => "Restore",
     "save"=> "Save",
+    "save_and_continue"=> "Save and continue",
     "select_no_data_set"=>"No data in target table yet",
     "select_relation_item"=> "Select related item",
     "tdactions" => "Actions",

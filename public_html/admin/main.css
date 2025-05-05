@@ -75,7 +75,8 @@ li.nav-item .active i {color:var(--iconcolor);}
 
 /** AdminLTE 3 **/
 .bg-navy {background-color: #001f3f !important;}.bg-navy, .bg-navy > a {color: #fff !important;}
-.page-title {color: #904070;}
+.page-title {color: #958;}
+.page-title span::before {color: #385; content: ' / '; margin: 0 0.3em;}
 .page-hint {
 	color: #d72; 
 	font-size: 120%; 

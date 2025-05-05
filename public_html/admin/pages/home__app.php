@@ -19,7 +19,7 @@ if(!$acl->canView($sTabApp)){
 
 $sContextbar='';
 
-$TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> :: {{apphome.title}}' ;
+$TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong> {{apphome.title}}' ;
 $BANNER=$appmeta->getApphint();
 
 $s=''
