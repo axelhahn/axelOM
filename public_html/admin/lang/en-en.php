@@ -30,7 +30,6 @@ return [
     "home.items"=> "Items",
 
     // ----- page :: app home
-    "apphome.title" => "Backend",
 
     "newapp.title" => "Create new application",
     "newapp.appname" => "Subdir (lowercase)",

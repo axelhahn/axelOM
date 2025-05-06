@@ -322,16 +322,16 @@ if ($iItems == 0) {
         $bDbTableOk=isset($aCheck['_result']['errors']) && $aCheck['_result']['errors']==0;
 
         
-        $sTable = '' . "\n";
+        $sTable = "\n";
         $sTable .= '<table class="table table-bordered table-striped dataTable dtr-inline">
         <thead>
             <tr>';
         foreach($aBasicAttributes as $sField){
             $sTable .= $sField=='id' ? '' : '<th>'.$sField.'</th>';
         }
-        $sTable .= '<th>{{tdactions}}</th></tr>
+        $sTable .= "<th>{{tdactions}}</th></tr>
             </thead>
-            <tbody>' . "\n";
+            <tbody>\n";
 
         foreach ($aItems as $aRow) {
 

@@ -30,7 +30,6 @@ return [
     "home.items"=> "Eintr&auml;ge",
 
     // ----- page :: app home
-    "apphome.title" => "Backend",
 
     "newapp.title" => "Neue Applikation erstellen",
     "newapp.appname" => "Verzeichnis (Kleinbuchstaben)",
