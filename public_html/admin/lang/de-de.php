@@ -127,7 +127,7 @@ return [
     "search.hits" => "Treffer",
     "search.results_for" => "Ergebnisse für",
     "search.no_results_for" => "Kein Treffer für",
-    "search.type_ahead" => "Bitte weitersreiben ...",
+    "search.type_ahead" => "Bitte weiterschreiben ...",
     "search.hint_and_condition" => "Hinweis: Es gibt noch viele Treffer.<br>Mit Leerzeichen können mehrere Begriffe angegeben werden, die mit logischem UND verknüpft werden.",
     "search.no_objects" => "Keine Objekte",
     "search.no_objects_hint" => "Diese Applikation hat noch keine Objekte definiert.<br>Es existiert somit kein Datenbestand, der durchsucht werden könnte.",
