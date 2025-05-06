@@ -617,12 +617,15 @@ if ($bShowEdit) {
                 'type' => 'primary',
                 'text' => icon::get('save') . '{{save}}',
             ])
-            .' '
-            . $renderAdminLTE->getButton([
-                'type' => 'primary',
-                'onclick' => '$(\'#frmEditObject\').attr(\'action\', \''.$sBaseUrl.'&id='.$o->id().'\'); $(\'#frmEditObject\').submit(); return false;',
-                'text' => icon::get('save') . '{{save_and_continue}}',
-            ])
+            .($iId ? 
+                ' '
+                . $renderAdminLTE->getButton([
+                    'type' => 'primary',
+                    'onclick' => '$(\'#frmEditObject\').attr(\'action\', \''.$sBaseUrl.'&id='.$o->id().'\'); $(\'#frmEditObject\').submit(); return false;',
+                    'text' => icon::get('save') . '{{save_and_continue}}',
+                ])
+                : ''
+              )
             . '</form>'
             ;
 
