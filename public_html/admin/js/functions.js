@@ -66,6 +66,7 @@ function overlayHide(){
 function dosearch(){
   var _GET=getQueryParams();
   var q=$("#searchtop").val();
+  localStorage.setItem("search", q);
 
   if(q){
     httprequest("GET", "?app="+_GET['app']+"&page=search&q="+q, {}, "overlay-text");
@@ -182,6 +183,8 @@ $(document).ready(function () {
     $( '#overlay-text' ).on( 'click', function( event ) {
       event.stopPropagation();
     });
+
+    $('#searchtop').val(localStorage.getItem("search") ? localStorage.getItem("search") : "");
 
     // search field on top right
     $('#searchtop').click(function () {
