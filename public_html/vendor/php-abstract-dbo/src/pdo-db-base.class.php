@@ -1128,7 +1128,7 @@ class pdo_db_base
      * @param string $sObjectname  name of the object type
      * @return array
      */
-    protected function relReadObjects(string $sObjectname): array
+    public function relReadObjects(string $sObjectname): array
     {
         $aRel=$this->relRead(['table' => $sObjectname]);
         $aReturn=[];
