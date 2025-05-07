@@ -1404,16 +1404,26 @@ class renderadminlte
      * https://adminlte.io/themes/v3/pages/forms/general.html
      * 
      * @param array $aOptions  hash with keys for all options
-     *                        styling:
-     *                          - type    - field type: text, email, password, hidden and all other html 5 input types
-     *                        content
-     *                          - label   - label tag
-     *                          - name    - name attribute for sending form
-     *                          - value   - value in field
+     *                        content + styling:
+     *                          - id          - id attribute
+     *                          - label       - label tag in front
+     *                          - name        - name attribute for sending form
+     *                          - type        - field type: text, email, password, hidden and all other html 5 input types
+     *                                          + html
+     *                          - value       - value in field
+     * 
      *                        more:
-     *                          - hint    - hint to be displayed above the field
-     *                                      If not set, no hint is displayed.
-     *                                      css for ".row .hint" to customize look and feel
+     *                          - placeholder - placeholder attribute
+     *                          - maxlength   - maxlength attribute
+     *                          - required    - mark as required with asterisk in label and attribute
+     *                          - title       - title attribute
+     * 
+     *                        surrounding:
+     *                          - append      - append text before input text field
+     *                          - prepend     - prepend text or html afterinput text field
+     *                          - hint        - hint to be displayed above the field
+     *                                          If not set, no hint is displayed.
+     *                                          css for ".row .hint" to customize look and feel
      * @return string
      */
     public function GetFormInput(array $aOptions): string
