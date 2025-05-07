@@ -15,7 +15,7 @@ header("Pragma: no-cache");
 
 $iTimerStart=microtime(true);
 define("APP_NAME", 'axel :: OM');
-define("APP_VERSION", '0.0.22');
+define("APP_VERSION", '0.0.23');
 define("DELIM_TITLE", ' <span></span> ');
 
 require_once('../classes/render-adminlte4.class.php');
@@ -130,7 +130,15 @@ if(!count($aSidebarNav)){
 if($bAppFound){
     $aTopnavRight[]=['label'=>'<input class="form-control form-control-sidebar fix-nolabel" type="search" id="searchtop" placeholder="{{search.placeholder}}" aria-label="Search">',];
 }
-$aTopnavRight[]=['href'=>'?page=userprofile', 'label'=>'' . $acl->getUserDisplayname(), 'icon'=>icon::getclass('user'), 'title'=> $acl->getUser()."\n- ".implode("\n- ",$acl->getGroups()), 'class'=>($sPage=='userprofile' ? 'active' : '') ];
+$aTopnavRight[]=[
+    'href'    => ($sPage=='userprofile' ? '#' : '?page=userprofile'),
+    'icon'    => icon::getclass('user'), 
+    'label'   => $acl->getUserDisplayname(), 
+
+    'class'   => ($sPage=='userprofile' ? 'active' : ''),
+    'onclick' => ($sPage=='userprofile' ? 'history.back();' : ''),
+    'title'   => ($sPage=='userprofile'  ? '{{back}}' : $acl->getUser()."\n- ".implode("\n- ",$acl->getGroups()) ), 
+];
 
 // highlight menu item
 for($i=0; $i<count($aSidebarNav); $i++){
