@@ -568,7 +568,7 @@ if ($bShowEdit) {
         }
 
         // hooks and callbacks
-        if(method_exists($o, 'hookActions')){
+        if($iId && method_exists($o, 'hookActions')){
             $aHooks=$o->hookActions();
             if($aHooks['backend_preview'] && method_exists($o, $aHooks['backend_preview'])){
 
