@@ -18,7 +18,6 @@
 	--formHintBg: #e0f4f4;
 	--requiredColor: #c00;
 	--iconcolor: #2ac;
-
 	/** colors from AdminLTE 3
 	--blue: #007bff;
 	--indigo: #6610f2;
@@ -57,7 +56,7 @@ ins{background-color: #cfc}
 .required{color: var(--requiredColor);}
 
 .app-header li.nav-item a[href*="?"]:hover{background-color: #f0f0f0;}
-li.nav-item .active{background-color: var(--navTopActiveItemBg);}
+.app-header li.nav-item .active{background-color: var(--navTopActiveItemBg) !important;}
 li.nav-item .active i {color:var(--iconcolor);}
 
 .sidebar-wrapper .sidebar-menu > .nav-item > .nav-link.active:not(:hover),

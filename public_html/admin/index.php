@@ -15,7 +15,7 @@ header("Pragma: no-cache");
 
 $iTimerStart=microtime(true);
 define("APP_NAME", 'axel :: OM');
-define("APP_VERSION", '0.0.23');
+define("APP_VERSION", '0.0.24');
 define("DELIM_TITLE", ' <span></span> ');
 
 require_once('../classes/render-adminlte4.class.php');
@@ -128,7 +128,7 @@ if(!count($aSidebarNav)){
 
 // add search field
 if($bAppFound){
-    $aTopnavRight[]=['label'=>'<input class="form-control form-control-sidebar fix-nolabel" type="search" id="searchtop" placeholder="{{search.placeholder}}" aria-label="Search">',];
+    $aTopnavRight[]=['label'=>'<input class="form-control form-control-sidebar fix-nolabel" type="search" id="searchtop" placeholder="🔎 {{search.placeholder}}" aria-label="Search">',];
 }
 $aTopnavRight[]=[
     'href'    => ($sPage=='userprofile' ? '#' : '?page=userprofile'),
