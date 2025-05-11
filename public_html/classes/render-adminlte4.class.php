@@ -1472,8 +1472,10 @@ class renderadminlte
                 unset($aElement[$sDeleteKey]);
             }
         }
-
-        // return data
+        // remove required field if it is set to false or 0
+        if(isset($aElement['required']) && !$aElement['required']){
+            unset($aElement['required']);
+        }
 
         switch ($aElement['type']) {
             case 'checkbox':
@@ -1542,6 +1544,11 @@ class renderadminlte
                 unset($aElement[$sDeleteKey]);
             }
         }
+        // remove required field if it is set to false or 0
+        if(isset($aElement['required']) && !$aElement['required']){
+            unset($aElement['required']);
+        }
+
         return $this->getHorizontalFormElement(
             $this->_tag('textarea', $aElement, $value),
             $sLabel,
