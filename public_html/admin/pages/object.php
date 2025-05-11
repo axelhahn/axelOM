@@ -610,7 +610,9 @@ if ($bShowEdit) {
             . $renderAdminLTE->getButton([
                 'type' => 'secondary',
                 'text' => icon::get('abort') . '{{abort}}',
-                'onclick' => 'location.href=\'' . $sBaseUrl . '\'; return false;',
+                'onclick' => 'location.href=\'' 
+                    . ($o->id() ? $sBaseUrl : $sHomeAppUrl)
+                    . '\'; return false;',
             ])
             .' '
             . $renderAdminLTE->getButton([
