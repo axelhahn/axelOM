@@ -18,7 +18,7 @@
  * Licence: GNU GPL 3.0
  * ----------------------------------------------------------------------
  * 2023-08-26  0.1  ah  first lines
- * 2025-04-29  ___  ah  add methods getLookupItem(), relReadObjects()
+ * 2025-05-12  ___  ah  fix required attribute
  * ======================================================================
  */
 
@@ -506,19 +506,29 @@ class pdo_db_base
 
         $aData = [];
         $Where = [];
-        $Where[] = "1=1";
+        // $Where[] = "1=1";
 
         $this->new();
 
         foreach ($aColumns as $skey => $value) {
 
-            $Where[] = "AND `$skey` = :$skey";
+            if(strstr($value, '%')){
+                $Where[] = "AND `$skey` LIKE :$skey ESCAPE '\\'";
+                $value = addcslashes($value, '%_');
+            } else {
+                $Where[] = "AND `$skey` = :$skey";                
+            }
             $aData[$skey] = $value;
             if (isset($this->_aProperties[$skey])) {
                 $this->set($skey, $value); // pre defined fields on new object
             }
         }
-        $this->_bChanged = false;
+
+        // cut starting "AND " from 1st condition
+        if($Where[0]??false){
+            $Where[0] = substr($Where[0], 4);
+        }
+        $this->_bChanged = false; 
 
         // search fetches 2 items.
         // 1 is needed to apply value and a 2nd for detection of multiple values
