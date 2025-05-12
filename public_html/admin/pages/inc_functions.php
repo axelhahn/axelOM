@@ -50,7 +50,7 @@ function renderMsg(){
             'text' => $aMsg[1],
         ]);
     }
-    return $sReturn;
+    return $sReturn ? "$sReturn<br>" : '';
 }
 
 /**
