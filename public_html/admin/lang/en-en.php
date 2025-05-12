@@ -51,7 +51,7 @@ return [
     "about.title" => "About this backend",
     "about.text" => '
         Author: <strong>Axel Hahn</strong><br>
-        Programming langauge: PHP 8<br>
+        Programming language: PHP 8<br>
         License: GNU GPL 3.0<br>
         Sourcecode: Github<br>
         Documentation: axel-hahn.de/docs/<br>
