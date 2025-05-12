@@ -124,7 +124,7 @@ return [
 
     "search.placeholder" => "Type to search ...",
     "search.hits" => "Hits",
-    "search.results_for" => "Results für",
+    "search.results_for" => "Results for",
     "search.no_results_for" => "No hit for",
     "search.type_ahead" => "Type ahead ...",
     "search.hint_and_condition" => "Hint: There are a lot of results.<br>Use space to seperate multipe keywords that will be combined with logical AND.",
