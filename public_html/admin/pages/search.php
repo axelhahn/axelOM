@@ -88,10 +88,15 @@ if (count($appmeta->getObjects())){
                     .'</a></h4>'
                     .'<ol>'
                     ;
+                    $aGroupResult=[];
                     foreach($aResult as $aRow){
                         $iHits++;
                         $o->read($aRow['id']);
-                        $sContent.= '<li><a href="'.$sObjectUrl.'&object='.$sObj.'&id='.$aRow['id'].'">'.$o->getLabel()."</a></li>";
+                        $aGroupResult[$o->getLabel()]='<li><a href="'.$sObjectUrl.'&object='.$sObj.'&id='.$aRow['id'].'">'.$o->getLabel()."</a></li>";
+                    }
+                    ksort($aGroupResult);
+                    foreach(array_values($aGroupResult) as $sItem){
+                        $sContent.= $sItem;
                     }
                     $sContent.= '</ol>';
                 }

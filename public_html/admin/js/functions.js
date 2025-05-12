@@ -66,7 +66,7 @@ function overlayHide(){
 function dosearch(){
   var _GET=getQueryParams();
   var q=$("#searchtop").val();
-  localStorage.setItem("search", q);
+  localStorage.setItem(_GET['app'] + "-search", q);
 
   if(q){
     httprequest("GET", "?app="+_GET['app']+"&page=search&q="+q, {}, "overlay-text");
@@ -184,7 +184,8 @@ $(document).ready(function () {
       event.stopPropagation();
     });
 
-    $('#searchtop').val(localStorage.getItem("search") ? localStorage.getItem("search") : "");
+    var _GET=getQueryParams();
+    $('#searchtop').val(localStorage.getItem("search") ? localStorage.getItem(_GET['app'] + "-search") : "");
 
     // search field on top right
     $('#searchtop').click(function () {
