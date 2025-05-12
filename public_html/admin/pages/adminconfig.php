@@ -46,6 +46,14 @@ if (isset($_POST['action'])) {
 
 // ---------- MAIN
 
+$aGroups=$aSettings['acl']['groups'] ?? [];
+$aApps=$adminmetainfos->getApps();
+foreach(array_keys($aGroups) as $sGroup){
+    if($sGroup !== "global" && array_search($sGroup, array_keys($aApps)) === false){
+        addMsg('error', "Users for acl -> groups -> [$sGroup] were configured but this app id does not exist");
+    }
+}
+
 $s = ''
     . editorInCard([
         'url' => '?page=adminconfig',
