@@ -185,7 +185,7 @@ $(document).ready(function () {
     });
 
     var _GET=getQueryParams();
-    $('#searchtop').val(localStorage.getItem("search") ? localStorage.getItem(_GET['app'] + "-search") : "");
+    $('#searchtop').val(localStorage.getItem(_GET['app'] + "-search") ? localStorage.getItem(_GET['app'] + "-search") : "");
 
     // search field on top right
     $('#searchtop').click(function () {
