@@ -93,6 +93,11 @@ return [
     "404-obj.subtitle" => "Das angeforderte Objekt wurde nicht gefunden.",
     "404-obj.message" => "Pr&uuml;fe die URL. Der Parameter object=... ist falsch. W&auml;hle in der Navigation links ein existierendes Objekt. Oder gehe zur letzten Seite zur&uuml;ck oder beginne von der Startseite.",
 
+    "404-obj-id.title" => "404 :: Seite nicht gefunden",
+    "404-obj-id.banner" => "Object ID ist falsch",
+    "404-obj-id.subtitle" => "Die angeforderte Objekt ID exisitiert nicht (mehr).",
+    "404-obj-id.message" => "Pr&uuml;fe die URL. Der Parameter id=... ist falsch. W&auml;hle in der Navigation links das aktuelle den Objekttyp, um eine Liste von dessen Eintr&auml;gen zu sehen. Oder gehe zur letzten Seite zur&uuml;ck oder beginne von der Startseite.",
+
     // ----- page :: users list
     "users.title" => "Benutzer",
     "users.banner" => "Liste der Benutzer und Berechtigungen",

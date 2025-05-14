@@ -105,9 +105,13 @@ pre.config{background:#f4f4f4; color:#448; border-radius: 0.5em; max-height: aut
 	float: left; text-align: unset; margin-left: 1em; padding-left: 1em; border-left: 1px solid #bcc;
 }
 
-table.dataTable thead th, table.dataTable thead td {
+table.dataTable thead th{
 	border-bottom: 1px solid #bcc;
 	background-color: #dee;
+}	
+
+table.dataTable tr:hover td, form>div.row:hover{
+	background-color: #fff5e8 !important;
 }
 
 table.dataTable.no-footer {

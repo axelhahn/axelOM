@@ -93,6 +93,11 @@ return [
     "404-obj.subtitle" => "The requested object was not found.",
     "404-obj.message" => "Check the url. The url parameter object=... is wrong. Select a known object in the naviation left. Or go back to the last page or start again from home page.",
 
+    "404-obj-id.title" => "404 :: Page not found",
+    "404-obj-id.banner" => "Object id is wrong",
+    "404-obj-id.subtitle" => "The requested object id doe not exist (anymore).",
+    "404-obj-id.message" => "Check the url. The url parameter id=... is wrong. Select the current object type in the left navigation to see existing items. Or go back to the last page or start again from home page.",
+
     // ----- page :: users list
     "users.title" => "Users",
     "users.banner" => "List of users and their permissions",

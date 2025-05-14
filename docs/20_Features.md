@@ -7,6 +7,6 @@
 * access control per application when using basic authentication or SSO: \
   admin/ editor/ viewer/ no access
 * Admin can 
-  * backup / restore
+  * backup / restore data (also to support switch of database type)
   * Update database structure
   * view all users and their access

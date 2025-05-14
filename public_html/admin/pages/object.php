@@ -283,7 +283,11 @@ if (queryparam::get('new')) {
 $iId = queryparam::get('id', false, 'int');
 if ($iId) {
     $bShowEdit = true;
-    $o->read($iId, true);
+    if(!$o->read($iId, true)){
+        include('error404-wrong-obidj.php');
+        return true;
+    }
+
     $TITLE='<strong>'
     .'<a href="'.$sHomeAppUrl.'">'
         .icon::get($appmeta->getAppicon()) . $appmeta->getAppname()
@@ -314,7 +318,6 @@ if ($iItems == 0) {
         // ---------- overview page with all entries (rows)
 
         $aBasicAttributes = $o->getBasicAttributes();
-
         $aItems = $o->search(['columns'=>$aBasicAttributes]);
         // print_r($aBasicAttributes);echo "<hr>"; print_r($aItems); die();
 
@@ -327,12 +330,14 @@ if ($iItems == 0) {
         <thead>
             <tr>';
         foreach($aBasicAttributes as $sField){
-            $sTable .= $sField=='id' ? '' : '<th>'.$sField.'</th>';
+            $sLabel=$o->getFormtype($sField)['label']??$sField;
+            $sTable .= $sField=='id' ? '' : '<th>'.$sLabel.'</th>';
         }
         $sTable .= "<th>{{tdactions}}</th></tr>
             </thead>
             <tbody>\n";
 
+        $iCol=0;
         foreach ($aItems as $aRow) {
 
             $sTable .= '<tr>';
@@ -340,8 +345,9 @@ if ($iItems == 0) {
                 if($sField=='id'){
                     continue;
                 }
+                $iCol++;
                 $sText=$aRow[$sField];
-                if($sField=='label'){
+                if($sField=='label' || $iCol==1){
                     $sText=$acl->canEdit($sTabApp)
                         ? '<a href="'.$sBaseUrl . '&id=' . $aRow['id'] . '"><strong>'.$aRow[$sField].'</strong></a>'
                         : '<strong>'.$aRow[$sField].'</strong>'
