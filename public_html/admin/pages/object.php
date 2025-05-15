@@ -284,7 +284,7 @@ $iId = queryparam::get('id', false, 'int');
 if ($iId) {
     $bShowEdit = true;
     if(!$o->read($iId, true)){
-        include('error404-wrong-obidj.php');
+        include('error404-wrong-objid.php');
         return true;
     }
 
@@ -337,10 +337,10 @@ if ($iItems == 0) {
             </thead>
             <tbody>\n";
 
-        $iCol=0;
         foreach ($aItems as $aRow) {
 
             $sTable .= '<tr>';
+            $iCol=0;
             foreach($aBasicAttributes as $sField){
                 if($sField=='id'){
                     continue;
