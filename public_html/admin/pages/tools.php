@@ -151,7 +151,7 @@ if($sTabApp){
         . '<td>' . basename($file) . '</td>'
         . '<td>' . date('Y-m-d H:i:s', filemtime($file)) . '</td>'
         . '<td align="right">' . number_format( filesize($file), false, false,"'") . '</td>'
-        . '<td align="right">' 
+        . '<td align="right"><nobr>' 
                 . $renderAdminLTE->getButton([
                     'class' => 'btn-outline-dark',
                     'text' => icon::get('view') . '{{view}}',
@@ -173,7 +173,7 @@ if($sTabApp){
                     'onclick' => 'if(confirm(\'{{confirm_delete}}\n\n'.$file.'\n\n?\')) httprequest(\'POST\', location.href , {\'action\': \'delete\', \'file\': \''.basename($file).'\'});',
                 ])
 
-            . '</td>' . "\n";
+            . '</nobr></td>' . "\n";
 
         $sTable .= '</tr>' . "\n";
     }
@@ -181,7 +181,12 @@ if($sTabApp){
     $sTable = $sTable 
         ? '<table class="table table-bordered table-striped dataTable dtr-inline">
         <thead>
-            <tr><th>{{backup.file}}</th><th>{{backup.timestamp}}</th><th>{{backup.size}}</th><th>{{tdactions}}</th></tr>
+            <tr>
+                <th>{{backup.file}}</th>
+                <th>{{backup.timestamp}}</th>
+                <th>{{backup.size}}</th>
+                <th class="actions">{{td-actions}}</th>
+            </tr>
         </thead>
         <tbody>' . "\n" 
         . $sTable 

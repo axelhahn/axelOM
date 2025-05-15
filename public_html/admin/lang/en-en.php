@@ -203,7 +203,10 @@ return [
     "save_and_continue"=> "Save and continue",
     "select_no_data_set"=>"No data in target table yet",
     "select_relation_item"=> "Select related item",
-    "tdactions" => "Actions",
+    "td-actions" => "Actions",
+    "td-rel-target"=> "Target",
+    "td-rel-column"=> "Column",
+    "td-rel-key"=> "Key",
     "tools"=> "Tools",
     "view"=> "View",
 

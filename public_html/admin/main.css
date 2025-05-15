@@ -49,6 +49,9 @@ main {
 }
 
 button{border: 1px solid rgba(0,0,0,0.1) !important;}
+button.btn:disabled{
+	color: #888;
+}
 del{background-color: #fdd;}
 ins{background-color: #cfc}
 
@@ -109,8 +112,11 @@ table.dataTable thead th{
 	border-bottom: 1px solid #bcc;
 	background-color: #dee;
 }	
+table.dataTable thead th.actions{
+	width: 50px;
+}
 
-table.dataTable tr:hover td, form>div.row:hover{
+table.dataTable tr:hover td{
 	background-color: #fff5e8 !important;
 }
 

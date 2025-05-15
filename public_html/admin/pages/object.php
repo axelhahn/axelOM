@@ -333,7 +333,7 @@ if ($iItems == 0) {
             $sLabel=$o->getFormtype($sField)['label']??$sField;
             $sTable .= $sField=='id' ? '' : '<th>'.$sLabel.'</th>';
         }
-        $sTable .= "<th>{{tdactions}}</th></tr>
+        $sTable .= "<th class=\"actions\">{{td-actions}}</th></tr>
             </thead>
             <tbody>\n";
 
@@ -861,11 +861,15 @@ if ($bShowEdit) {
 
 
                     $sRelTable.= '<tr>'
-                        .'<td>'.icon::get($appmeta->getObjectIcon($aRelation['table'])).' '.$sTargetLabel.'</td>'
+                        .'<td>'
+                            .'<a href="'.$sBaseAppUrl . '&object='.$aRelation['table'].'&id=' . $aRelation['id'].'"><strong>'
+                            .icon::get($appmeta->getObjectIcon($aRelation['table'])).' '.$sTargetLabel
+                            .'</strong></a>'
+                        .'</td>'
                         .'<td>'.$aRelation['column'].'</td>'
                         .'<td>'.$sRelKey.'</td>'
                         
-                        .'<td align="right">'.$sBtnEdit.' '.$sBtnDel.'</td>'
+                        .'<td align="right"><nobr>'.$sBtnEdit.' '.$sBtnDel.'</nobr></td>'
                         ;
                 }
             }
@@ -873,10 +877,10 @@ if ($bShowEdit) {
                 ? '<table class="table table-bordered table-striped dataTable dtr-inline">'
                     . '<thead>'
                     .'<tr>'
-                        .'<th>Target</th>'
-                        .'<th>column</th>'
-                        .'<th>key</th>'
-                        .'<th>actions</th>'
+                        .'<th>{{td-rel-target}}</th>'
+                        .'<th>{{td-rel-column}}</th>'
+                        .'<th>{{td-rel-key}}</th>'
+                        .'<th class="actions">{{td-actions}}</th>'
                     .'</tr></thead>'
                     .'<tbody>'.$sRelTable.'</tbody></table>' 
                 : '';

@@ -203,7 +203,10 @@ return [
     "save_and_continue"=> "Zwischenspeichern",
     "select_no_data_set"=>"Noch keine Daten in Ziel-Tabelle",
     "select_relation_item"=> "Verkn&uuml;pfung w&auml;hlen",
-    "tdactions"=> "Aktionen",
+    "td-actions"=> "Aktionen",
+    "td-rel-target"=> "Ziel-Item",
+    "td-rel-column"=> "Spalte",
+    "td-rel-key"=> "Schlüssel",
     "tools"=> "Werkzeuge",
     "view"=> "Ansehen",
 
