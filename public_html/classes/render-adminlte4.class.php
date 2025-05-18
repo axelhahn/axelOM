@@ -1400,6 +1400,25 @@ class renderadminlte
     }
 
     /**
+     * Helper function
+     * get html code for a label before a input field
+     * 
+     * @param array $aOptions  form field options array
+     * @return string html code
+     */
+    protected function _renderLabel(array $aOptions): string
+    {
+        $sLabel = $aOptions['label'] ?? '';
+        if ($aOptions['overview']??false) {
+            $sLabel = "<span class=\"in-overview\">$sLabel</span>";
+        }
+        if ($aOptions['required']??false) {
+            $sLabel = "<span class=\"required\">$sLabel</span>";
+        }
+        return $sLabel;
+    }
+
+    /**
      * return a text input field:
      * https://adminlte.io/themes/v3/pages/forms/general.html
      * 
@@ -1432,20 +1451,16 @@ class renderadminlte
         $aElement = $aOptions;
         $aElement['class'] = ''
             . 'form-control '
-            . (isset($aOptions['class']) ? $aOptions['class'] : '')
+            . ($aOptions['class']??'')
         ;
         $sFormid = (isset($aOptions['id'])
             ? $aOptions['id']
-            : (isset($aOptions['name']) ? $aOptions['name'] : 'field') . '-' . md5(microtime(true))
+            : ($aOptions['name']??'field') . '-' . md5(microtime(true))
         );
         $aElement['id'] = $sFormid;
 
-        $sLabel = isset($aOptions['label']) ? $aOptions['label'] : '';
-        if ($aOptions['required']??false) {
-            $sLabel .= ' <span class="required">*</span>';
-        }
-
-        $sHint = isset($aOptions['hint']) ? $aOptions['hint'] : '';
+        $sLabel = $this->_renderLabel($aOptions);
+        $sHint = $aOptions['hint'] ?? '';
         $sPrepend = '';
         $sAppend = '';
 
@@ -1526,15 +1541,15 @@ class renderadminlte
         $aElement = $aOptions;
         $aElement['class'] = ''
             . 'form-control '
-            . ((isset($aOptions['type']) && $aOptions['type'] == 'html') ? 'summernote ' : '')
+            . ($aOptions['type']??false == 'html' ? 'summernote ' : '')
             . ($aOptions['class'] ?? '')
         ;
         $sFormid = (isset($aOptions['id'])
             ? $aOptions['id']
             : ($aOptions['name'] ?? 'field') . '-' . md5(microtime(true))
         );
-        $sLabel = isset($aOptions['label']) ? $aOptions['label'] : '';
-        $sHint = isset($aOptions['hint']) ? $aOptions['hint'] : '';
+        $sLabel = $this->_renderLabel($aOptions);
+        $sHint = $aOptions['hint'] ?? '';
         $aElement['id'] = $sFormid;
 
         $value = $aOptions['value'] ?? '';
@@ -1586,8 +1601,8 @@ class renderadminlte
         $aElement = $aOptions;
         $aElement['class'] = ''
             . 'form-control '
-            . (isset($aOptions['class']) ? $aOptions['class'] . ' ' : '')
-            . (isset($aOptions['bootstrap-select']) ? 'selectpicker ' : '') //$aOptions
+            . ($aOptions['class'] ??  '').' '
+            . (($aOptions['bootstrap-select']??false) ? 'selectpicker ' : '') //$aOptions
         ;
         if (isset($aOptions['bootstrap-select']) && $aOptions['bootstrap-select']) {
             $aElement['data-live-search'] = "true";
@@ -1596,10 +1611,10 @@ class renderadminlte
         $sFormid = (isset($aOptions['id'])
 
             ? $aOptions['id']
-            : (isset($aOptions['name']) ? $aOptions['name'] : 'field') . '-' . md5(microtime(true))
+            : ($aOptions['name']??'field') . '-' . md5(microtime(true))
         );
         $aElement['id'] = $sFormid;
-        $sLabel = isset($aOptions['label']) ? $aOptions['label'] : '';
+        $sLabel = $this->_renderLabel($aOptions);
         $sHint = $aOptions['hint'] ?? '';
 
         $sOptionTags = '';
