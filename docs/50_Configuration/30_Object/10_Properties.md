@@ -13,10 +13,12 @@ Custom properties:
 
 | Key            | type     | default | description |
 | ---            | ---      | ---     | --- |
-| overview       | {bool}   | false   | if true or 1 this property is shown in overview table of the admin. |
 | attr           | {array}  | -       | Attributes to extend the detected form element |
+| overview       | {bool}   | false   | if true or 1 this property is shown in overview table of the admin. |
 | force          | {array}  | -       | Ignore autodetection and apply the given attributes |
 | lookup         | {array}  | -       | this property is a lookup to another object. You can setup the lookup parameters here. |
+| markup-pre     | {string} | -       | for editing an object: html code before the form element |
+| markup-post    | {string} | -       | for editing an object: html code after the form element |
 
 ### create
 
@@ -114,8 +116,10 @@ Example:
 ```
 
 (2) Lookup to a download file.
-The tablename is `pdo_db_attachments` that has a column `filename`.
 
+My object has a field `image_main` which is a file.
+The tablename is `pdo_db_attachments` that has a column `filename`.
+When adding the `where` key then it add a `WHERE mime = "image/png"` to the lookup sql statement.
 
 ```php
         'image_main'=> [
@@ -124,6 +128,31 @@ The tablename is `pdo_db_attachments` that has a column `filename`.
                 'table' => 'pdo_db_attachments', 
                 'columns' => ['filename'], 
                 'bootstrap-select' => true,
+                'where' => 'mime = "image/png"',
             ]
+        ],
+```
+
+### markup-*
+
+Some edit forms can grow an you want to add optical delimters, spaces or headers with information.
+Here the options
+
+* `markup-pre` - html code before the form element
+* `markup-post` - html code after the form element
+
+... will help you.
+
+Example:
+
+To show a horizontal line as optical delimter before the form element:
+
+```php
+        'something' => [
+            'create' => 'text',
+            // ...
+            'markup-pre' => '<hr><br>',
+            'markup-post' => '',
+            // ...
         ],
 ```
