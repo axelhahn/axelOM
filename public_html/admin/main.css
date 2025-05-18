@@ -15,7 +15,7 @@
 	--overlayBg: rgba(0,30,30,0.5);
 	--overlayBoxBordercolor: rgba(0,30,30,0.5);
 	--overlayBoxShadow: #345;
-	--formHintBg: #e0f4f4;
+	--formHintBg: #fff1e4;
 	--requiredColor: #c00;
 	--iconcolor: #2ac;
 	/** colors from AdminLTE 3
@@ -56,7 +56,9 @@ del{background-color: #fdd;}
 ins{background-color: #cfc}
 
 
-.required{color: var(--requiredColor);}
+.required{font-weight: bold;}
+.required:after{color: var(--requiredColor); content: ' *';}
+.in-overview{background: #eff; }
 
 .app-header li.nav-item a[href*="?"]:hover{background-color: #f0f0f0;}
 .app-header li.nav-item .active{background-color: var(--navTopActiveItemBg) !important;}
@@ -146,7 +148,7 @@ h2 a, h3 a, h4 a, .callout a, .card-header a, table a{color: #479; text-decorati
 input.form-control[required]{ border-right: 0.3em solid var(--requiredColor); background: linear-gradient(90deg, #fffcfc 85%, #fee);}
 .row .hint{
 	background: var(--formHintBg); padding: 0.3em 0.7em; margin-bottom: 0.5em; transform: skewX(-5deg);
-	border-left: 2px dotted;
+	border-left: 1px dotted;
 	width: 95%;
 }
 
