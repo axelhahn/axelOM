@@ -1648,7 +1648,10 @@ class pdo_db_base
         }
 
         $aReturn['name'] = $sAttr;
-        $aReturn['label'] = isset($aReturn['label']) ? $aReturn['label'] : $sAttr;
+        $aReturn['label']??=$sAttr;
+
+        $aReturn['markup-pre'] = $this->_aProperties[$sAttr]['markup-pre'] ?? null;
+        $aReturn['markup-post'] = $this->_aProperties[$sAttr]['markup-post'] ?? null;
 
         // if (isset($aReturn['required']) && $aReturn['required']) {
         //     $aReturn['label'] .= ' <span class="required">*</span>';
