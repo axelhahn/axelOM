@@ -3,20 +3,20 @@
 Default properties:
 
 | Key            | type     | default | description |
-| ---            | ---      | ---   | --- |
-| create         | {string} | -     | Create statement for this property like<br>- integer<br>- varchar(32)<br>- varchar(4096) |
-| validate_is    | {string} | -     | Validation rule for this property <br>- "string" value must be a string<br>- "integer" value must be an integer|
-| validate_regex | {string} | -     | if set a value must match this regular expression |
-| index          | {bool}   | false | Create an index for this column |
+| ---            | ---      | ---     | --- |
+| create         | {string} | -       | Create statement for this property like<br>- integer<br>- varchar(32)<br>- varchar(4096) |
+| validate_is    | {string} | -       | Validation rule for this property <br>- "string" value must be a string<br>- "integer" value must be an integer|
+| validate_regex | {string} | -       | if set a value must match this regular expression |
+| index          | {bool}   | false   | Create an index for this column |
 
 Custom properties:
 
 | Key            | type     | default | description |
-| ---            | ---      | ---   | --- |
-| overview       | {bool}   | false | if true or 1 this property is shown in overview table of the admin. |
-| attr           | {array}  | -     | Attributes to extend the detected form element |
-| force          | {array}  | -     | Ignore autodetection and apply the given attributes |
-| lookup         | {array}  | -     | this property is a lookup to another object. You can setup the lookup parameters here. |
+| ---            | ---      | ---     | --- |
+| overview       | {bool}   | false   | if true or 1 this property is shown in overview table of the admin. |
+| attr           | {array}  | -       | Attributes to extend the detected form element |
+| force          | {array}  | -       | Ignore autodetection and apply the given attributes |
+| lookup         | {array}  | -       | this property is a lookup to another object. You can setup the lookup parameters here. |
 
 ### create
 
@@ -85,19 +85,18 @@ You can extend the detected form element with the `attr` key. Or you can force t
 
 ### lookup
 
-The lookup is a lookup to a single item of another object type.
+The lookup is a lookup to a single item of another object type (1:1).
 Your property must be an `integer` and is used as foreign key to the lookup table.
 
 In the lookup key you define with the keys
 
-
-| Key | type | default | description |
-| --- | --- | --- | --- |
-| table | {string} | - | target table to reference to |
-| columns | {array} | - | list of columns of the target table to generate a select with those values |
-| value | {string} | "id" | optional: set another column as value |
-| bootstrap-select | {bool} | false | optional: if true or 1 the select will enable the bootstrap-select plugin (= a searchable select box) |
-| where | {string} | "" | optional: set a where clause to the lookup table; default: show all values |
+| Key              | type     | default | description |
+| ---              | ---      | ---     | --- |
+| table            | {string} | -       | target table to reference to |
+| columns          | {array}  | -       | list of columns of the target table to generate a select with those values |
+| value            | {string} | "id"    | optional: set another column as value |
+| bootstrap-select | {bool}   | false   | optional: if true or 1 the select will enable the bootstrap-select plugin (= a searchable select box) |
+| where            | {string} | ""      | optional: set a where clause to the lookup table; default: show all values |
 
 Example:
 
