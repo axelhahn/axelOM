@@ -26,7 +26,7 @@ $TITLE='<strong>'
     .'</a></strong> ' .DELIM_TITLE
     . icon::get('config') . '{{config.title}}';
 
-$BANNER='{{config.banner}}';
+$BANNER=$appmeta->getApphint() . ' -> <strong>{{config.banner}}</strong>';
 
 $sFile=__DIR__.'/../../apps/'.$sTabApp.'/config/objects.php';
 
