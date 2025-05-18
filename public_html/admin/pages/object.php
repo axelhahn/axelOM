@@ -505,6 +505,7 @@ if ($bShowEdit) {
     } else {
 
         $aItem = $o->getItem();
+        $aBasicAttributes = $o->getBasicAttributes();
         // echo ''; print_r($aItem);die();
 
         // DEBUG
@@ -540,7 +541,18 @@ if ($bShowEdit) {
                 // DEBUG
                 // $sForm.='<pre>aCfgForm = '.print_r($aCfgForm, 1).'</pre>';
                 
+                $sHtmlPre=$aCfgForm['markup-pre']??'';
+                $sHtmlPost=$aCfgForm['markup-post']??'';
+
+                unset($aCfgForm['markup-pre']);
+                unset($aCfgForm['markup-post']);
+
+                if(array_search($sVarname, $aBasicAttributes)!==false){
+                    $aCfgForm['overview'] = true;
+                }
                 $sInput = '';
+
+                $sForm.=$sHtmlPre;
                 if (isset($aCfgForm['tag'])) {
                     switch ($aCfgForm['tag']) {
                         case 'input':
@@ -563,6 +575,7 @@ if ($bShowEdit) {
                             $sForm.='UNHANDLED: form tag "'.$aCfgForm['tag'].'"<pre>UNHANDLED: '.htmlentities(print_r($aCfgForm, 1), 1).'</pre>';
                     }
                 }
+                $sForm.=$sHtmlPost;
             }
 
             /*
