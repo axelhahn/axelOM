@@ -57,6 +57,7 @@ Detected prefixes and their applied tags and types types are:
             ['regex' => '/^month/',    'tag' => 'input',    'type' => 'month'],
             ['regex' => '/^number/',   'tag' => 'input',    'type' => 'number'],
             ['regex' => '/^password/', 'tag' => 'input',    'type' => 'password'], // TODO: add dummy password in value
+            ['regex' => '/^range/',    'tag' => 'input',    'type' => 'range'],
             ['regex' => '/^tel/',      'tag' => 'input',    'type' => 'tel'],
             ['regex' => '/^time/',     'tag' => 'input',    'type' => 'time'],
             ['regex' => '/^url/',      'tag' => 'input',    'type' => 'url'],

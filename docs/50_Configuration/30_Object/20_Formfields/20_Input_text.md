@@ -1,11 +1,11 @@
-## Input type text
+## Input type "text"
 
-Input fields of type text will be used on varchar create statements.
+Input fields of type **text** will be used on varchar create statements.
 The max-size for input is taken from tha varchar length.
 
 ### Screenshot
 
-![alt text](input_text.png)
+![alt text](../../../images/input_text.png)
 
 ### Snippet
 
