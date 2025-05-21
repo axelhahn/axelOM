@@ -28,6 +28,7 @@ require_once 'htmlelements.class.php';
  * 2024-05-18  <axel.hahn@unibe.ch>  add variable types
  * 2024-07-04  <axel.hahn@unibe.ch>  added type declarations
  * 2024-07-10  <axel.hahn@unibe.ch>  WIP start using AdminLTE 4.0.0 beta (using Bootstrap 5)
+ * 2025-05-22  <www.axel.hahn.de>    remove hint attribute before form output
  * ======================================================================
  */
 class renderadminlte
@@ -1482,7 +1483,7 @@ class renderadminlte
             );
         }
 
-        foreach (['_infos', 'label', 'append', 'prepend', 'debug'] as $sDeleteKey) {
+        foreach (['_infos', 'label', 'append', 'prepend', 'debug', 'hint'] as $sDeleteKey) {
             if (isset($aElement[$sDeleteKey])) {
                 unset($aElement[$sDeleteKey]);
             }
@@ -1554,7 +1555,7 @@ class renderadminlte
 
         $value = $aOptions['value'] ?? '';
 
-        foreach (['_infos', 'label', 'debug', 'type', 'value'] as $sDeleteKey) {
+        foreach (['_infos', 'label', 'debug', 'type', 'value', 'hint'] as $sDeleteKey) {
             if (isset($aElement[$sDeleteKey])) {
                 unset($aElement[$sDeleteKey]);
             }
@@ -1624,7 +1625,7 @@ class renderadminlte
             $sOptionTags .= $this->_tag('option', $aField, $optionText) . "\n";
         }
 
-        foreach (['_infos', 'label', 'debug', 'type', 'value', 'options'] as $sDeleteKey) {
+        foreach (['_infos', 'label', 'debug', 'type', 'value', 'options', 'hint'] as $sDeleteKey) {
             if (isset($aElement[$sDeleteKey])) {
                 unset($aElement[$sDeleteKey]);
             }
