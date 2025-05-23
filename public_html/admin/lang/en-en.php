@@ -242,6 +242,8 @@ return [
     "msgerr.relation_was_not_created"=> "ERROR: relation was not created",
     "msgerr.relation_was_not_deleted"=> "ERROR: relation was not deleted",
 
+    "msgerr.relation_not_allowed"     => "ERROR: A relation to this object type is not allowed",
+
     "msgok.relation_was_created"      => "OK: relation was created",
     "msgok.relation_was_deleted"      => "OK: relation was deleted",
 

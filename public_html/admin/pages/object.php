@@ -666,7 +666,17 @@ if ($bShowEdit) {
 
         if($iId){
             $aRelations=$o->relRead();
-            // echo '<pre>' ;print_r($aRelations); die();
+
+            // check relations
+            $iRelErrors=0;
+            foreach($aRelations['_targets']??[] as $sRelKey => $aRel){
+                if(!$appmeta->isRelationAllowed($sObject, $aRel['table']) ){
+                    $iRelErrors++;
+                    addMsg('error', "{{msgerr.relation_not_allowed}}: $sObject -> <strong>$aRel[table]</strong>");   
+                } else {
+                    // addMsg('ok', "OK <strong>$aRel[table]</strong>");
+                }
+            }
             
             // $sMainContent.='<pre>'.print_r($aRelations, 1).'</pre>';
             $sFormAttach='<form action="'.$sBaseUrl.'" class="dropzone">'
@@ -687,8 +697,16 @@ if ($bShowEdit) {
                     'text' => $aItem['timeupdated'] ? '{{last_updated}}:<br>'.$aItem['timeupdated']: '{{created}}:<br>'.$aItem['timecreated'],
                 ])
                 . $renderAdminLTE->getCallout([
-                    'type' => '',
-                    'title' => icon::get('relation').'{{relations}}',
+                    'type' => $iRelErrors ? 'danger' : '',
+                    'title' => icon::get('relation').'{{relations}}'
+                        .($iRelErrors 
+                            ? ' '.$sItems=$renderAdminLTE->getBadge([
+                                'type'=>'danger',
+                                'text'=>$iRelErrors,
+                            ])
+                            : ''
+                        )
+                        ,
                     'text' => '<h3>' . (isset($aRelations['_targets']) ? count($aRelations['_targets']) : 0) . '</h3>',
                 ])
                 . '<div id="frmAttach">'
@@ -718,13 +736,26 @@ if ($bShowEdit) {
                 // foreach($aObjects as $sObjname){
                 
                 foreach($appmeta->getObjects() as $sObjname=>$aObjdata){
+                    $bRelationAllowed=$appmeta->isRelationAllowed($sObject, $sObjname);
+                    $sBtnClass= $bRelationAllowed
+                        ? ($sObjname == $sObject ? 'secondary' : 'success')
+                        : ''
+                        ;
+
                     $sContentRelations.=''
-                        . $renderAdminLTE->getButton([
-                            'type' => ($sObjname == $sObject ? 'secondary' : 'success'),
-                            'text' => icon::get($appmeta->getObjectIcon($sObjname)) 
-                                . ($aObjdata['label'] ?? $sObjname),
-                            'onclick' => 'location.href=\'' . $sBaseUrl . '&id='.$aItem['id'].'&newrel='.$sObjname.'#relations\'',
-                        ]) .' '
+                        . ($bRelationAllowed 
+                            ?  $renderAdminLTE->getButton([
+                                    'type' => ($sObjname == $sObject ? 'secondary' : 'success'),
+                                    'text' => icon::get($appmeta->getObjectIcon($sObjname)) 
+                                        . ($aObjdata['label'] ?? $sObjname),
+                                    'onclick' => 'location.href=\'' . $sBaseUrl . '&id='.$aItem['id'].'&newrel='.$sObjname.'#relations\'',
+                                ])
+                            : $renderAdminLTE->getButton([
+                                    'disabled' => 'disabled',
+                                    'text' => icon::get($appmeta->getObjectIcon($sObjname)) 
+                                        . ($aObjdata['label'] ?? $sObjname),
+                                ])
+                            ).' '
                     ;
 
                 }
@@ -872,8 +903,11 @@ if ($bShowEdit) {
                         'onclick' => 'if(confirm(\'{{confirm_delete}}\n\n'.$o->getLabel().' -> '.$sTargetLabel.'\n\n?\')) httprequest(\'POST\', location.href , {\'action\': \'relDelete\', \'relkey\': \''.$sRelKey.'\'});',
                     ]);
 
+                    
 
-                    $sRelTable.= '<tr>'
+                    $sRelTable.= '<tr'
+                            .($appmeta->isRelationAllowed($sObject, $aRelation['table']) ? '' : ' class="table-danger"')
+                        .'>'
                         .'<td>'
                             .'<a href="'.$sBaseAppUrl . '&object='.$aRelation['table'].'&id=' . $aRelation['id'].'"><strong>'
                             .icon::get($appmeta->getObjectIcon($aRelation['table'])).' '.$sTargetLabel

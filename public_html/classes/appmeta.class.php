@@ -58,6 +58,12 @@ class appmetainfos {
         'files'
     ];
 
+    /**
+     * List of allowed relations between objects
+     * @var array
+     */
+    protected array $_aRelations = [];
+
 
 
     // --------------------------------------------------------------
@@ -329,6 +335,45 @@ class appmetainfos {
             ? $this->_aConfig['objects'][$sObjId]['hint']
             : ''
         ;
+    }
+
+    /**
+     * Get an array of all allowed relation between objects
+     * see config value 'relations'
+     * 
+     * @return array
+     */
+    public function getAllowedRelations(string $sObject) :array {
+        if($this->_aRelations[$sObject]??false){
+            return $this->_aRelations[$sObject];
+        }
+        $aReturn=[];
+        foreach($this->getConfig('relations')?:[] as $aRelation){
+            if(array_search($sObject, $aRelation)!==false){
+                $relObj=$aRelation[0]===$sObject?$aRelation[1]:$aRelation[0];
+                $aReturn[]=$relObj;
+            }
+        }
+        array_unique($aReturn);
+        sort($aReturn);
+        $this->_aRelations[$sObject]=$aReturn;
+        return $aReturn;
+    }
+
+    /**
+     * Return bool if 2 given objects can have a relation.
+     * It returns true if no key 'relations' was set or a relation between 2 objects was defined.
+     * 
+     * @param string $sObject1
+     * @param string $sObject2
+     * @return bool
+     */
+    public function isRelationAllowed(string $sObject1, string $sObject2) :bool {
+        if(!count($this->getConfig('relations')?:[])){
+            return true;
+        }
+        $aAllowed=$this->getAllowedRelations($sObject1);
+        return in_array($sObject2, $aAllowed);
     }
 
     // --------------------------------------------------------------

@@ -241,6 +241,8 @@ return [
     "msgerr.relation_was_not_created"=> "FEHLER: Die Relation konnte nicht erstellt werden",
     "msgerr.relation_was_not_deleted"=> "FEHLER: Die Relation konnte nicht gel&ouml;scht werden",
 
+    "msgerr.relation_not_allowed"     => "FEHLER: Die Relation zu diesem Objekt-Typ ist nicht erlaubt",
+
     "msgok.relation_was_created"      => "OK: Relation wude angelegt",
     "msgok.relation_was_deleted"      => "OK: Relation wurde gel&ouml;scht",
 
