@@ -15,7 +15,7 @@ header("Pragma: no-cache");
 
 $iTimerStart=microtime(true);
 define("APP_NAME", 'axel :: OM');
-define("APP_VERSION", '0.0.30');
+define("APP_VERSION", '0.0.31-dev');
 define("DELIM_TITLE", ' <span></span> ');
 
 require_once('../classes/render-adminlte4.class.php');
@@ -192,11 +192,13 @@ include($sIncfile);
 
 // ---------- generate output
 // die($appmeta->getAppname());
+/*
 $sBcSpacer='&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;';
 $sBreadcrumb='<a href="?page=home">{{nav.home}}</a>'.$sBcSpacer
     .($sTabApp ? '<a href="?page=home&app='.$sTabApp.'">'.$appmeta->getAppname().'</a>'.$sBcSpacer : '')
     .($sObject ? '<a href="?page=object&app='.$sTabApp.'&object='.$sObject.'">'.$appmeta->getObjectLabel($sObject).'</a>'.$sBcSpacer : '')
     ;
+*/
 
 // ---------- add debug info
 
@@ -305,7 +307,7 @@ $sBreadcrumb='<a href="?page=home">{{nav.home}}</a>'.$sBcSpacer
 
 $aReplace['{{PAGE_BODY}}']=$BODY;
 $aReplace['{{PAGE_HEADER_LEFT}}']='<h2 class="page-title">'.$TITLE.'</h2>';
-$aReplace['{{PAGE_HEADER_RIGHT}}']=$sBreadcrumb;
+// $aReplace['{{PAGE_HEADER_RIGHT}}']=$sBreadcrumb;
 $aReplace['{{PAGE_BANNER}}']=$BANNER;
 $aReplace['{{JS_BODY_END}}']=$JS_BODYEND ?: '';
 
