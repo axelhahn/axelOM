@@ -147,6 +147,8 @@ h2 i{color: var(--iconcolor);}
 .card-title i, .callout i {color:rgba(0,80,80,0.3);}
 .card-title i, .callout i {color:var(--iconcolor);}
 
+.info-box .info-box-number {font-size: 200%; margin: 0; color: #09a;}
+
 input.form-control[required]{ border-right: 0.3em solid var(--requiredColor); background: linear-gradient(90deg, #fffcfc 85%, #fee);}
 .row .hint{
 	background: var(--formHintBg); padding: 0.3em 0.7em; margin-bottom: 0.5em; transform: skewX(-5deg);

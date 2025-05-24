@@ -48,7 +48,7 @@ $s=''
                 // 'progressvalue' => 70,
                 // 'progresstext' => '70% Increase in 30 Days',
                 ])
-            , 4
+            , 2
         )
     )
     .'<br>'
