@@ -42,6 +42,7 @@ return [
     'code'=>'fa-solid fa-code',
     'view'=>'fa-solid fa-eye',
     'more'=>'fa-solid fa-ellipsis-vertical',
+    'item' => 'fa-solid fa-caret-right',
 
     // 'relation' => 'fa-solid fa-folder-tree',
     'relation' => 'fa-solid fa-sitemap',

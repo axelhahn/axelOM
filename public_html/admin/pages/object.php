@@ -295,7 +295,7 @@ if ($iId) {
     .DELIM_TITLE
     . '<a href="'.$sBaseUrl.'">'.($sObjLabel ? '  ' . $sObjLabel : '') .'</a>'
     .DELIM_TITLE
-    .$o->getLabel()
+    .icon::get('item').$o->getLabel()
     ;
 
     // $TITLE = '<a href="'.$sBaseUrl.'">'.$TITLE.'</a> :: '.$o->getLabel();
@@ -553,6 +553,7 @@ if ($bShowEdit) {
                 $sInput = '';
 
                 $sForm.=$sHtmlPre;
+                // $sForm.='<pre>'.print_r($aCfgForm, 1).'</pre>';
                 if (isset($aCfgForm['tag'])) {
                     switch ($aCfgForm['tag']) {
                         case 'input':
