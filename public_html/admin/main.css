@@ -155,6 +155,10 @@ input.form-control[required]{ border-right: 0.3em solid var(--requiredColor); ba
 	border-left: 1px dotted;
 	width: 95%;
 }
+::placeholder{
+	color: #69a !important;
+	opacity: 1;
+}
 
 .height10em{min-height: 10em;}
 
