@@ -150,11 +150,11 @@ foreach ($adminmetainfos->getApps(1) as $sApp => $aAppData){
 
         $sBoxContent=''
             .($appmeta->getApphint() && $appmeta->getApphint() ? $appmeta->getApphint().'<br>' : '')
-            .'{{home.objects}}: '.$sItems.'<br>';
+            ;
         $sBoxes.=$renderAdminLTE->addCol(
             $renderAdminLTE->getCard([
                 'type' => '',
-                'title' => '<a href="?app='.$sApp.'&page=home">' .icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</a>',
+                'title' => '<a href="?app='.$sApp.'&page=home">' .icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</a> '.$sItems,
                 'text' => $sBoxContent,
                 'class' => 'height10em'
                 // 'variant' => '',

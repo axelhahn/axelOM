@@ -86,10 +86,9 @@ foreach($appmeta->getObjects() as $sObj=>$aObjData){
     $sBoxes.=$renderAdminLTE->addCol(
             $renderAdminLTE->getCard([
                 // 'type' => 'gray',
-                'title' => '<a href="?app='.$appmeta->getId().'&page=object&object='.$sObj.'"><i class="'.$aObjData['icon'].'"></i> ' . $aObjData['label'].'</a>' ,
+                'title' => '<a href="?app='.$appmeta->getId().'&page=object&object='.$sObj.'"><i class="'.$aObjData['icon'].'"></i> ' . $aObjData['label'].'</a> ' .$sItems,
                 'text' => ''
-                    . ($appmeta->getObjectHint($sObj) ? $appmeta->getObjectHint($sObj).'<br>' : '')
-                    . '{{home.items}}: '.$sItems,
+                    . ($appmeta->getObjectHint($sObj) ? $appmeta->getObjectHint($sObj).' ' : ''),
                 // 'variant' => '',
                 'class' => 'height10em'
             ]),
