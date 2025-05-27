@@ -72,8 +72,8 @@ foreach($appmeta->getObjects() as $sObj=>$aObjData){
         $iCount=$o->count();
         $sItems=$renderAdminLTE->getBadge([
             'type'=>$iCount ? 'success' : 'secondary',
-            'title'=>'{{home.count}}: '.$iCount,
-            'text'=>' '.$iCount.' ',
+            'title'=>"{{items}}: $iCount",
+            'text'=>" $iCount ",
         ]);;
     } else {
         $sItems=$renderAdminLTE->getBadge([

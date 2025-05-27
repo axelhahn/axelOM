@@ -142,7 +142,7 @@ h2 a, h3 a, h4 a, .callout a, .card-header a, table a{color: #479; text-decorati
 h2 i{color: var(--iconcolor);}
 .card-header a{font-size: 130%;;}
 .callout a:hover, .card-header a:hover{color: #09a;}
-.card-header {background: #e8f2f4; border-bottom: 2px solid rgba(0,0,0,.03);}
+.card-header { border-bottom: 2px solid rgba(0,0,0,.05);}
 .card-title i {color:rgba(0,80,80,0.3)}
 .card-title i, .callout i {color:rgba(0,80,80,0.3);}
 .card-title i, .callout i {color:var(--iconcolor);}
@@ -156,8 +156,8 @@ input.form-control[required]{ border-right: 0.3em solid var(--requiredColor); ba
 	width: 95%;
 }
 ::placeholder{
-	color: #69a !important;
-	opacity: 1;
+	color: #a40 !important;
+	opacity: 0.6 !important;
 }
 
 .height10em{min-height: 10em;}

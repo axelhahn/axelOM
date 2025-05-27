@@ -52,12 +52,6 @@ if (count($appmeta->getObjects())){
 
             $o=initClass( $oDB, $sObj );
             if(is_object($o)){
-                $iCount=$o->count();
-                $sItems=$renderAdminLTE->getBadge([
-                    'type'=>$iCount ? 'success' : 'secondary',
-                    'title'=>'{{home.count}}: '.$iCount,
-                    'text'=>' '.$iCount.' ',
-                ]);
 
                 $sWhere='';
                 $iCounter=0;

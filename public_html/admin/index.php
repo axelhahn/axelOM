@@ -9,14 +9,14 @@
 
 */
 
+$iTimerStart=microtime(true);
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-$iTimerStart=microtime(true);
-define("APP_NAME", 'axel :: OM');
-define("APP_VERSION", '0.0.31');
-define("DELIM_TITLE", ' <span></span> ');
+const APP_NAME='axel :: OM';
+const APP_VERSION='0.0.32';
+const DELIM_TITLE='<span></span>';
 
 require_once('../classes/render-adminlte4.class.php');
 require_once('classes/adminmeta.class.php');
