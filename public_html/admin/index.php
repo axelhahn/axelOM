@@ -15,7 +15,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 const APP_NAME='axel :: OM';
-const APP_VERSION='0.0.32';
+const APP_VERSION='0.0.33';
 const DELIM_TITLE='<span></span>';
 
 require_once('../classes/render-adminlte4.class.php');
@@ -60,7 +60,7 @@ $aTopnavRight=[];
 $aObjects=[];
 
 $bAppFound=false;
-foreach(array_keys($adminmetainfos->getApps()) as $sApp){
+foreach(array_keys($adminmetainfos->getApps(1)) as $sApp){
     $appmeta=new appmetainfos($sAppRootDir.'/'.$sApp);
     if ($acl->canView($sApp)){
         if($sApp==$sTabApp){
