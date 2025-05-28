@@ -22,6 +22,7 @@
  * ----------------------------------------------------------------------
  * 2024-05-18        <axel>  add variable types
  * 2024-11-05        <axel>  enhance variable types
+ * 2025-05-28        <axel>  handle flag 'enabled' in <app>/config/objects.php
  * ======================================================================
  */
 
@@ -82,6 +83,9 @@ class adminmetainfos
             if (is_dir($sFileEntry) && file_exists($sFileEntry . '/config/objects.php')) {
                 $sAppName = basename($sFileEntry);
                 $aReturn[$sAppName] = $bScanConfigs ? include($sFileEntry . '/config/objects.php') : 1;
+                if(!($aReturn[$sAppName]['enabled']??true)){
+                    unset($aReturn[$sAppName]);
+                }
             }
             ;
         }
