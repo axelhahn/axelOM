@@ -20,7 +20,7 @@ This project is work in progess.
 ## Requirements
 
 * PHP 8
-* PHP-PDO: sqlite (mysql will be supported soon)
+* PHP-PDO: sqlite + mysql
 
 ## Features
 
@@ -28,10 +28,10 @@ This project is work in progess.
 * CRUD actions for all objects of a given application
 * file uploads
 * link all objects using an extra table for relations between tables
-* internal search to find objects
+* internal search to find objects quickly
 * detection of changed database definitions
 * export as json + import can be used to switch between PDO database types
-* enabled debugging shows execution time, GET/P OST and executed queries incl. their execution time and affected rows
+* enabled debugging shows execution time, GET/ POST and executed queries incl. their execution time and affected rows
 
 ## Screenshots
 
