@@ -21,7 +21,6 @@ Input fields of type **range** will be used when the property starts with "range
                 'min' => 1,
                 'max' => 5,
                 'step' => 1,
-                // 'placeholder' => 'user@example.com',
             ],
         ],
 ```
