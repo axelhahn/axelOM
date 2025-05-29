@@ -36,11 +36,11 @@ flowchart TD
 What we can (and or must) configure is:
 
 * **1 configuration** for the ui
-    * [admin/config/settings.php](10_settings.php.md) - Configure behaviour of the web ui and access rules for all apps<br><br>
+    * [./admin/config/settings.php](10_Web_ui.md) - Configure behaviour of the web ui and access rules for all apps<br><br>
 * **Per application** there is its app folder. The foldername is the id of the application.
 
-    * [apps/\<APPID\>/config/objects.php](20_application_config.md) - Configure an application here<br><br>
+    * [./apps/\<APPID\>/config/objects.php](20_App_config.md) - Configure an application here<br><br>
 
 * In **each application configure its objects**
 
-    * [apps/\<APPID\>/classes/\<OBJECT\>.class.php](30_Objects/_index.md) - Configure an object of an application<br><br>
+    * [./apps/\<APPID\>/classes/\<OBJECT\>.class.php](30_Objects/_index.md) - Configure an object of an application<br><br>
