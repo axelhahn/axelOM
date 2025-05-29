@@ -4,7 +4,8 @@ Each application is below the apps folder.
 That one has this structure:
 
 ```txt
-.
+<APPID>
+│
 ├── classes
 │   ├── <object_1>.class.php
 │   :

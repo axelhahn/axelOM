@@ -43,4 +43,4 @@ What we can (and or must) configure is:
 
 * In **each application configure its objects**
 
-    * [apps/\<APPID\>/classes/\<OBJECT\>.class.php](30_Object/_index.md) - Configure an object of an application<br><br>
+    * [apps/\<APPID\>/classes/\<OBJECT\>.class.php](30_Objects/_index.md) - Configure an object of an application<br><br>
