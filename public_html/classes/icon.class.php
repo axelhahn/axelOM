@@ -7,6 +7,13 @@
  * - navigation
  * - widgets and forms
  * 
+ * @example <code>
+ * // load class
+ * require_once('../classes/icon.class.php');
+ * 
+ * // get html code for an icon with its keyword
+ * echo icon::get('back');
+ * </code>
  * ----------------------------------------------------------------------
  * 2024-05-18  <axel-hahn.de>  add variable types
  * 2025-04-10  <axel-hahn.de>  fix static method
