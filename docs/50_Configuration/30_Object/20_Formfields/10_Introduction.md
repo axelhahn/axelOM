@@ -72,3 +72,11 @@ If you want to have an object eg. with a starting day and a finishing day then u
 
 * **date**_start
 * **date**_end
+
+### Key 'attr'
+
+If the auto detection fails or you miss an attribute of the generated for element, thren use the key`'attr'`. In its array you can set 
+
+* `tag` - force an html tag to use
+* `label` - set a label for the form field shofn on the left
+* `<ATTRIBUTE>` - all other subkeys than tag and label will be used in the form element. 

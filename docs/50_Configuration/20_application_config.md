@@ -36,6 +36,7 @@ This contains
 | `'label'`     | {string}    | Visible name of the application
 | `'icon'`      | {string}    | FontAwesome icon class for the app
 | `'hint'`      | {string}    | Short description
+| `'enabled'`   | {bool}      | Enable or disable the app; default: true; set to false to hide the app in the backend
 | `'db'`        | {array}     | Database connection infos
 | `'objects'`   | {array}     | Array with objects for this app with subkeys "label", "icon" and "hint" to render a navigation
 | `'relations'` | {array}     | optional: Array with allowed object relations
@@ -49,6 +50,7 @@ return [
     'label' => 'Addons',
     'icon' => 'fa fa-puzzle-piece',
     'hint' => 'Addons for Axels tools and apps',
+    'enabled' => true,
     'db' => [
         // see https://www.php.net/manual/de/pdo.construct.php
         'dsn' => 'sqlite:'.__DIR__.'/../../../protected/data/app_addons.sqlite3',
