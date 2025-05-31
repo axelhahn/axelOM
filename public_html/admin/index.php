@@ -25,13 +25,18 @@ require_once('../classes/appmeta.class.php');
 require_once('../classes/queryparam.class.php');
 require_once('../classes/icon.class.php');
 
-$aSettings=include('config/settings.php');
-$sUiLang=$aSettings['lang'] ?? "de-de";
 
 $sPage=queryparam::get('page', '/^[a-z]*$/');
 $sObject=queryparam::get('object', '/^[a-z\_]*$/');
 
 $sTabApp=queryparam::get('app', '/^[a-z\-0-9]*$/');
+if(!file_exists('config/settings.php')){
+    $sPage='install';
+} else {
+    $aSettings=include('config/settings.php');
+}
+$sUiLang=$aSettings['lang'] ?? "en-en";
+
 if(!$sTabApp && !$sPage){
     // $sTabApp=array_key_first($aObjects);
     header('location: ?page=home');

@@ -114,7 +114,7 @@ $s=''
                 'icon' => icon::getclass('apps'),
                 'iconbg' => '',
                 'text' => '{{home.apps}}',
-                'number' => (count($adminmetainfos->getApps()??[]))
+                'number' => (count($adminmetainfos->getApps()??[])) . ' '
                     ,
                 // 'progressvalue' => 70,
                 // 'progresstext' => '70% Increase in 30 Days',

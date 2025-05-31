@@ -23,10 +23,12 @@ return [
 
     // do not edit configurations in web ui    
     'editor' => [
+        /*
         'readonly'=>[
             'globalsettings' => true,
             'appsettings' => true,
         ],
+        */
     ],
 
     // if "acl" is missing or empty --> sets admin user for everything

@@ -96,6 +96,14 @@ return [
     "404-obj-id.subtitle" => "The requested object id doe not exist (anymore).",
     "404-obj-id.message" => "Check the url. The url parameter id=... is wrong. Select the current object type in the left navigation to see existing items. Or go back to the last page or start again from home page.",
 
+    // ----- page :: installer
+    "install.title" => "Installer",
+    "install.banner" => "First steps to install the backend",
+    "install.content" => "Hey, welcome!<br>
+        You are in the installer.<br>
+        <br>
+        We just copied the dist file <code>public_html/admin/config/settings.php.dist</code> to activate this tool. OK?!",
+
     // ----- page :: users list
     "users.title" => "Users",
     "users.banner" => "List of users and their permissions",
