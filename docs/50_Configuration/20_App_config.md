@@ -69,10 +69,10 @@ return [
         'objaddons'                 => ['label' => 'Addon',                 'icon' => 'fa fa-puzzle-piece',   'hint' => ''],
     ],
     'relations' =>  [
-        ['objaddons', 'objaddontypes'],
-        ['objaddons', 'objproducts'],
+        ['objaddons',   'objaddontypes'          ],
+        ['objaddons',   'objproducts'            ],
         ['objproducts', 'objprogramminglanguages'],
-        ['objproducts', 'pdo_db_attachments'],
+        ['objproducts', 'pdo_db_attachments'     ],
     ],
 ];
 ```

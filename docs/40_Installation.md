@@ -6,7 +6,7 @@ Use git clone to get the files
 
 ```shell
 cd ~/docker-projects/
-git clone https://github.com/axelhahn/axelOM.git axel-om
+git clone https://github.com/axelhahn/axelOM.git
 ```
 This is the preferred method to keep it up to date with `git pull`
 
