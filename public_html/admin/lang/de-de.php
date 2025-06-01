@@ -96,6 +96,11 @@ return [
     "404-obj-id.subtitle" => "Die angeforderte Objekt ID exisitiert nicht (mehr).",
     "404-obj-id.message" => "Pr&uuml;fe die URL. Der Parameter id=... ist falsch. W&auml;hle in der Navigation links das aktuelle den Objekttyp, um eine Liste von dessen Eintr&auml;gen zu sehen. Oder gehe zur letzten Seite zur&uuml;ck oder beginne von der Startseite.",
 
+    // ----- page :: installer
+    "install.title" => "Installer",
+    "install.banner" => "Nur wenige Schritte, um das Backend zu installieren",
+    "install.select-lang" => "Sprache des Backends festlegen",
+
     // ----- page :: users list
     "users.title" => "Benutzer",
     "users.banner" => "Liste der Benutzer und Berechtigungen",
@@ -176,6 +181,7 @@ return [
     "config"=>"Konfiguration",
     "confirm_delete"=>"Sind Sie sicher, dass Sie dies L&ouml;schen m&ouml;chten",
     "confirm_restore"=> "Sind Sie sicher, dass Sie dies Wiederherstellen m&ouml;chten",
+    "continue"=>"Weiter",
     "created"=> "Angelegt",
     "create_new_item" => "Neuen Eintrag anlegen",
     "delete"=>"L&ouml;schen",

@@ -19,7 +19,6 @@ return [
 
     // language of backnd ui
     'lang' => 'en-en',
-    // 'lang' => 'de-de',
 
     // do not edit configurations in web ui    
     'editor' => [

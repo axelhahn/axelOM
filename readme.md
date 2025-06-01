@@ -20,7 +20,7 @@ This project is work in progess.
 ## Requirements
 
 * PHP 8
-* PHP-PDO: sqlite + mysql
+* PHP-PDO: sqlite or mysql
 
 ## Features
 

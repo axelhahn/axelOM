@@ -98,11 +98,8 @@ return [
 
     // ----- page :: installer
     "install.title" => "Installer",
-    "install.banner" => "First steps to install the backend",
-    "install.content" => "Hey, welcome!<br>
-        You are in the installer.<br>
-        <br>
-        We just copied the dist file <code>public_html/admin/config/settings.php.dist</code> to activate this tool. OK?!",
+    "install.banner" => "Just a few steps to install the backend",
+    "install.select-lang" => "Select language of the backend",
 
     // ----- page :: users list
     "users.title" => "Users",
@@ -184,6 +181,7 @@ return [
     "config"=>"Configuration",
     "confirm_delete"=>"Are you sure you want to delete this",
     "confirm_restore"=>"Are you sure you want to restore this",
+    "continue"=>"Weiter",
     "created"=> "Created",
     "create_new_item" => "Create new entry",
     "delete"=>"Delete",

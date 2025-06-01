@@ -15,7 +15,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 const APP_NAME='axel :: OM';
-const APP_VERSION='0.0.33';
+const APP_VERSION='0.0.34';
 const DELIM_TITLE='<span></span>';
 
 require_once('../classes/render-adminlte4.class.php');
@@ -36,6 +36,8 @@ if(!file_exists('config/settings.php')){
     $aSettings=include('config/settings.php');
 }
 $sUiLang=$aSettings['lang'] ?? "en-en";
+$sUiLang=queryparam::get('lang', '/^[a-z\-]*$/')
+    ?: ($aSettings['lang'] ?? "en-en");
 
 if(!$sTabApp && !$sPage){
     // $sTabApp=array_key_first($aObjects);
