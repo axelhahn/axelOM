@@ -167,12 +167,17 @@ if (isset($_POST['action'])) {
             case 'relCreate':
                 $o->read(queryparam::get('id', false, 'int'));
                 $sTargetObj=queryparam::post('relobject');
-                $sTargetId=queryparam::post('relid', false, 'int');
-                if($sTargetId && $sTargetObj){
-                    if ($o->relCreate($sTargetObj, $sTargetId)){
-                        addMsg('ok', '{{msgok.relation_was_created}} ' . $sTargetObj . ':'.$sTargetId. '');
-                    } else {
-                        addMsg('error', '{{msgerr.relation_was_not_created}} [' . $sTargetObj . ':'.$sTargetId. ']');
+
+                // list of multiple targets
+                $aTargetIdList=queryparam::post('relidlist', false, 'array');
+
+                if($sTargetObj && $aTargetIdList){
+                    foreach($aTargetIdList  as $sTargetId){
+                        if ($o->relCreate($sTargetObj, $sTargetId)){
+                            addMsg('ok', '{{msgok.relation_was_created}} ' . $sTargetObj . ':'.$sTargetId. '');
+                        } else {
+                            addMsg('error', '{{msgerr.relation_was_not_created}} [' . $sTargetObj . ':'.$sTargetId. ']');
+                        }
                     }
                 } else {
                     addMsg('error', '{{msgerr.wrong_relationdata}} [' . $sTargetObj . ':'.$sTargetId. ']');
@@ -800,12 +805,13 @@ if ($bShowEdit) {
 
                             . '<div class="row mb-3">'
 
-                                . '<label for="selectnewrel" class="col-sm-2 col-form-select">'
+                                . '<label for="selectnewrel" class="col-sm-2 col-form-label">'
                                     .icon::get($appmeta->getObjectIcon($sRelobjectname))
                                     .$appmeta->getObjectLabel($sRelobjectname).'<br>'
                                     // .'{{select_relation_item}}'
                                 .'</label>'
-                                . '<select id="selectnewrel" name="relid" class="selectpicker col-sm-10 form-control" size="1" data-live-search="true" title="--- {{select_relation_item}} ---">'
+                                . '<div class="col-sm-10">'
+                                . '<select id="selectnewrel" name="relidlist[]" class="selectpicker form-control" size="1" multiple="multiple" data-live-search="true" title="--- {{select_relation_item}} ---">'
                                     ;
                                     if($aRelItems && count($aRelItems)){
                                         
@@ -835,6 +841,7 @@ if ($bShowEdit) {
                                         $sFormRelations .= '<option value="">--- {{select_no_data_set}} ---</option>';
                                     }
                             $sFormRelations.='</select>'
+                            . '</div>'
                             . '</div>';
                     } else {
                         $sFormRelations.='{{no_items_found}}';
