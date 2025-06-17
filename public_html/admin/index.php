@@ -15,7 +15,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 const APP_NAME='axel :: OM';
-const APP_VERSION='0.0.35';
+const APP_VERSION='0.0.36-dev';
 const DELIM_TITLE='<span></span>';
 
 require_once('../classes/render-adminlte4.class.php');
@@ -194,7 +194,10 @@ $TITLE="WARNING: $sIncfile did not set \$TITLE";
 $BANNER="WARNING: $sIncfile did not set \$BANNER";
 $JS_BODYEND="";
 
-include($sIncfile);
+if(file_exists("pages/hooks/$sPage.php")){
+    include "pages/hooks/$sPage.php";
+}
+include $sIncfile;
 
 
 // ---------- generate output

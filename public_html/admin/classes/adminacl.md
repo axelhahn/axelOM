@@ -37,6 +37,10 @@ return [
         // 'displayname'=>['givenName', '_surname'],
         'displayname'=>false,
 
+        // enble IML MFA server
+        // see https://os-docs.iml.unibe.ch/mfa-client/index.html
+        // 'postinclude'=>'vendor/mfa-client/src/mfa-ensure.php",
+
         // ---------- GROUPS
         'groups'=>[
 

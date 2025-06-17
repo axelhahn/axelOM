@@ -88,6 +88,11 @@ class adminacl
         $this->_aGroups = ['@anonymous'];
         $this->_sUserDisplayname = '';
 
+        $sPostInclude = ($this->_aConfig['postinclude']??false)
+            ? realpath(__DIR__ ."/../../../" . $this->_aConfig['postinclude'])
+            : ''
+            ;
+
         // print_r($_SERVER);
         if (!count($this->_aConfig)) {
             $this->_sUser = 'superuser';
@@ -104,6 +109,9 @@ class adminacl
                 }
             }
             $this->_detectGroups();
+            if($sPostInclude){
+                include $sPostInclude;
+            }
             return true;
         }
 

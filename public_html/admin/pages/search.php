@@ -14,7 +14,7 @@
  * 
  */
 
- $sContent='';
+$sContent='';
 
 $aReplace=[];
 $sLangfile=__DIR__.'/../lang/'.$sUiLang.'.php';
