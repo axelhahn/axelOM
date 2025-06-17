@@ -1,0 +1,11 @@
+<?php
+/*
+ * hook file for page "userprofile" 
+ */
+
+$CONTENT_HOOK_1='
+    <tr>
+        <td></td>
+        <td>Here is some custom content</dd>
+    </tr>
+';
