@@ -63,8 +63,10 @@ return [
                 <li><a href="https://summernote.org/" target="_blank">Summernote</a> - Summmernote (HTML-Editor)</li>
                 <li><a href="https://github.com/snapappointments/bootstrap-select" target="_blank">Bootstrap-Select plugin</a></li>
                 </ul>
-            <li><a href="https://jquery.com/" target="_blank">jQuery</a></li>
+                
+            <li><a href="https://codemirror.net/" target="_blank">Codemirror</a> Editor with syntax highlight</li>
             <li><a href="https://fontawesome.com/" target="_blank">Fontawesome</a> (Icons)</li>
+            <li><a href="https://jquery.com/" target="_blank">jQuery</a></li>
             <li><a href="https://os-docs.iml.unibe.ch/adminlte-renderer/" target="_blank">AdminLTE-Renderer - class</a> (Institut for Medical Education; University of Bern)</li>
             <li><a href="https://github.com/axelhahn/php-abstract-dbo" target="_blank">php-abstract-dbo </a> - Axels Abstract PDO class (Axel Hahn)</li>
         </ul>

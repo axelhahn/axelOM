@@ -33,7 +33,7 @@ return [
     "newapp.appname" => "Verzeichnis (Kleinbuchstaben)",
     "newapp.appname-placeholder" => "z.B. appname",
     "newapp.icon" => "Icon CSS-Klasse",
-    "newapp.label" => "z.B. Neuw Applikation",
+    "newapp.label" => "z.B. Meine Applikation",
     "newapp.label-placeholder" => "Name",
     "newapp.description" => "Beschreibung",
 
@@ -63,8 +63,9 @@ return [
                 <li><a href="https://summernote.org/" target="_blank">Summernote</a> - Summmernote (HTML-Editor)</li>
                 <li><a href="https://github.com/snapappointments/bootstrap-select" target="_blank">Bootstrap-Select Plugin</a></li>
                 </ul>
-            <li><a href="https://jquery.com/" target="_blank">jQuery</a></li>
+            <li><a href="https://codemirror.net/" target="_blank">Codemirror</a> Editor mit Syntax highlight</li>
             <li><a href="https://fontawesome.com/" target="_blank">Fontawesome</a> (Icons)</li>
+            <li><a href="https://jquery.com/" target="_blank">jQuery</a></li>
             <li><a href="https://os-docs.iml.unibe.ch/adminlte-renderer/" target="_blank">AdminLTE-Renderer - Klasse</a> (Institut f&uuml;r Medizinische Lehre; Universit&auml;t Bern)</li>
             <li><a href="https://github.com/axelhahn/php-abstract-dbo" target="_blank">php-abstract-dbo </a> - Axels Abstract PDO Klasse (Axel Hahn)</li>
         </ul>
