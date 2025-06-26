@@ -532,7 +532,7 @@ class pdo_db
      * @param array  $aTables   optional: array of tables to dump; default: false (dumps all tables)
      * @return mixed  array of data on success or false on error
      */
-    public function dump(string $sOutfile = '', array $aTables = []): array|bool
+    public function dump_old(string $sOutfile = '', array $aTables = []): array|bool
     {
 
         $aResult = [];
@@ -589,6 +589,94 @@ class pdo_db
     }
 
     /**
+     * Dump a database to an array.
+     * Optional it can write a json file to disk
+     * 
+     * @see import()
+     * @param string $sOutfile  optional: output file name
+     * @param array  $aTables   optional: array of tables to dump; default: false (dumps all tables)
+     * @return mixed  array of data on success or false on error
+     */
+    public function dump(string $sOutfile = '', array $aTables = []): array|bool
+    {
+        $this->_wd(__METHOD__ . ' Writing to ' . $sOutfile .' '. (count($aTables) ? 'tables: ' . implode(', ', $aTables) : '(all tables)' ));
+
+        if (!$this->db) {
+            $this->_log(PB_LOGLEVEL_WARN, '[DB]', __METHOD__, 'Cannot dump. Database was not set yet.');
+            return false;
+        }
+        $_sDriver = $this->driver();
+        if (!isset($this->_aSql[$_sDriver])) {
+            $this->_log(PB_LOGLEVEL_WARN, '[DB]', __METHOD__, 'Cannot dump. Unknown database driver "' . $_sDriver . '".');
+            return false;
+        }
+
+        if (!is_dir(dirname($sOutfile))) {
+            $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, 'Directory "' . dirname($sOutfile) . '" does not exist. Output file cannot be written.');
+            return false;
+        }
+
+        // ----- get all tables
+        $_aTableList = count($aTables) ? $aTables : $this->showTables();
+        if (!$_aTableList || !count($_aTableList)) {
+            $this->_log(PB_LOGLEVEL_WARN, '[DB]', __METHOD__, 'Cannot dump. No tables were found.');
+            return false;
+        }
+        
+        $aMeta = [
+            ':meta:' => [
+                'timestamp' => date("Y-m-d H:i:s"),
+                'driver' => $this->driver(),
+                'tables' => $_aTableList
+            ]
+        ];
+        if (!file_put_contents($sOutfile, json_encode($aMeta)."\n")) {
+            $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, 'Unable to write to file "' . $sOutfile . '" after successful dumping.');
+            return false;
+        }
+
+        // ----- read each table
+        foreach ($_aTableList as $sTablename) {
+            $this->_wd(__METHOD__ . ' Reading table ' . $sTablename);
+
+            $sSqlCreate = sprintf($this->_aSql[$this->driver()]['getcreate'], $sTablename, 1);
+            $oCreate = $this->db->query($sSqlCreate);
+            $aMeta=[
+                $sTablename => [
+                    'create' => $oCreate->fetchAll(PDO::FETCH_COLUMN)[0],
+                ],
+            ];
+            file_put_contents($sOutfile, json_encode($aMeta)."\n", FILE_APPEND);
+
+            $odbtables = $this->db->query('SELECT * FROM `' . $sTablename . '` ');
+            $iRow=0;
+            foreach($odbtables->fetchAll(PDO::FETCH_ASSOC) as $aRow) {
+                $iRow++;
+                if($iRow==1) {
+                    $aMeta=[
+                        $sTablename => [
+                            'columns' => array_keys($aRow),
+                        ],
+                    ];
+                    file_put_contents($sOutfile, json_encode($aMeta)."\n", FILE_APPEND);
+                }
+                $aMeta=[
+                    $sTablename => [
+                        'data' => array_values($aRow),
+                    ],
+                ];
+                file_put_contents($sOutfile, str_replace(PHP_EOL,"\n", json_encode($aMeta))."\n", FILE_APPEND);
+            }
+        }
+        // echo '<pre>';
+        // echo file_get_contents($sOutfile);
+        // echo '</pre>';
+        // unlink($sOutfile);
+
+        return true;
+    }
+
+    /**
      * Import data from a json file; reverse function of dump()
      * TODO: handle options array
      * 
@@ -618,7 +706,7 @@ class pdo_db
      *                               - 'tables' {array}  options for all tables 
      * @return boolean
      */
-    public function import(string $sFile, array $aOptions = []): bool
+    public function import_old(string $sFile, array $aOptions = []): bool
     {
         $this->_wd(__METHOD__);
         if (!$this->db) {
@@ -663,6 +751,112 @@ class pdo_db
         }
         return true;
     }
+
+    /**
+     * Import data from a json file; reverse function of dump()
+     * TODO: handle options array
+     * 
+     * @example:
+     * $aOptions = [
+     *     'global' => [
+     *         'drop' => false,
+     *         'create-if-not-exists' => true,
+     *         'import' => true,
+     *     ],
+     *     // when given, only these tables will be imported
+     *     'tables' => [
+     *         'table1' => [
+     *              // optionally: override global settings
+     *             'drop' => false,
+     *             'create-if-not-exists' => true,
+     *             'import' => true,
+     *         ],
+     *         'tableN' => [
+     *             ...
+     *         ]
+     ]
+     * @see dump()
+     * @param  string   $sFile     json file to import
+     * @param  array    $aOptions  UNUSED optional: options array with these keys
+     *                               - 'global' {array}  options for all tables 
+     *                               - 'tables' {array}  options for all tables 
+     * @return boolean
+     */
+    public function import(string $sFile, array $aOptions = []): bool
+    {
+        $this->_wd(__METHOD__);
+        if (!$this->db) {
+            $this->_log(PB_LOGLEVEL_WARN, '[DB]', __METHOD__, 'Cannot import. Database was not set yet.');
+            return false;
+        }
+        if (!file_exists($sFile)) {
+            $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, 'Cannot import. Given file does not extist [' . $sFile . '].');
+            return false;
+        }
+
+        $aColumns=[];
+        foreach(file($sFile) as $jsonLine) {
+            $aTmp= json_decode($jsonLine, true);
+            $sTablename=array_key_first($aTmp);
+            $aData=$aTmp[$sTablename];
+            if($sTablename==':meta:') {
+                // maybe we can show meta infos
+                $this->_wd(__METHOD__ . ": Metadata $jsonLine");
+            } else {
+                // handle tables and data
+                // $sTablename is the tablename
+                $sType=array_key_first($aData);
+
+                $this->_wd(__METHOD__ . ": table $sTablename ($sType)");
+                switch ($sType) {
+                    case 'create':
+                        if ($this->tableExists($sTablename)) {
+                            $this->_log(PB_LOGLEVEL_INFO, '[DB]', __METHOD__, 'Table [' . $sTablename . '] already exists. Skipping.');
+                        } else {
+                            $sSql = $aData[$sType];
+                            if (!$this->makeQuery($sSql)) {
+                                $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, 'Creation of missing able failed.');
+                                return false;
+                            }
+                        }
+                        break;
+                    case 'columns':
+                        $this->_log(PB_LOGLEVEL_INFO, '[DB]', __METHOD__, 'Table [' . $sTablename . '] set columns '.print_r($aData[$sType], 1));
+                        $aColumns=$aData[$sType];
+                        break;
+                    case 'data':
+                        $aRow=[];
+                        $iCol=0;
+                        foreach($aColumns as $sColname) {
+                            $aRow[$sColname]=$aData[$sType][$iCol];
+                            $iCol++;
+                        }
+                        $sSqlTest = "SELECT id FROM `$sTablename` WHERE id=:id;";
+                        if($this->makeQuery($sSqlTest, [':id' => $aRow['id']])) {
+                            // id exists ... we need to update
+                            $sValues = '';
+                            unset($aColumns[0]);// remove "id"
+                            foreach($aColumns as $sColname) {
+                                $sValues .= ($sValues ? ', ' : '') . "`$sColname` = :$sColname";
+                            }
+                            $sSql = "UPDATE `$sTablename` SET $sValues WHERE `id` = :id";
+                        } else {
+                            $sSql = 'INSERT INTO `' . $sTablename . '` (' . implode(',', array_keys($aRow)) . ') VALUES (:' . implode(', :', array_keys($aRow)) . ');';
+                        }
+                        $aReturn=$this->makeQuery($sSql, $aRow);
+                        if($this->makeQuery($sSql, $aRow)===false){
+                            $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, " Import failed. Stopped on <br>query $sSql <br>Line: $jsonLine<br>" . $this->error());
+                            return false;
+                        }
+                        break;
+                    default:
+                        $this->_wd(__METHOD__ . ": unknown type $sType");
+                }
+            }
+        }
+
+        return true;
+    }    
 }
 
 // ----------------------------------------------------------------------

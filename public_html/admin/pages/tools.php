@@ -18,6 +18,8 @@ if(!$acl->isAppAdmin($sTabApp)){
 
 require_once('inc_functions.php');
 
+
+$sDumpExtension='jsonlines';
 $sContextbar='';
 $sBackuppath=dirname(dirname(__DIR__)).'/apps/'.$sTabApp.'/data/';
 
@@ -57,18 +59,12 @@ if($sTabApp){
         switch ($sAction) {
             case 'backup':
                 $TITLE.=DELIM_TITLE . ' {{backup}}';
-                $sBackupfile=$sBackuppath.'/'.$sTabApp.'-'.$oDB->driver().'-'.date('U').'.json';
-                $aDumpdata=$oDB->dump();
-                if(isset($aDumpdata)){
-
-                    if (file_put_contents($sBackupfile, json_encode($aDumpdata, JSON_PRETTY_PRINT))){
-                        addMsg('ok', '{{msgok.tools_backup_created}}');
-                        $sOutAction.='{{msgok.tools_backup_created}}<br>';
-                    } else {
-                        addMsg('error', '{{msgerr.tools_backup_file_not_written}}');
-                    }
+                $sBackupfile=$sBackuppath.'/'.$sTabApp.'-'.$oDB->driver().'-'.date('U').'.'.$sDumpExtension;
+                if($oDB->dump($sBackupfile)){
+                    addMsg('ok', '{{msgok.tools_backup_created}}');
+                    $sOutAction.='{{msgok.tools_backup_created}}<br>';
                 } else {
-                    addMsg('error', '{{msgerr.tools_backup_no_data}}');
+                    addMsg('error', '{{msgerr.tools_backup_file_not_written}}');
                 }
                 break;
             case 'restore':
@@ -146,7 +142,7 @@ if($sTabApp){
     $s='';
 
     $sTable = '';
-    foreach (glob($sBackuppath."/*json") as $file) {
+    foreach (glob($sBackuppath."/*.$sDumpExtension") as $file) {
         $sTable .= '<tr>'
         . '<td>' . basename($file) . '</td>'
         . '<td>' . date('Y-m-d H:i:s', filemtime($file)) . '</td>'

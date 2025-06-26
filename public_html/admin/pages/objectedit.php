@@ -53,7 +53,7 @@ if (isset($_POST['action'])) {
     switch ($_POST['action']) {
         case 'repair':
 
-            $sDumpfile=sys_get_temp_dir() . '/'. $sObject . '_'.microtime(true).'.json';
+            $sDumpfile=sys_get_temp_dir() . '/'. $sObject . '_'.microtime(true).'.jsonlines';
             $sPostOut.="Dumping to $sDumpfile... <br>";
             $oDB->dump($sDumpfile, [$sObject]);
 
