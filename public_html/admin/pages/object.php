@@ -685,7 +685,11 @@ if ($bShowEdit) {
             }
             
             // $sMainContent.='<pre>'.print_r($aRelations, 1).'</pre>';
-            $sFormAttach='<form action="'.$sBaseUrl.'" class="dropzone">'
+
+            // add attachment - for all objects but not the attachment object
+            $sFormAttach=$sObject=="pdo_db_attachments" 
+                ? ""
+                : '<form action="'.$sBaseUrl.'" class="dropzone">'
                 .'<input type="hidden" name="action" value="attach">'
                 .'<input type="hidden" name="id" value="'.$o->id().'">'
                 .'</form>'
@@ -715,13 +719,16 @@ if ($bShowEdit) {
                         ,
                     'text' => '<h3>' . (isset($aRelations['_targets']) ? count($aRelations['_targets']) : 0) . '</h3>',
                 ])
-                . '<div id="frmAttach">'
-                . $renderAdminLTE->getCallout([
-                    'type' => '',
-                    'title' => icon::get('attachments').'{{attachments}}',
-                    'text' => '<h3>...</h3>'.$sFormAttach,
-                ])
-                . '</div>'
+                . ($sFormAttach
+                    ? '<div id="frmAttach">'
+                        . $renderAdminLTE->getCallout([
+                            'type' => '',
+                            'title' => icon::get('attachments').'{{attachments}}',
+                            'text' => '<h3>...</h3>'.$sFormAttach,
+                        ])
+                        . '</div>'
+                    : ''
+                )
                 ;
         };
 

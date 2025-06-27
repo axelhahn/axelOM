@@ -795,7 +795,9 @@ class pdo_db
         }
 
         $aColumns=[];
+        $iLine=0;
         foreach(file($sFile) as $jsonLine) {
+            $iLine++;
             $aTmp= json_decode($jsonLine, true);
             $sTablename=array_key_first($aTmp);
             $aData=$aTmp[$sTablename];
@@ -811,17 +813,17 @@ class pdo_db
                 switch ($sType) {
                     case 'create':
                         if ($this->tableExists($sTablename)) {
-                            $this->_log(PB_LOGLEVEL_INFO, '[DB]', __METHOD__, 'Table [' . $sTablename . '] already exists. Skipping.');
+                            $this->_wd(__METHOD__ . 'Table [$sTablename] already exists. Skipping.');
                         } else {
                             $sSql = $aData[$sType];
-                            if (!$this->makeQuery($sSql)) {
+                            if ($this->makeQuery($sSql)===false) {
                                 $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, 'Creation of missing able failed.');
                                 return false;
                             }
                         }
                         break;
                     case 'columns':
-                        $this->_log(PB_LOGLEVEL_INFO, '[DB]', __METHOD__, 'Table [' . $sTablename . '] set columns '.print_r($aData[$sType], 1));
+                        $this->_wd(__METHOD__ . "Table [$sTablename] set columns ".print_r($aData[$sType], 1));
                         $aColumns=$aData[$sType];
                         break;
                     case 'data':
@@ -831,12 +833,14 @@ class pdo_db
                             $aRow[$sColname]=$aData[$sType][$iCol];
                             $iCol++;
                         }
+
                         $sSqlTest = "SELECT id FROM `$sTablename` WHERE id=:id;";
                         if($this->makeQuery($sSqlTest, [':id' => $aRow['id']])) {
                             // id exists ... we need to update
                             $sValues = '';
-                            unset($aColumns[0]);// remove "id"
-                            foreach($aColumns as $sColname) {
+                            $aUpdateColumns=$aColumns;
+                            unset($aUpdateColumns[0]);// remove "id"
+                            foreach($aUpdateColumns as $sColname) {
                                 $sValues .= ($sValues ? ', ' : '') . "`$sColname` = :$sColname";
                             }
                             $sSql = "UPDATE `$sTablename` SET $sValues WHERE `id` = :id";
@@ -844,13 +848,13 @@ class pdo_db
                             $sSql = 'INSERT INTO `' . $sTablename . '` (' . implode(',', array_keys($aRow)) . ') VALUES (:' . implode(', :', array_keys($aRow)) . ');';
                         }
                         $aReturn=$this->makeQuery($sSql, $aRow);
-                        if($this->makeQuery($sSql, $aRow)===false){
-                            $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, " Import failed. Stopped on <br>query $sSql <br>Line: $jsonLine<br>" . $this->error());
+                        if($aReturn===false){
+                            $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, " Import failed. Stopped on <br>query $sSql <br>Line: $iLine: $jsonLine<br>" . $this->error());
                             return false;
                         }
                         break;
                     default:
-                        $this->_wd(__METHOD__ . ": unknown type $sType");
+                        $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, " unknown type $sType <br>Line: $iLine: $jsonLine");
                 }
             }
         }

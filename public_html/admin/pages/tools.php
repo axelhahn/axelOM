@@ -18,7 +18,6 @@ if(!$acl->isAppAdmin($sTabApp)){
 
 require_once('inc_functions.php');
 
-
 $sDumpExtension='jsonlines';
 $sContextbar='';
 $sBackuppath=dirname(dirname(__DIR__)).'/apps/'.$sTabApp.'/data/';
@@ -54,7 +53,7 @@ if($sTabApp){
     if($sAction){
         // $sOutAction.='ACTION = '.$sAction.'<br>';
         $sFile=queryparam::post('file', '/^[a-z\.0-9\-]*$/');
-        $sBackupfile=$sBackuppath.'/'.$sFile;
+        $sBackupfile="$sBackuppath/$sFile";
 
         switch ($sAction) {
             case 'backup':
@@ -69,14 +68,14 @@ if($sTabApp){
                 break;
             case 'restore':
                     $sBackupfile=$sBackuppath.'/'.$sFile;
-                    $oDB->setDebug(1); 
+                    // $oDB->setDebug(1); 
                     
                     if ($oDB->import($sBackupfile)){
                         addMsg('ok', '{{msgok.tools_backup_restored}}');
                     } else {
                         addMsg('error', '{{msgerr.tools_restore_failed}}');
                     }
-                    $oDB->setDebug(0);
+                    // $oDB->setDebug(0);
                     break;
             case 'delete':
                 $sBackupfile=$sBackuppath.'/'.$sFile;
