@@ -28,7 +28,7 @@ foreach ($adminmetainfos->getApps(1) as $sApp => $aAppData){
     $appmeta=new appmetainfos($sAppRootDir.'/'.$sApp);
     if ($acl->canView($sApp)){
         $sPerms.='<tr>'
-            .'<td><a href="?app='.$sApp.'&page=home">'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</a></td>'
+            .'<td><a href="?app='.$sApp.'&page=home"><strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</a></strong><br>'.$appmeta->getApphint().'</td>'
             .'<td>'.yesno($acl->canView($sApp)).'</td>'
             .'<td>'.yesno($acl->canEdit($sApp)).'</td>'
             .'<td>'.yesno($acl->isAppAdmin($sApp)).'</td>'

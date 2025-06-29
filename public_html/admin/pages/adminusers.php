@@ -84,7 +84,9 @@ if (!isset($aSettings['acl'])){
 
             }
             $sPerms.=($sTable
-                    ? '<tr><th><h5 class="text-primary">'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</h5></th><th>{{perms.view}}</th><th>{{perms.edit}}</th><th>{{perms.admin}}</th></tr>'
+                    ? '<tr><th><h5 class="text-primary">'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</h5>
+                            '.$appmeta->getApphint().'
+                        </th><th>{{perms.view}}</th><th>{{perms.edit}}</th><th>{{perms.admin}}</th></tr>'
                         .''.$sTable.''
                     : '<tr><td>'.icon::get('close').' {{perms.none}}</td></tr>'
                 )
