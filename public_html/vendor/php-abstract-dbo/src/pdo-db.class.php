@@ -9,7 +9,7 @@
  * Licence: GNU GPL 3.0
  * ----------------------------------------------------------------------
  * 2023-08-26  0.1  ah  first lines
- * 2025-02-25  ___  ah  last changes
+ * 2025-06-29  ___  ah  last changes
  * ======================================================================
  */
 
@@ -589,6 +589,22 @@ class pdo_db
     }
 
     /**
+     * Helper function for dump(): append a line to a given file
+     * @param string  $sFile     filename to write
+     * @param string  $sContent  textline to write (without trailing "\n") 
+     * @param integer $flags     optional: file_put_contents flags; default: 0 (= create new file or overwrite it)
+     * @return bool
+     */
+    protected function _write2File($sFile, $sContent, $flags=0)
+    {
+        if (!file_put_contents($sFile, "$sContent\n", $flags)) {
+            $this->_log(PB_LOGLEVEL_ERROR, '[DB]', "dump", "Unable to write /append to file '$sFile'.");
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Dump a database to an array.
      * Optional it can write a json file to disk
      * 
@@ -601,6 +617,7 @@ class pdo_db
     {
         $this->_wd(__METHOD__ . ' Writing to ' . $sOutfile .' '. (count($aTables) ? 'tables: ' . implode(', ', $aTables) : '(all tables)' ));
 
+        // ----- checks
         if (!$this->db) {
             $this->_log(PB_LOGLEVEL_WARN, '[DB]', __METHOD__, 'Cannot dump. Database was not set yet.');
             return false;
@@ -623,6 +640,7 @@ class pdo_db
             return false;
         }
         
+        // ----- start
         $aMeta = [
             ':meta:' => [
                 'timestamp' => date("Y-m-d H:i:s"),
@@ -630,8 +648,7 @@ class pdo_db
                 'tables' => $_aTableList
             ]
         ];
-        if (!file_put_contents($sOutfile, json_encode($aMeta)."\n")) {
-            $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, 'Unable to write to file "' . $sOutfile . '" after successful dumping.');
+        if (!$this->_write2File($sOutfile, json_encode($aMeta))) {
             return false;
         }
 
@@ -641,33 +658,67 @@ class pdo_db
 
             $sSqlCreate = sprintf($this->_aSql[$this->driver()]['getcreate'], $sTablename, 1);
             $oCreate = $this->db->query($sSqlCreate);
-            $aMeta=[
-                $sTablename => [
-                    'create' => $oCreate->fetchAll(PDO::FETCH_COLUMN)[0],
-                ],
-            ];
-            file_put_contents($sOutfile, json_encode($aMeta)."\n", FILE_APPEND);
-
-            $odbtables = $this->db->query('SELECT * FROM `' . $sTablename . '` ');
-            $iRow=0;
-            foreach($odbtables->fetchAll(PDO::FETCH_ASSOC) as $aRow) {
-                $iRow++;
-                if($iRow==1) {
-                    $aMeta=[
-                        $sTablename => [
-                            'columns' => array_keys($aRow),
-                        ],
-                    ];
-                    file_put_contents($sOutfile, json_encode($aMeta)."\n", FILE_APPEND);
+            $sCreateStatement = $oCreate->fetchAll(PDO::FETCH_COLUMN)[0];
+            if(!preg_match('/^CREATE TABLE/i', $sCreateStatement)) {
+                if (!$this->_write2File($sOutfile, "; Table [$sTablename] does not exist yet.", FILE_APPEND)) {
+                    return false;
                 }
+
+            } else {
+
                 $aMeta=[
                     $sTablename => [
-                        'data' => array_values($aRow),
+                        'create' => $sCreateStatement,
                     ],
                 ];
-                file_put_contents($sOutfile, str_replace(PHP_EOL,"\n", json_encode($aMeta))."\n", FILE_APPEND);
+                // file_put_contents($sOutfile, json_encode($aMeta)."\n", FILE_APPEND);
+                if (!$this->_write2File($sOutfile, json_encode($aMeta), FILE_APPEND)) {
+                    return false;
+                }
+
+
+                $odbtables = $this->db->query('SELECT * FROM `' . $sTablename . '` ');
+                $iRow=0;
+                foreach($odbtables->fetchAll(PDO::FETCH_ASSOC) as $aRow) {
+                    $iRow++;
+                    if($iRow==1) {
+                        $aMeta=[
+                            $sTablename => [
+                                'columns' => array_keys($aRow),
+                            ],
+                        ];
+                        // file_put_contents($sOutfile, json_encode($aMeta)."\n", FILE_APPEND);
+                        if (!$this->_write2File($sOutfile, json_encode($aMeta), FILE_APPEND)) {
+                            return false;
+                        }
+
+                    }
+                    $aMeta=[
+                        $sTablename => [
+                            'data' => array_values($aRow),
+                        ],
+                    ];
+                    // file_put_contents($sOutfile, str_replace(PHP_EOL,"\n", json_encode($aMeta))."\n", FILE_APPEND);
+                    if (!$this->_write2File($sOutfile, json_encode($aMeta), FILE_APPEND)) {
+                        return false;
+                    }
+
+                }
             }
+
         }
+
+        // ----- finish
+        $aMeta = [
+            ':done:' => [
+                'timestamp' => date("Y-m-d H:i:s"),
+            ]
+        ];
+        // file_put_contents($sOutfile, json_encode($aMeta)."\n", FILE_APPEND);
+        if (!$this->_write2File($sOutfile, json_encode($aMeta), FILE_APPEND)) {
+            return false;
+        }
+
         // echo '<pre>';
         // echo file_get_contents($sOutfile);
         // echo '</pre>';
@@ -798,7 +849,10 @@ class pdo_db
         $iLine=0;
         foreach(file($sFile) as $jsonLine) {
             $iLine++;
-            $aTmp= json_decode($jsonLine, true);
+            $aTmp=json_decode($jsonLine, true);
+            if(!is_array($aTmp)) {
+                continue;
+            }
             $sTablename=array_key_first($aTmp);
             $aData=$aTmp[$sTablename];
             if($sTablename==':meta:') {
