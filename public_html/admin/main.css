@@ -157,8 +157,8 @@ input.form-control[required]{ border-right: 0.3em solid var(--requiredColor); ba
 	width: 95%;
 }
 ::placeholder{
-	color: #a40 !important;
-	opacity: 0.6 !important;
+	color: #366 !important;
+	opacity: 0.8 !important;
 }
 
 
