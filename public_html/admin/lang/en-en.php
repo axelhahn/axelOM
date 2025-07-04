@@ -143,6 +143,14 @@ return [
 
     // ----- page :: tools
     "tools.manage_backups" => "Manage backups",
+    "tools.no_backup_yet" => "No backup was created yet. Click 'Full Backup create' to create the first backup.",
+    "tools.dump-completed" => "Backup was successful.",
+    "tools.dump-incomplete" => "Backup-End marker was not found.",
+    "tools.restore-global-options"=> "Options",
+    "tools.restore-global-drop" => "Drop existing table first",
+    "tools.restore-global-create-if-not-exist" => "Create a table if it does not exist",
+    "tools.restore-global-import" => "Import data",
+    "tools.dump-total-rows" => "Count of data sets",
     "tools.output" => "Output",
 
     // ----- debug box
@@ -179,7 +187,7 @@ return [
     "app"=>"Application",
     "attachments"=> "Attachments",
     "back"=>"Back",
-    "backup"=>"Create new backup",
+    "backup"=>"Create full backup",
     "config"=>"Configuration",
     "confirm_delete"=>"Are you sure you want to delete this",
     "confirm_restore"=>"Are you sure you want to restore this",

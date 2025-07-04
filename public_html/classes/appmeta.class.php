@@ -55,7 +55,8 @@ class appmetainfos {
     protected array $_aDirs = [
         'classes',
         'config',
-        'files'
+        'data',
+        'files',
     ];
 
     /**

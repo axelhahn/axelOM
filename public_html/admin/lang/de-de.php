@@ -142,6 +142,14 @@ return [
 
     // ----- page :: tools
     "tools.manage_backups" => "Backups verwalten",
+    "tools.no_backup_yet" => "Es wurde noch kein Backup erstellt. Klicken Sie auf 'Full Backup erstellen', um eine erste Sicherung zu erstellen.",
+    "tools.dump-completed" => "Backup war erfolgreich.",
+    "tools.dump-incomplete" => "Backup-Ende-Marker wurde nicht gefunden.",
+    "tools.restore-global-options"=> "Optionen",
+    "tools.restore-global-drop" => "Bestehende Tabelle zuerst l&ouml;schen",
+    "tools.restore-global-create-if-not-exist" => "Tabelle erstellen, wenn nicht vorhanden",
+    "tools.restore-global-import" => "Daten importieren",
+    "tools.dump-total-rows" => "Anzahl der Datens&auml;tze",
     "tools.output" => "Ausgabe",
 
     // ----- debug box
@@ -178,7 +186,7 @@ return [
     "attachments"=> "Anh&auml;nge",
     "app"=>"Application",
     "back"=>"Zur&uuml;ck",
-    "backup"=>"Neues Backup erstellen",
+    "backup"=>"Full-Backup erstellen",
     "config"=>"Konfiguration",
     "confirm_delete"=>"Sind Sie sicher, dass Sie dies L&ouml;schen m&ouml;chten",
     "confirm_restore"=> "Sind Sie sicher, dass Sie dies Wiederherstellen m&ouml;chten",
