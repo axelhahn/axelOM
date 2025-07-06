@@ -9,7 +9,7 @@
  * Licence: GNU GPL 3.0
  * ----------------------------------------------------------------------
  * 2023-08-26  0.1  ah  first lines
- * 2025-07-05  ___  ah  last changes
+ * 2025-07-07  ___  ah  last changes
  * ======================================================================
  */
 
@@ -804,6 +804,62 @@ class pdo_db
     }
 
     /**
+     * helper function for import() method to handle the bolk import
+     * 
+     * @param string $sAction     Name of action; one of reset|add|flush
+     * @param array  $aRow        for add: new data row
+     * @param int    $iLimit      limit of rows before starting INSERT statement
+     * @param string $sSqlInsert  sql base statement without values
+     * @return bool
+     */
+    protected function _importBulk($sAction, $aRow=[], $iLimit=1, $sSqlInsert=""){
+        static $sSqlData;
+        static $aData;
+        static $iRows;
+        switch ($sAction){
+            case 'reset':
+                $sSqlData = '';
+                $aData = [];
+                $iRows = 0;
+                break;
+            case 'add':
+                // $aData[] = $aRow;
+                $sSqlData.= ($sSqlData ? ', ' : '') . '(';
+                $id=$aRow[0];
+                $iCol=0;
+                $sSqlRow='';
+                foreach($aRow as $val){
+                    $iCol++;
+                    $datakey="id_{$id}__col_{$iCol}";
+                    $sSqlRow.= ($sSqlRow ? ", ": "") . ":$datakey";
+                    $aData[$datakey]=$val;
+                }
+                $sSqlData.=$sSqlRow . ") ";
+                $iRows++;
+                break;
+            case 'flush':
+                break;
+            default:
+                $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, " Unknown action $sAction");
+                return false;
+        }
+
+        if(( $iRows>=$iLimit || $sAction=='flush') && count($aData)){
+            $this->_log(PB_LOGLEVEL_INFO, '[DB]', __METHOD__, " Flushing / importing bulk data after $iRows datasets - $sAction");
+            $sSql="$sSqlInsert $sSqlData";
+            $aReturn = $this->makeQuery($sSql, $aData);
+            if ($aReturn === false) {
+                return false;
+            }
+
+            $this->_importBulk('reset');
+
+            return true;
+        }
+        return true;
+    }
+
+    /**
      * Import data from a json file; reverse function of dump()
      * TODO: handle options array
      * 
@@ -813,6 +869,7 @@ class pdo_db
      *         'drop' => true,
      *         'create' => true,
      *         'import' => true,
+     *         'rows2instert' => 30
      *     ],
      *     // TODO: add options for each table
      *     // when given, only these tables will be imported
@@ -854,6 +911,7 @@ class pdo_db
                 'drop' => $aOptions['global']['drop'] ?? true,
                 'create' => $aOptions['global']['create'] ?? true,
                 'import' => $aOptions['global']['import'] ?? true,
+                'rows2instert' => $aOptions['global']['rows2instert'] ?? 30,
             ],
             // when given, only these tables will be imported
             'tables' => [],
@@ -861,6 +919,9 @@ class pdo_db
 
         $aColumns = [];
         $iLine = 0;
+        $iRows2insert = $aOpt['global']['rows2instert'];
+        $bCheckUpdateOrInsert = false;
+        $sSqlInsertBase='';
         foreach (file($sFile) as $jsonLine) {
             $iLine++;
             $aTmp = json_decode($jsonLine, true);
@@ -877,6 +938,12 @@ class pdo_db
                 case ':done:':
                     $this->_wd(__METHOD__ . ": Last line was reached. $jsonLine");
                     $this->_log(PB_LOGLEVEL_INFO, '[DB]', __METHOD__, "Last line was reached. $jsonLine.");
+
+                    if(!$this->_importBulk('flush', [], 1, $sSqlInsertBase)){
+                        $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, " Import failed. Stopped on <br>query $sSql <br>Line: $iLine: $jsonLine<br>" . $this->error());
+                        return false;
+                    }
+
                     break;
                 default:
                     $sType = array_key_first($aData);
@@ -884,6 +951,15 @@ class pdo_db
                     $this->_wd(__METHOD__ . ": table $sTablename ($sType)");
                     switch ($sType) {
                         case 'create':
+
+                            // get Create statement for current object with current database driver
+                            $sSqlCreate = sprintf($this->_aSql[$this->driver()]['getcreate'], $sTablename, 1);
+                            $oCreate = $this->db->query($sSqlCreate);
+                            $sSqlCreateTable = $oCreate->fetchAll(PDO::FETCH_COLUMN)[0]??'';
+
+                            if(!$sSqlCreateTable){
+                                $sSqlCreateTable = $aData[$sType];
+                            }
 
                             if ($aOpt['global']['drop'] ?? false) {
                                 if ($this->makeQuery('DROP TABLE IF EXISTS `' . $sTablename . '`') === false) {
@@ -894,22 +970,12 @@ class pdo_db
 
                             if ($this->tableExists($sTablename)) {
                                 $this->_wd(__METHOD__ . "Table [$sTablename] already exists. Skipping.");
+                                $iRows2insert=1;
+                                $bCheckUpdateOrInsert=true;
                             } else {
                                 if ($aOpt['global']['create'] ?? false) {
 
-                                    // Create statement from dump file
-                                    // $sSql = $aData[$sType];
-
-                                    // get Create statement for current object with current database driver
-                                    $sSqlCreate = sprintf($this->_aSql[$this->driver()]['getcreate'], $sTablename, 1);
-                                    $oCreate = $this->db->query($sSqlCreate);
-                                    $sSql = $oCreate->fetchAll(PDO::FETCH_COLUMN)[0]??'';
-
-                                    if(!$sSql){
-                                        $sSql = $aData[$sType];
-                                    }
-
-                                    if ($this->makeQuery($sSql) === false) {
+                                    if ($this->makeQuery($sSqlCreateTable) === false) {
                                         $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, "Creation of missing table [$sTablename] failed.");
                                         return false;
                                     }
@@ -921,34 +987,59 @@ class pdo_db
                             break;
                         case 'columns':
                             $this->_wd(__METHOD__ . "Table [$sTablename] set columns " . print_r($aData[$sType], 1));
+
+                            if($sSqlInsertBase){
+                                if(!$this->_importBulk('flush', $aData[$sType], 1, $sSqlInsertBase)){
+                                    $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, " Import failed. Stopped on <br>query $sSql <br>Line: $iLine: $jsonLine<br>" . $this->error());
+                                    return false;
+                                }
+                                $sSqlInsertBase='';
+                            }
+
                             $aColumns = $aData[$sType];
+                            $sSqlInsertBase='INSERT INTO `' . $sTablename . '` '
+                                            .'(' . implode(',', $aColumns) . ') VALUES '
+                                            ;
+                            if(!$this->_importBulk('reset', [], 1, "")){
+                            }
                             break;
                         case 'data':
                             if ($aOpt['global']['import'] ?? false) {
-                                $aRow = [];
-                                $iCol = 0;
-                                foreach ($aColumns as $sColname) {
-                                    $aRow[$sColname] = $aData[$sType][$iCol];
-                                    $iCol++;
-                                }
+                                if($iRows2insert==1){
+                                    
+                                    $aRow = [];
+                                    $iCol = 0;
+                                    foreach ($aColumns as $sColname) {
+                                        $aRow[$sColname] = $aData[$sType][$iCol];
+                                        $iCol++;
+                                    }                                
 
-                                $sSqlTest = "SELECT id FROM `$sTablename` WHERE id=:id;";
-                                if ($this->makeQuery($sSqlTest, [':id' => $aRow['id']])) {
-                                    // id exists ... we need to update
-                                    $sValues = '';
-                                    $aUpdateColumns = $aColumns;
-                                    unset($aUpdateColumns[0]);// remove "id"
-                                    foreach ($aUpdateColumns as $sColname) {
-                                        $sValues .= ($sValues ? ', ' : '') . "`$sColname` = :$sColname";
+                                    $sSql = $sSqlInsertBase
+                                        .' (:' . implode(', :', $aColumns) . ')'
+                                        ;
+                                    if($bCheckUpdateOrInsert) {
+                                        $sSqlTest = "SELECT id FROM `$sTablename` WHERE id=:id;";
+                                        if ($this->makeQuery($sSqlTest, [':id' => $aRow['id']])) {
+                                            // id exists ... we need to update
+                                            $sValues = '';
+                                            $aUpdateColumns = $aColumns;
+                                            unset($aUpdateColumns[0]);// remove "id"
+                                            foreach ($aUpdateColumns as $sColname) {
+                                                $sValues .= ($sValues ? ', ' : '') . "`$sColname` = :$sColname";
+                                            }
+                                            $sSql = "UPDATE `$sTablename` SET $sValues WHERE `id` = :id";
+                                        }
                                     }
-                                    $sSql = "UPDATE `$sTablename` SET $sValues WHERE `id` = :id";
+                                    $aReturn = $this->makeQuery($sSql, $aRow);
+                                    if ($aReturn === false) {
+                                        $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, " Import failed. Stopped on <br>query $sSql <br>Line: $iLine: $jsonLine<br>" . $this->error());
+                                        return false;
+                                    }
                                 } else {
-                                    $sSql = 'INSERT INTO `' . $sTablename . '` (' . implode(',', array_keys($aRow)) . ') VALUES (:' . implode(', :', array_keys($aRow)) . ');';
-                                }
-                                $aReturn = $this->makeQuery($sSql, $aRow);
-                                if ($aReturn === false) {
-                                    $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, " Import failed. Stopped on <br>query $sSql <br>Line: $iLine: $jsonLine<br>" . $this->error());
-                                    return false;
+                                    if(!$this->_importBulk('add', $aData[$sType], $iRows2insert, $sSqlInsertBase)){
+                                        $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, " Import failed. Stopped on <br>query $sSql <br>Line: $iLine: $jsonLine<br>" . $this->error());
+                                        return false;
+                                    }
                                 }
                             }
                             break;
@@ -974,6 +1065,10 @@ class pdo_db
      *     'rows' => [
      *         <table1> => <rowcount>,
      *         <tableN> => <rowcount>,
+     *      ],
+     *     'counters' => [
+     *         'tables' => <number_of_tables>,
+     *         'roes' => <number_of_rows_total>,
      *      ],
      * ]
      * 
@@ -1005,9 +1100,8 @@ class pdo_db
             return $aReturn;
         }
 
-        $iLine = 0;
+        $iRows = 0;
         foreach (file($sFile) as $jsonLine) {
-            $iLine++;
             $aTmp = json_decode($jsonLine, true);
             if (!is_array($aTmp)) {
                 continue;
@@ -1028,12 +1122,15 @@ class pdo_db
                     }
                     if ($sType == 'data') {
                         $aReturn['rows'][$sTablename]++;
+                        $iRows++;
                     }
                     break;
             }
-
         }
-
+        $aReturn['counters']=[
+            'tables'=>count($aReturn['rows']),
+            'rows'=>$iRows,
+        ];
         return $aReturn;
     }
 }

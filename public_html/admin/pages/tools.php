@@ -62,7 +62,11 @@ if($sTabApp){
                 $sBackupfile=$sBackuppath.'/'.$sTabApp.'-'.$oDB->driver().'-'.date('U').'.'.$sDumpExtension;
                 if($oDB->dump($sBackupfile, $aTables)){
                     addMsg('ok', '{{msgok.tools_backup_created}}');
-                    $sOutAction.='{{msgok.tools_backup_created}}<br>';
+                    $aOptions=$oDB->dumpAnalyzer($sBackupfile);
+
+                    $sOutAction.='{{msgok.tools_backup_created}}<br>'
+                        .'<pre>'.print_r($aOptions, 1).'</pre>'
+                        ;
                 } else {
                     addMsg('error', '{{msgerr.tools_backup_file_not_written}}');
                 }
@@ -82,9 +86,8 @@ if($sTabApp){
                     .($aOptions['completed'] ? icon::get('yes') . '{{tools.dump-completed}}' : icon::get('no') . '{{tools.dump-incomplete}}').'<br>'
                     ."<br>"
                 ;
-                $iRowsTotal=0;
+                $iRowsTotal=$aOptions['counters']['rows']??0;
                 foreach($aOptions['rows']??[] as $sTable => $iRows){
-                    $iRowsTotal+=$iRows;
                     $sFormCustomRestore.= 
                         "... $sTable (<strong>$iRows</strong>)<br>"
                         // . '<label><input type="checkbox" name="tables['.$sTable.'][drop]" value="true" /> {{tools.restore-global-drop}}<br></label><br>'
