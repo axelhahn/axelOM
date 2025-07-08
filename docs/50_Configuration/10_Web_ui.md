@@ -22,6 +22,9 @@ return [
         'displayname'=>false,
 
         // 'userfield'=>'mail', // example for shibboleth authentication: configure by email instead of uuid
+        
+        // enble mfa
+        // 'postinclude'=>'vendor/mfa-client/src/mfa-ensure.php',
 
         // ---------- GROUPS
         'groups'=>[
@@ -79,6 +82,7 @@ Below `"acl"` these keys will be detected:
 |--               |--           |-- 
 | `'userfield'`   | {string}    | Name of key in $_SERVER to detect a username.<br>With the user ids of these field the user access will be configured.<br>default: `"REMOTE_USER"`
 | `'displayname'` | {string}    | optional: Name of key in $_SERVER to display a logged in username on top right. It has no further logical functionionality.<br>default: `false` = use the key given in "userfield"
+| `'postinclude'` | {string}    | experimaental: path from Webroot to include a file for mfa. public_html/admin/classes/adminacl.class.php.
 | `'groups'`      | {array}     | Array to define access. See next chapter.
 
 #### Permissions

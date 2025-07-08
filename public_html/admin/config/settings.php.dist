@@ -40,6 +40,9 @@ return [
 
         // 'userfield'=>'mail', // set by shibbolethauthentication
 
+        // enable mfa (requires configuration in hooks and for mfa too)
+        // 'postinclude'=>'vendor/mfa-client/src/mfa-ensure.php',
+
         // ---------- GROUPS
         'groups'=>[
 
