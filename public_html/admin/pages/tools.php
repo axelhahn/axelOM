@@ -62,18 +62,23 @@ if($sTabApp){
                 $sBackupfile=$sBackuppath.'/'.$sTabApp.'-'.$oDB->driver().'-'.date('U').'.'.$sDumpExtension;
                 $iStartBackup=microtime(true);
                 if($oDB->dump($sBackupfile, $aTables)){
-                    $iTimeBackup=microtime(true)-$iStartBackup;
-
-                    addMsg('ok', 
-                        "{{msgok.tools_backup_created}} // "
-                            .(round(($iTimeBackup)*10000)/10)." ms - "
-                            .number_format(filesize($sBackupfile)/$iTimeBackup, false, false, "'")." B/ sec"
-                        );
                     $aOptions=$oDB->dumpAnalyzer($sBackupfile);
+                    if($aOptions['counters']['rows']==0){
+                        $sOutAction.='{{msgerr.tools_backup_no_data}}<br>';
+                        addMsg('error', '{{msgerr.tools_backup_no_data}}');
+                        unlink($sBackupfile);
+                    } else {
+                        $sOutAction.='{{msgok.tools_backup_created}}<br>';
 
-                    $sOutAction.='{{msgok.tools_backup_created}}<br>'
-                        .'<pre>'.print_r($aOptions, 1).'</pre>'
-                        ;
+                        $iTimeBackup=microtime(true)-$iStartBackup;
+
+                        addMsg('ok', 
+                            "{{msgok.tools_backup_created}} // "
+                                .(round(($iTimeBackup)*10000)/10)." ms - "
+                                .number_format(filesize($sBackupfile)/$iTimeBackup, false, false, "'")." B/ sec"
+                            );
+                        $sOutAction.='<pre>'.print_r($aOptions, 1).'</pre>';
+                    }
                 } else {
                     addMsg('error', '{{msgerr.tools_backup_file_not_written}}');
                 }
