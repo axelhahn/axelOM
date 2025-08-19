@@ -269,7 +269,7 @@ return [
     // ----- messages backup /restore
     "msgerr.action_not_implemented" => "FEHLER: Aktion wurde noch nicht implementiert",
     "msgerr.tools_backup_file_not_written" => "FEHLER: Backup-Daten konnte nicht als Datei geschrieben werden.",
-    "msgerr.tools_backup_no_data" => "FEHLER: Keine Backup-Daten gefunden.",
+    "msgerr.tools_backup_no_data" => "FEHLER: Es wurden keine Daten gefunden.",
     "msgerr.tools_file_not_deleted" => "FEHLER: Datei konnte nicht gel&ouml;scht werden.",
     "msgerr.tools_file_not_deleted_not_found" => "FEHLER: Datei konnte nicht gel&ouml;scht werden. Datei nicht gefunden.",
     "msgerr.tools_restore_failed" => "FEHLER: Backup konnte nicht wiederhergestellt werden.",
