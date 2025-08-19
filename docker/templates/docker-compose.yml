@@ -24,6 +24,15 @@ services:
     ports:
       - '${APP_PORT}:80'
 
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 500M
+        # reservations:
+        #   cpus: '0.01'
+        #   memory: 20M
+
     working_dir: ${WEBROOT}
     
     volumes:
@@ -55,6 +64,16 @@ services:
     # restart: always
     ports:
       - '${DB_PORT}:3306'
+
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 500M
+        # reservations:
+        #   cpus: '0.001'
+        #   memory: 20M
+
     environment:
       MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASS}'
       MYSQL_USER: '${MYSQL_USER}'
