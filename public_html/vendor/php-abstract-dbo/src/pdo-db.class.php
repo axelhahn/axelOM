@@ -9,7 +9,7 @@
  * Licence: GNU GPL 3.0
  * ----------------------------------------------------------------------
  * 2023-08-26  0.1  ah  first lines
- * 2025-07-07  ___  ah  last changes
+ * 2025-08-19  ___  ah  last changes
  * ======================================================================
  */
 
@@ -1128,7 +1128,7 @@ class pdo_db
             }
         }
         $aReturn['counters']=[
-            'tables'=>count($aReturn['rows']),
+            'tables'=>count($aReturn['rows']??[]),
             'rows'=>$iRows,
         ];
         return $aReturn;
