@@ -47,7 +47,7 @@
 main {
 	background-color: #f4f6f9;
 }
-
+blockquote{background-color: #f4f6f9; margin-left: 2em; padding: 1em;}
 button{border: 1px solid rgba(0,0,0,0.1) !important;}
 button.btn:disabled{
 	color: #888;
