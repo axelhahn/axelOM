@@ -41,8 +41,13 @@
     <link rel="stylesheet" href="{{DIR_ADMINLTEPLUGINS}}/summernote/summernote-bs4.min.css">
     <link rel="stylesheet" href="{{DIR_ADMINLTEPLUGINS}}/dropzone/dropzone.css" type="text/css" />
 
+    <!--
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/iconify/3.1.1/iconify.without-api.min.js" integrity="sha512-qW65t+uQCZXchxjevlC+a45Mo4UcdSCNYDBS9+1wRgbpU4t5Xk5opnYrdSnhcwBmUtggCwBF+l5ze4VHTuk+gw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    -->
 
     <link rel="stylesheet" href="main.css">
+
+    {{HTML_HEAD}}
 
 </head>
 
