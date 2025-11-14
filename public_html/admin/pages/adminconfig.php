@@ -39,7 +39,7 @@ if (isset($_POST['action'])) {
             break;;
 
         default:
-            header('http/1.0 400 Bad Request');
+            http_response_code(400);
             addMsg('error', 'OOPS: POST action [' . htmlentities($_POST['action']) . '] is not handled (yet). :-/');
     }
 }
