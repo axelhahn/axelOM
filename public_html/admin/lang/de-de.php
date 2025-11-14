@@ -24,7 +24,7 @@ return [
     // ----- page :: home
     "home.welcome" => "Willkommen bei <strong>Axels ObjManager</strong>",
     "home.banner" => "Backend zum Bearbeiten der Objekte verschiedener Applikationen.",
-    "home.apps" => "Anzahl Applikationen",
+    "home.apps" => "Anzahl Apps",
     "home.objecttypes"=> "Anzahl Objekte",
     
     // ----- page :: app home
