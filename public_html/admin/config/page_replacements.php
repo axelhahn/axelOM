@@ -13,7 +13,7 @@
 */
 $sAppReldir=str_replace('/admin/index.php', '', $_SERVER['SCRIPT_NAME']);
 return [
-    '{{DIR_ADMINLTE}}' => $sAppReldir.'/vendor/admin-lte/4.0.0-beta1',
+    '{{DIR_ADMINLTE}}' => $sAppReldir.'/vendor/admin-lte/4.0.0-rc4',
     '{{DIR_ADMINLTEPLUGINS}}' => $sAppReldir.'/vendor/admin-lte-plugins',
     '{{HTML_HEAD}}'    =>'<!-- MORE HTML_HEAD DATA -->',
     '{{PAGE_SKIN}}'    =>'',
