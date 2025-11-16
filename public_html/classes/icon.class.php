@@ -2,10 +2,7 @@
 /**
  * ======================================================================
  * 
- * This is a php class to get safe values from $_GET|$_POST|$_SESSION
- * - grid layout
- * - navigation
- * - widgets and forms
+ * EMBED ICONS
  * 
  * @example <code>
  * // load class
