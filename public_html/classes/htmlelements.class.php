@@ -22,6 +22,7 @@
  * 
  * ----------------------------------------------------------------------
  * 2024-05-18        <axel>  add variable types
+ * 2025-11-05        <axel>  remove attribute on NULL value; optimze spacing between attributes
  */
 class htmlelements {
 
@@ -69,10 +70,12 @@ class htmlelements {
             if(is_array($sValue)){
                 echo "ERROR: an html tag was defined with array in attribute [$sAttr]:<br><pre>".print_r($this->_aAttributes, 1)."</pre>";
             }
-            $sReturn .= ' '.$sAttr . '="' . $sValue . '"';
+            $sReturn .= ($sValue!==null) 
+                ? (($sReturn ? ' ' : '' ) . "$sAttr=\"$sValue\"") 
+                : '';
             
         }
-        return $sReturn;
+        return $sReturn ? " $sReturn" : "";
     }
     
     
