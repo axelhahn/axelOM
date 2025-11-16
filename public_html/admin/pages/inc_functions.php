@@ -151,26 +151,14 @@ function initClass($oDB, $sObject){
  */
 function editorInit(array $aOptions = []): string
 {
-    static $iIdCounter;
-    if(!isset($iIdCounter)){
-        $iIdCounter=0;
+    require_once __DIR__.'/../../classes/cm-helper.class.php';
+    if(!($codemirror??false)){
+        $codemirror=new cmhelper();
     }
-    $sCmBase="../vendor/codemirror/6.65.7";
-
+    
+    static $iIdCounter;
     $iIdCounter++;
     $sIdBase="editor-$iIdCounter";
-
-    // ========== handle options
-    //
-    // --- theme: 
-    // $sTheme="material-palenight";
-    // $sTheme="nord";
-    $sTheme=$aOptions['theme'] ?? "neo";
-
-    $sMode=$aOptions['mode'] ?? "php";
-    $sMime=$aOptions['mime'] ?? "text/x-php";
-
-    $bReadonly=$aOptions['readonly'] ?? false;
 
     $sContent=$aOptions['content'] ?? '';
     if(isset($aOptions['file'])){
@@ -179,37 +167,17 @@ function editorInit(array $aOptions = []): string
         }
     }
 
-    $sReturn="";
+    $codemirror->addEditor(
+        'php', 
+        $sIdBase, 
+        [
+            'theme'=>'neo',
+    ]);
 
-    if($iIdCounter==1){
-        $sReturn.='
-        <link rel="stylesheet" href="'.$sCmBase.'/codemirror.css">
-        <link rel="stylesheet" href="'.$sCmBase.'/theme/'.$sTheme.'.min.css">
-
-        <script src="'.$sCmBase.'/codemirror.js"></script>
-
-        <script src="'.$sCmBase.'/mode/clike/clike.min.js"></script>
-        ';
-    }
-
-    $sReturn.='
-    <script src="'.$sCmBase.'/mode/'.$sMode.'/'.$sMode.'.min.js"></script>
-
-    <textarea id="'.$sIdBase.'" name="content">'.$sContent.'</textarea>
-
-    <script>
-      window.onload = function() {
-        var myTextarea = document.getElementById("'.$sIdBase.'");
-        editor = CodeMirror.fromTextArea(myTextarea, {
-          theme: "'.$sTheme.'",
-          lineNumbers: true,
-          matchBrackets: true,
-          '.($bReadonly ? 'readOnly: true,' : '').'
-          mode: "'.$sMime.'"
-        });
-      };
-    </script>
-    ';
+    $sReturn='<textarea id="'.$sIdBase.'" class="highlight-php" name="content">'.$sContent.'</textarea>'
+        .$codemirror->getHtmlHead()
+        .$codemirror->getJs()
+        ;
     return $sReturn;
 
 }
@@ -227,6 +195,7 @@ function editorInit(array $aOptions = []): string
  */
 function editorInCard(array $aOptions = []): string
 {
+    global $oCM;
     $bReadonly=$aOptions['readonly'] ?? false;
     $renderAdminLTE=new renderadminlte();
     return ''
@@ -236,18 +205,17 @@ function editorInCard(array $aOptions = []): string
             .($bReadonly ? ' ({{readonly}})' : ''),
         'text' => ''
         
-        // init form
-        .'
-        <form id="frmEditFile" action="'.$aOptions['url'].'" method="POST">
+            // init form
+            .'
+            <form id="frmEditFile" action="'.$aOptions['url'].'" method="POST">
 
-        <input type="hidden" name="action" value="save">    
-        <input type="hidden" name="file" value="' . $aOptions['file'] . '">
+            <input type="hidden" name="action" value="save">    
+            <input type="hidden" name="file" value="' . $aOptions['file'] . '">
 
-        '
-        . editorInit($aOptions)
+            '
+            . editorInit($aOptions)
 
-        // end form
-        
+            // end form        
         ,
         'footer' => $bReadonly 
             ? '' 
