@@ -271,7 +271,7 @@ return [
     // ----- messages backup /restore
     "msgerr.action_not_implemented" => "ERROR: Action is not implmented yet",
     "msgerr.tools_backup_file_not_written" => "ERROR: Backup data could not be written as file.",
-    "msgerr.tools_backup_no_data" => "ERROR: No backup data found.",
+    "msgerr.tools_backup_no_data" => "ERROR: No data found.",
     "msgerr.tools_file_not_deleted" => "ERROR: File could not be deleted.",
     "msgerr.tools_file_not_deleted_not_found" => "ERROR: File could not be deleted. File not found.",
     "msgerr.tools_restore_failed" => "ERROR: Restore failed.",

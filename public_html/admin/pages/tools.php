@@ -60,13 +60,25 @@ if($sTabApp){
 
                 $TITLE.=DELIM_TITLE . ' {{backup}}';
                 $sBackupfile=$sBackuppath.'/'.$sTabApp.'-'.$oDB->driver().'-'.date('U').'.'.$sDumpExtension;
+                $iStartBackup=microtime(true);
                 if($oDB->dump($sBackupfile, $aTables)){
-                    addMsg('ok', '{{msgok.tools_backup_created}}');
                     $aOptions=$oDB->dumpAnalyzer($sBackupfile);
+                    if($aOptions['counters']['rows']==0){
+                        $sOutAction.='{{msgerr.tools_backup_no_data}}<br>';
+                        addMsg('error', '{{msgerr.tools_backup_no_data}}');
+                        unlink($sBackupfile);
+                    } else {
+                        $sOutAction.='{{msgok.tools_backup_created}}<br>';
 
-                    $sOutAction.='{{msgok.tools_backup_created}}<br>'
-                        .'<pre>'.print_r($aOptions, 1).'</pre>'
-                        ;
+                        $iTimeBackup=microtime(true)-$iStartBackup;
+
+                        addMsg('ok', 
+                            "{{msgok.tools_backup_created}} // "
+                                .(round(($iTimeBackup)*10000)/10)." ms - "
+                                .number_format(filesize($sBackupfile)/$iTimeBackup, false, false, "'")." B/ sec"
+                            );
+                        $sOutAction.='<pre>'.print_r($aOptions, 1).'</pre>';
+                    }
                 } else {
                     addMsg('error', '{{msgerr.tools_backup_file_not_written}}');
                 }
@@ -79,7 +91,8 @@ if($sTabApp){
                 $sFormCustomRestore='<form method="POST" id="backup" action="">'
                     . '<input type="hidden" name="action" value="restore">'
                     . '<input type="hidden" name="file" value="'.$sFile.'">'
-                    .icon::get('file')."$sBackuppath/<strong>$sFile</strong><br>"
+                    .icon::get('file')."$sBackuppath/<strong>$sFile</strong><br><br>"
+                    .'<blockquote>'
                     .icon::get('clock').$aOptions['meta']['timestamp'].'<br>'
                     .icon::get('database').$aOptions['meta']['driver']
                     .($oDB->driver()==$aOptions['meta']['driver'] ? '' : ' --> '.$oDB->driver()).'<br>'
@@ -95,11 +108,14 @@ if($sTabApp){
                         // . '<label><input type="checkbox" name="tables['.$sTable.'][import]" value="true" checked /> {{tools.restore-global-import}}<br></label><br>'
                         ;
                 }
-                $sFormCustomRestore.= "<br>{{tools.dump-total-rows}}: <strong>$iRowsTotal</strong><br>";
+                $sFormCustomRestore.= "<br>{{tools.dump-total-rows}}: <strong>$iRowsTotal</strong><br>"
+                    .'</blockquote>'
+                    ;
                 if(!$iRowsTotal){                
                     addMsg('error', "{{tools.dump-total-rows}}: <strong>$iRowsTotal</strong>");
                 } else {
                     $sFormCustomRestore.=""
+
                     ."<br><fieldset>"
                         ."<strong>{{tools.restore-global-options}}</strong>:<br>"
                         . '<label><input type="checkbox" name="global[drop]"   value="true" checked/> {{tools.restore-global-drop}}<br></label><br>'
@@ -155,9 +171,15 @@ if($sTabApp){
 
                 // echo "$sBackupfile<br>";
                 // print_r($aOptions); die();
-                
+                $iStartImport=microtime(true);
                 if ($oDB->import($sBackupfile, $aOptions)){
-                    addMsg('ok', '{{msgok.tools_backup_restored}}');
+                    $iTimeImport=microtime(true)-$iStartImport;
+
+                    addMsg('ok', 
+                        "{{msgok.tools_backup_restored}} // "
+                            .(round(($iTimeImport)*10000)/10)." ms - "
+                            .number_format(filesize($sBackupfile)/$iTimeImport, false, false, "'")." B/ sec"
+                        );
                 } else {
                     addMsg('error', '{{msgerr.tools_restore_failed}}');
                 }
@@ -217,6 +239,7 @@ if($sTabApp){
             'title' => '{{tools.output}}',
             'tools' => '',
             'text' => ''
+                .renderMsg()
                 .$renderAdminLTE->getButton([
                     'type' => 'dark',
                     'text' => icon::get('back') . '{{back}}',

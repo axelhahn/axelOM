@@ -9,13 +9,13 @@ require_once 'htmlelements.class.php';
  * 
  * ______________________________________________________________________
  * 
- * RENDERER FOR ADNINLTE 4 (beta) template https://adminlte.io
+ * RENDERER FOR ADNINLTE 4 (rc) template https://adminlte.io
  * its docs: https://marlonluan.github.io/adminlte4/dist/pages/index.html
  *           https://getbootstrap.com/docs/5.3/getting-started/introduction/
  * 
  * This is a php class to render
  * - grid layout
- * - navigation
+ * - navigation top and left
  * - widgets, components and forms
  * 
  * DOCS: https://os-docs.iml.unibe.ch/adminlte-renderer/
@@ -28,7 +28,9 @@ require_once 'htmlelements.class.php';
  * 2024-05-18  <axel.hahn@unibe.ch>  add variable types
  * 2024-07-04  <axel.hahn@unibe.ch>  added type declarations
  * 2024-07-10  <axel.hahn@unibe.ch>  WIP start using AdminLTE 4.0.0 beta (using Bootstrap 5)
- * 2025-05-22  <www.axel.hahn.de>    remove hint attribute before form output
+ * 2025-05-22  <www.axel.hahn.de>        remove hint attribute before form output
+ * 2025-10-24  <axel.hahn@unibe.ch>      update navigation and components
+ * 2025-10-27  <axel.hahn@unibe.ch>      last update
  * ======================================================================
  */
 class renderadminlte
@@ -78,6 +80,15 @@ class renderadminlte
                 'warning' => 'yellow',
                 'dark' => 'dark gray',
                 'gray' => 'gray',
+                'light' => 'light',
+            ]
+        ],
+        'gradient' => [
+            'description' => 'Gradient on solid bg',
+            'group' => 'styling',
+            'values' => [
+                '' => 'no value',
+                'gradient' => 'true',
             ]
         ],
         'shadow' => [
@@ -109,7 +120,6 @@ class renderadminlte
                 '' => 'no value',
                 'outline' => 'small stripe on top',
                 'solid' => 'full filled widget',
-                'gradient' => 'full filled with gradient',
             ]
         ],
         'visibility' => [
@@ -138,7 +148,7 @@ class renderadminlte
             'values' => [
                 '' => 'no value',
                 '0' => 'no',
-                '1' => 'yes',
+                'dismissable' => 'yes',
             ]
         ],
     ];
@@ -223,7 +233,7 @@ class renderadminlte
 
                 'params' => [
                     'type' => ['select' => $this->aPresets['type'], 'example_value' => 'danger'],
-                    'bgcolor' => ['select' => $this->aPresets['bgcolor'], 'example_value' => ''],
+                    // 'bgcolor' => ['select' => $this->aPresets['bgcolor'], 'example_value' => ''],
                     'class' => [
                         'group' => 'styling',
                         'description' => 'optional: css classes',
@@ -301,7 +311,8 @@ class renderadminlte
 
                 'params' => [
                     'type' => ['select' => $this->aPresets['type'], 'example_value' => 'primary'],
-                    'variant' => ['select' => $this->aPresets['variant'], 'example_value' => 'outline'],
+                    'variant' => ['select' => $this->aPresets['variant'], 'example_value' => ''],
+                    'gradient' => ['select' => $this->aPresets['gradient'], 'example_value' => ''],
                     'shadow' => ['select' => $this->aPresets['shadow'], 'example_value' => ''],
                     'class' => [
                         'group' => 'styling',
@@ -317,7 +328,7 @@ class renderadminlte
                     'tb-collapse' => ['description' => 'show minus symbol as collapse button', 'select' => $this->aPresets['visibility'], 'example_value' => ''],
                     'tb-expand' => ['description' => 'show plus symbol to expand card', 'select' => $this->aPresets['visibility'], 'example_value' => ''],
                     'tb-maximize' => ['description' => 'show maximize button for fullscreen', 'select' => $this->aPresets['visibility'], 'example_value' => ''],
-                    'tb-minimize' => ['description' => 'show minimize button to minimize', 'select' => $this->aPresets['visibility'], 'example_value' => ''],
+                    // 'tb-minimize' => ['description' => 'show minimize button to minimize', 'select' => $this->aPresets['visibility'], 'example_value' => ''],
                     'tb-remove' => ['description' => 'show cross symbol to remove card', 'select' => $this->aPresets['visibility'], 'example_value' => ''],
 
                     'title' => [
@@ -350,7 +361,8 @@ class renderadminlte
 
                 'params' => [
                     'type' => ['select' => $this->aPresets['type'], 'example_value' => ''],
-                    'iconbg' => ['select' => $this->aPresets['type'], 'example_value' => 'info'],
+                    'gradient' => ['select' => $this->aPresets['gradient'], 'example_value' => ''],
+                    'iconbg' => ['select' => $this->aPresets['type'], 'example_value' => ''],
                     'shadow' => ['select' => $this->aPresets['shadow'], 'example_value' => ''],
                     'class' => [
                         'group' => 'styling',
@@ -391,7 +403,7 @@ class renderadminlte
                 'method' => 'getSmallbox',
 
                 'params' => [
-                    'type' => ['select' => $this->aPresets['type'], 'example_value' => 'info'],
+                    'type' => ['select' => $this->aPresets['type'], 'example_value' => ''],
                     'shadow' => ['select' => $this->aPresets['shadow'], 'example_value' => ''],
                     'class' => [
                         'group' => 'styling',
@@ -643,7 +655,8 @@ class renderadminlte
         $aChildren = isset($aLink['children']) && is_array($aLink['children']) && count($aLink['children']) ? $aLink['children'] : false;
 
         $aLink['class'] = 'nav-link'
-            . (isset($aLink['class']) ? ' ' . $aLink['class'] : '')
+            . ($aLink['class']??false  ? ' ' . $aLink['class'] : '')
+            . ($aLink['active']??false ? ' active' : '')
             . ($aChildren ? ' dropdown-toggle' : '')
         ;
         if ($aChildren) {
@@ -656,8 +669,11 @@ class renderadminlte
                 'aria-haspopup' => "true",
                 'aria-expanded' => "false",
             ]);
-            unset($aLink['children']); // remove from html attributes to draw
         }
+
+        unset($aLink['active']);
+        unset($aLink['children']); // remove from html attributes to draw
+
         $sReturn = $this->_tag('a', $aLink) . "\n";
         if ($aChildren) {
             $iLevel++;
@@ -770,17 +786,21 @@ class renderadminlte
                 continue;
             }
             // to render active or open links: 
-            $aLink['class'] = 'nav-link' . (isset($aLink['class']) ? ' ' . $aLink['class'] : '');
+            $aLink['class'] = 'nav-link' . (isset($aLink['class']) ? ' ' . $aLink['class'] : '')
+                .($aLink['active']??false ? ' active' : '')
+                ;
 
             $aChildren = isset($aLink['children']) ? $aLink['children'] : false;
             $aLiClass = 'nav-item' . ($aChildren && strstr($aLink['class'], 'active') ? ' menu-open' : '');
             $sSubmenu = '';
             if ($aChildren) {
                 unset($aLink['children']);
-                $aLink['label'] .= '<i class="right fa-solid fa-angle-left"></i>';
+                $aLink['label'] .= '<i class="nav-arrow bi bi-chevron-right"></i>';
                 $sSubmenu .= $this->getSidebarNavigation($aChildren, ['class' => 'nav nav-treeview']);
             }
             $aLink['label'] = $this->addWrapper('p', [], $aLink['label']);
+
+            unset($aLink['active']);
             $sReturn .= $this->addWrapper(
                 'li',
                 ['class' => $aLiClass],
@@ -801,7 +821,7 @@ class renderadminlte
         array $aNavItems,
         array $aUlOptions = [
             'class' => 'nav sidebar-menu nav-flat__ flex-column',
-            'data-widget' => 'treeview',
+            'data-lte-toggle' => 'treeview',
             'role' => 'menu',
             'data-accordion' => 'false'
         ]
@@ -1004,11 +1024,10 @@ class renderadminlte
 
     /**
      * return a alert box      
-     * https://adminlte.io/themes/v3/pages/UI/general.html
      * 
      * @param array $aOptions  hash with keys for all options
      *                          - type - one of [none]|danger|info|primary|success|warning
-     *                          - dismissible - if dismissible - one of true|false; default: false
+     *                          - dismissible - if dismissible - one of true|false; default: false --> is now bootstrap 5 functionality
      *                          - title
      *                          - text
      * @return string
@@ -1028,14 +1047,20 @@ class renderadminlte
                 . $this->_addClassValue($aOptions['type'], 'alert-')
                 . $this->_addClassValue($aOptions['dismissible'], 'alert-')
             ,
+            'role'=>'alert',
             'label' => ''
-                . ($aOptions['dismissible'] ? '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>' : '')
-                . $this->_tag('h5', [
-                    'label' => ''
-                        . (isset($aAlertIcons[$aOptions['type']]) ? '<i class="' . $aAlertIcons[$aOptions['type']] . '"></i> ' : '')
-                        . $aOptions['title']
-                ])
-                . $aOptions['text']
+                    .$this->_tag('div', [],
+                        ($aOptions['title']??false
+                            ? $this->_tag('h5', [
+                                    'label' => ''
+                                        . (isset($aAlertIcons[$aOptions['type']]) ? '<i class="' . $aAlertIcons[$aOptions['type']] . '"></i> ' : '')
+                                        . $aOptions['title']
+                                ])
+                            : ''
+                        )
+                        . $aOptions['text']
+                        )
+                . ($aOptions['dismissible'] ? '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' : '')
         ];
 
         return $this->_tag('div', $aElement);
@@ -1168,7 +1193,6 @@ class renderadminlte
      *                         - tb-collapse
      *                         - tb-expand    it is added automatically if you set 'state'=>'collapsed'
      *                         - tb-maximize 
-     *                         - tb-minimize  it is added automatically if you set 'state'=>'maximized'
      *                         - tb-remove
      * 
      *                        >> texts/ html content
@@ -1192,16 +1216,13 @@ class renderadminlte
         // window states: css class and toolbar buttons to add
         $aStates = [
             'collapsed' => ['class' => 'collapsed-card', 'tool' => 'tb-expand'],
-            'maximized' => ['class' => 'maximized-card', 'tool' => 'tb-minimize'],
+            'maximized' => ['class' => 'maximized-card', 'tool' => 'tb-maximize'],
         ];
         $aTools = [
-            'tb-collapse' => '<button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa-solid fa-minus"></i></button>',
-            'tb-expand' => '<button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa-solid fa-plus"></i></button>',
-
-            'tb-maximize' => '<button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa-solid fa-expand"></i></button>',
-            'tb-minimize' => '<button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa-solid fa-compress"></i></button>',
-
-            'tb-remove' => '<button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fa-solid fa-times"></i></button>',
+            'tb-collapse' => '<button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"><i data-lte-icon="expand" class="bi bi-plus-lg"></i><i data-lte-icon="collapse" class="bi bi-dash-lg"></i></button>',
+            'tb-expand'   => '<button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"><i data-lte-icon="expand" class="bi bi-plus-lg"></i><i data-lte-icon="collapse" class="bi bi-dash-lg"></i></button>',
+            'tb-maximize' => '<button type="button" class="btn btn-tool" data-lte-toggle="card-maximize"><i data-lte-icon="maximize" class="bi bi-fullscreen"></i><i data-lte-icon="minimize" class="bi bi-fullscreen-exit"></i></button>',
+            'tb-remove'   => '<button type="button" class="btn btn-tool" data-lte-toggle="card-remove"><i class="bi bi-x-lg"></i></i></button>',
         ];
 
         // print_r($aOptions);
@@ -1209,6 +1230,7 @@ class renderadminlte
         $sVariantPrefix = isset($aVariants[$aOptions['variant']]) ? $aVariants[$aOptions['variant']] : $aVariants['default'];
         $sClass = 'card'
             . $this->_addClassValue($aOptions['type'], $sVariantPrefix)
+            . $this->_addClassValue($aOptions['gradient'], 'bg-')
             . ($aOptions['shadow'] && isset($this->_aValueMappings['shadow'][$aOptions['shadow']])
                 ? ' ' . $this->_aValueMappings['shadow'][$aOptions['shadow']] : '')
             . $this->_addClassValue($aOptions['class'], '')
@@ -1270,7 +1292,8 @@ class renderadminlte
 
         // print_r($aOptions);
         $sClass = 'info-box'
-            . $this->_addClassValue($aOptions['type'], 'bg-')
+            . $this->_addClassValue($aOptions['type'], 'text-bg-')
+            . $this->_addClassValue($aOptions['gradient'], 'bg-')
             . $this->_addClassValue($aOptions['class'], '')
             . ($aOptions['shadow'] && isset($this->_aValueMappings['shadow'][$aOptions['shadow']])
                 ? ' ' . $this->_aValueMappings['shadow'][$aOptions['shadow']] : '')
@@ -1328,7 +1351,7 @@ class renderadminlte
         $aOptions = $this->_ensureOptions('smallbox', $aOptions);
         // print_r($aOptions);
         $sClass = 'small-box'
-            . $this->_addClassValue($aOptions['type'], 'bg-')
+            . $this->_addClassValue($aOptions['type'], 'text-bg-')
             . $this->_addClassValue($aOptions['class'], '')
             . ($aOptions['shadow'] && isset($this->_aValueMappings['shadow'][$aOptions['shadow']])
                 ? ' ' . $this->_aValueMappings['shadow'][$aOptions['shadow']] : '')
@@ -1342,6 +1365,7 @@ class renderadminlte
             . ($aOptions['number'] ? $this->_tag('h3', ['label' => $aOptions['number']]) : '')
             . ($aOptions['text'] ? $this->_tag('p', ['class' => 'info-box-text', 'label' => $aOptions['text']]) : '')
         );
+        /*
         $sIcon = $aOptions['icon']
             ? $this->addWrapper(
                 "div",
@@ -1350,6 +1374,11 @@ class renderadminlte
             )
             : ''
         ;
+        */
+        $sIcon = $aOptions['icon']
+            ? $this->_tag('i', ['class' => $aOptions['icon']. " small-box-icon"])
+            : ''
+            ;
         $sFooter = ($aOptions['url']
             ? $this->addWrapper(
                 "a",
@@ -1360,7 +1389,7 @@ class renderadminlte
                 ''
                 . ($aOptions['linktext'] ? $aOptions['linktext'] : $aOptions['url'])
                 . ' '
-                . $this->_tag('i', ['class' => 'fa-solid fa-arrow-circle-right'])
+                . $this->_tag('i', ['class' => 'bi bi-link-45deg'])
             )
             : ''
         );
@@ -1467,20 +1496,10 @@ class renderadminlte
 
 
         if (isset($aOptions['prepend']) && $aOptions['prepend']) {
-            $sWrapperclass = 'input-group';
-            $sPrepend = $this->_tag(
-                'div',
-                ['class' => 'input-group-prepend'],
-                $this->_tag('span', ['class' => 'input-group-text'], $aOptions['prepend'])
-            );
+            $sPrepend = $this->_tag('span', ['class' => 'input-group-text'], $aOptions['prepend']);
         }
         if (isset($aOptions['append']) && $aOptions['append']) {
-            $sWrapperclass = 'input-group';
-            $sAppend = $this->_tag(
-                'div',
-                ['class' => 'input-group-append'],
-                $this->_tag('span', ['class' => 'input-group-text'], $aOptions['append'])
-            );
+            $sAppend = $this->_tag('span', ['class' => 'input-group-text'], $aOptions['append']);
         }
 
         foreach (['_infos', 'label', 'append', 'prepend', 'debug', 'hint'] as $sDeleteKey) {
@@ -1512,8 +1531,12 @@ class renderadminlte
                 $aElement['class'] = str_replace('form-control ', 'form-range', $aElement['class']);
                 $aElement['title'] ??= $sHint;
             default:
+                $sOut=$sPrepend . $this->_tag('input', $aElement, '', false) . $sAppend;
+                if("$sPrepend$sAppend"){
+                    $sOut=$this->addWrapper('div', ['class'=>'input-group'], $sOut);
+                }
                 return $this->getHorizontalFormElement(
-                    $sPrepend . $this->_tag('input', $aElement, '', false) . $sAppend,
+                    $sOut,
                     $sLabel,
                     $sFormid,
                     $sHint
@@ -1525,7 +1548,8 @@ class renderadminlte
      * return a textarea field .. or html editor using summernote
      * @param array $aOptions  hash with keys for all options
      *                        styling:
-     *                          - type    - field type: [none]|html
+     *                          - type    - field type: [none]|html|highlight-<mime>
+     *                          - class   - for multiple classes in class attribute
      *                        content
      *                          - label   - label tag
      *                          - name    - name attribute for sending form
@@ -1540,15 +1564,37 @@ class renderadminlte
     {
         // $aOptions=$this->_ensureOptions('textarea', $aOptions);
         $aElement = $aOptions;
-        $aElement['class'] = ''
-            . 'form-control '
-            . ($aOptions['type']??false == 'html' ? 'summernote ' : '')
-            . ($aOptions['class'] ?? '')
-        ;
-        $sFormid = (isset($aOptions['id'])
+
+        // echo '<pre>'.print_r($aOptions, 1).'</pre>';
+        $sFormid = ($aOptions['id']??false
             ? $aOptions['id']
             : ($aOptions['name'] ?? 'field') . '-' . md5(microtime(true))
         );
+
+        $aOptions['class']??='';
+        if($aOptions['type']??''){
+
+            // type = "html"
+            if($aOptions['type']=='html'){
+                $aOptions['class'].=' summernote';
+            }
+
+            // type = "highlight-<mime>"
+            // - highlight-x-php
+
+            if(strstr($aOptions['type'], 'highlight-')){
+                require_once 'cm-helper.class.php';
+
+                if(!($codemirror??false)){
+                    $codemirror=new cmhelper();
+                }
+                $codemirror->addEditor($aOptions['type'], $sFormid);
+            }
+        }
+        $aElement['class'] = ''
+            . 'form-control '
+            . ($aOptions['class'] ?? '')
+        ;
         $sLabel = $this->_renderLabel($aOptions);
         $sHint = $aOptions['hint'] ?? '';
         $aElement['id'] = $sFormid;
@@ -1570,7 +1616,9 @@ class renderadminlte
             $sLabel,
             $sFormid,
             $sHint
-        );
+        ) 
+        . (($codemirror??false) ? $codemirror->getHtmlHead().$codemirror->getJs() : '')
+        ;
 
     }
 
@@ -1709,89 +1757,6 @@ class renderadminlte
             ? ['tabs' => $sTabs, 'content' => $sContent]
             : "$sTabs$sContent"
         ;
-    }
-
-    // ----------------------------------------------------------------------
-    // 
-    // PUBLIC FUNCTIONS :: CONTENT - Bootstrap 5
-    // 
-    // ----------------------------------------------------------------------
-
-    /**
-     * Get html for bootstrap 5 accordeon
-     * https://getbootstrap.com/docs/5.3/components/accordion/
-     * 
-     * It returns false if argument has no key "tabs"
-     * 
-     * @param array $aOptions  hash with keys for all options
-     *                           - tabs {array} key=tab label; value=content
-     * @return bool|string
-     */
-    public function getBsAccordeon(array $aOptions): bool|string
-    {
-        static $iTabCounter;
-        if (!isset($aOptions['tabs']) || !is_array($aOptions['tabs'])) {
-            return false;
-        }
-        if (!isset($iTabCounter)) {
-            $iTabCounter = 1;
-        } else {
-            $iTabCounter++;
-        }
-
-        $sContent = '';
-        $iContentCounter = 0;
-        $sAccordeonId = "accordeon-$iTabCounter";
-
-        foreach ($aOptions['tabs'] as $sLabel => $sTabContent) {
-
-            $iContentCounter++;
-            $sContentId = "accordeon-$iTabCounter-item-$iContentCounter";
-            $sContent .= $this->_tag(
-                'div',
-                [
-                    'class' => 'accordion-item',
-                ],
-
-                $this->_tag(
-                    'h2',
-                    [
-                        'class' => 'accordion-header'
-                    ],
-                    $this->_tag(
-                        'button',
-                        [
-                            'class' => 'accordion-button',
-                            'type' => 'button',
-                            'data-bs-toggle' => 'collapse',
-                            'data-bs-target' => "#$sContentId",
-                            'aria-expanded' => 'true',
-                            'aria-controls' => 'collapseOne',
-                        ],
-                        $sLabel
-                    )
-                )
-                . $this->_tag(
-                    'div',
-                    [
-                        'id' => $sContentId,
-                        'class' => 'accordion-collapse collapse' . ($iContentCounter == 1 ? ' show' : ''),
-                        'data-bs-parent' => "#$sAccordeonId",
-                    ],
-                    $this->_tag(
-                        'div',
-                        [
-                            'class' => 'accordion-body'
-                        ],
-                        $sTabContent
-                    )
-                )
-            );
-        }
-
-        $sContent = $this->_tag('div', ['class' => 'accordion'], $sContent);
-
-        return $sContent;
     }
 
 }

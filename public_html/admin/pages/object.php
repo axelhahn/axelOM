@@ -208,7 +208,7 @@ if (isset($_POST['action'])) {
                 // TODO: abstract the file path in config
                 $sUploadpath=dirname(dirname(__DIR__)).'/apps/'.$sTabApp.'/files/';
                 if(!is_dir($sUploadpath)){
-                    header('http/1.0 401 Access denied');
+                    http_response_code(401);
                     die('{{msgerr.fileupload_no_dir}} ['.$sUploadpath.']');
                 }
                 $aItemData['id'] = queryparam::post('id', false, 'int');
@@ -252,7 +252,7 @@ if (isset($_POST['action'])) {
                 // break;;
 
             default:
-                header('http/1.0 400 Bad Request');
+                http_response_code(400);
                 addMsg('error', 'OOPS: POST action [' . htmlentities($_POST['action']) . '] is not handled (yet). :-/');
         }
     } else {

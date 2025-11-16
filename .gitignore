@@ -1,2 +1,6 @@
+docker/dbdumps/*
 public_html/protected/data/*.sqlite3
 public_html/admin/config/settings.php
+
+public_html/apps/*
+!public_html/apps/inc_require.php

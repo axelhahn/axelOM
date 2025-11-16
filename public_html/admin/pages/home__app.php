@@ -19,40 +19,45 @@ if(!$acl->canView($sTabApp)){
 
 $sContextbar='';
 
-$TITLE='<strong>'.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().'</strong>' ;
+$TITLE='<strong>'
+        . icon::get($appmeta->getAppicon()) 
+        . $appmeta->getAppname()
+    .'</strong>'
+    .' ('.count($appmeta->getObjects()??[]).')'
+    ;
 $BANNER=$appmeta->getApphint();
+$s='';
 
-$s=''
-    . $renderAdminLTE->addRow(
-        $renderAdminLTE->addCol(
-            $renderAdminLTE->getInfobox([
-                'type' => '',
-                'shadow' => '',
-                'icon' => icon::getclass('objects'),
-                'iconbg' => '',
-                'text' => '{{home.objecttypes}}',
-                'number' => (count($appmeta->getObjects()??[]))
-                    /*
-                    . ($acl->isAppAdmin()
-                        ? '<span style="float: right">'
-                            .$renderAdminLTE->getButton([
-                            'type' => 'success',
-                            'text' => icon::get('new').'{{new}} :: TODO',
-                            'onclick' => '',
-                            ])
-                        .'</span>'
-                        : ''
-                    )
-                    */
-                    ,
-                // 'progressvalue' => 70,
-                // 'progresstext' => '70% Increase in 30 Days',
-                ])
-            , 2
-        )
-    )
-    .'<br>'
-;
+// $s.=$renderAdminLTE->addRow(
+//         $renderAdminLTE->addCol(
+//             $renderAdminLTE->getInfobox([
+//                 'type' => '',
+//                 'shadow' => '',
+//                 'icon' => icon::getclass('objects'),
+//                 'iconbg' => '',
+//                 'text' => '{{home.objecttypes}}',
+//                 'number' => (count($appmeta->getObjects()??[]))
+//                     /*
+//                     . ($acl->isAppAdmin()
+//                         ? '<span style="float: right">'
+//                             .$renderAdminLTE->getButton([
+//                             'type' => 'success',
+//                             'text' => icon::get('new').'{{new}} :: TODO',
+//                             'onclick' => '',
+//                             ])
+//                         .'</span>'
+//                         : ''
+//                     )
+//                     */
+//                     ,
+//                 // 'progressvalue' => 70,
+//                 // 'progresstext' => '70% Increase in 30 Days',
+//                 ])
+//             , 2
+//         )
+//     )
+//     .'<br>'
+// ;
 
 // $s='TODO: show <strong>app specific</strong> dashboard for app ['.$appmeta->getAppname() .'] ...<br>'
 //     .'<br>Appdir: '.$appmeta->getAppdir()
