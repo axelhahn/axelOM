@@ -213,7 +213,7 @@ if (isset($_POST['action'])) {
                 }
                 $aItemData['id'] = queryparam::post('id', false, 'int');
                 if(!$o->read($aItemData['id'])){
-                    header('503 Service Unavailable', true, 503);
+                    http_response_code(503);
                     die('{{msgerr.fileupload_wrong_id}} ' . $aItemData['id'] .' ');
                 }
 
@@ -236,12 +236,12 @@ if (isset($_POST['action'])) {
                             if ($o->relCreate($sTargetObj, $sTargetId)){
                                 $out.= '{{msgok.relation_was_created}} ' . $sTargetObj . ':'.$sTargetId. ':-)'. PHP_EOL;
                             } else {
-                                header('503 Service Unavailable', true, 503);
+                                http_response_code(503);
                                 $out.= '{{msgerr.relation_was_not_created}} [' . $sTargetObj . ':'.$sTargetId. ']: '. $oDB->error() . PHP_EOL;
                                 die($out);
                             }
                         } else {
-                            header('503 Service Unavailable', true, 503);
+                            http_response_code(503);
                             $out.= '{{msgerr.relation_was_not_created}} upload failed: '. $oDB->error() .print_r($aFile, 1). PHP_EOL;
                             die($out);
                         }
