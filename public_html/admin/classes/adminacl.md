@@ -37,6 +37,10 @@ return [
         // 'displayname'=>['givenName', '_surname'],
         'displayname'=>false,
 
+
+        // enble mfa
+        // 'postinclude'=>'vendor/mfa-client/src/mfa-ensure.php',
+
         // ---------- GROUPS
         'groups'=>[
 

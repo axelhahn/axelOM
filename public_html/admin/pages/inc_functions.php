@@ -145,7 +145,6 @@ function initClass($oDB, $sObject){
  * @param array $aOptions array with options. Keys are:
  *                        - content {string} The initial content of the editor.
  *                        - file    {string} The initial content of the editor loaded from given file
- *                        - mime    {string} mode for syntax highlighting; default: "text/x-php"
  *                        - theme   {string} Theme to use. See public_html/vendor/codemirror/6.65.7/theme/
  * @return string The HTML code for the editor.
  */
@@ -167,12 +166,14 @@ function editorInit(array $aOptions = []): string
         }
     }
 
+    unset($aOptions['content']);
+    unset($aOptions['file']);
+    $aOptions['theme']??="neo";
     $codemirror->addEditor(
         'php', 
         $sIdBase, 
-        [
-            'theme'=>'neo',
-    ]);
+        $aOptions
+    );
 
     $sReturn='<textarea id="'.$sIdBase.'" class="highlight-php" name="content">'.$sContent.'</textarea>'
         .$codemirror->getHtmlHead()
