@@ -11,12 +11,6 @@
  * ----------------------------------------------------------------------
  * 2025-11-16  v0.1  <axel>  initial version
  */
-/**
- * 
- * HELPER CLASS for syntax highlighting with codemiror
- * 
- */
-
 class cmhelper {
 
     /**
@@ -94,8 +88,10 @@ class cmhelper {
             <script src="'.$this->_sCmbaseUrl.'/addon/selection/selection-pointer.min.js"></script>
             <script src="'.$this->_sCmbaseUrl.'/addon/edit/matchbrackets.min.js"></script>
 
+            <!--
             <link rel="stylesheet" href="'.$this->_sCmbaseUrl.'/addon/lint/lint.css">
-            <script src="'.$this->_sCmbaseUrl.'/addon/lint/lint.css"></script>            
+            <script src="'.$this->_sCmbaseUrl.'/addon/lint/lint.css"></script>
+            -->
         ';
         $this->_sJS.='';
     }
@@ -106,17 +102,22 @@ class cmhelper {
 
     /**
      * Add an editor with its own syntax highlighting for a textarea.
+     * You can call this method multiple times for several editors with its
+     * own options.
      * 
-     * @param string $sCssClass   css classname named "highlight-<lang>"
-     * @param string $sFormid     id of the textarea
-     * @param array $aMoreOtions  array of additional options. known subkey are
-     *                            - mime  string  set a mime if mode does not
-     *                                            fit the mode param for 
-     *                                            codemirror
-     *                            - theme  string thene name
+     * As a reminder: you need to call
+     * - $o->getHtmlHead()
+     * - $o->getJs()
+     * ... to apply the editor settings in the html document
+     * 
+     * @param string $sCssClass     css classname named "highlight-<lang>"
+     * @param string $sFormid       id of the textarea
+     * @param array  $aMoreOptions  array of additional options. known subkeys are
+     *                              - readonly  bool    if true the editor is readonly
+     *                              - theme     string  thene name
      * @return bool
      */
-    public function addEditor(string $sCssClass, string $sFormid='', array $aMoreOtions=[]):bool{
+    public function addEditor(string $sCssClass, string $sFormid='', array $aMoreOptions=[]):bool{
 
         static $iCmCounter;
 
@@ -152,8 +153,8 @@ class cmhelper {
         }
 
         $sTheme='';
-        if($aMoreOtions['theme']??false){
-            $sTheme=$aMoreOtions['theme'];
+        if($aMoreOptions['theme']??false){
+            $sTheme=$aMoreOptions['theme'];
             if(!($this->_aThemes2Load[$sTheme]??false)){
                 $this->_aThemes2Load[$sTheme]=true;
                 $this->_sHtmlHead.="<link rel=\"stylesheet\" href=\"$this->_sCmbaseUrl/theme/$sTheme.min.css\">";
@@ -172,6 +173,7 @@ class cmhelper {
                             styleActiveLine: true,
                             indentUnit: 4,
                             indentWithTabs: true,
+                            '.($aMoreOptions['readonly']??false ? 'readOnly: true,' : '').'
                             mode: "'.($this->aSHLangs[$sMode]['mode'] ?? $sMode).'"
                     });
                 };
