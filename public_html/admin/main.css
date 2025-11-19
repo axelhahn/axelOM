@@ -9,15 +9,20 @@
 */
 :root{
 	--navSidebarActiveItemBg: #489;
+	--navSidebarActiveItemBg: #647;
 	--navSidebarActiveItemColor: white;
 	--navSidebarActiveIconColor: #acd;
 	--navTopActiveItemBg: #cee;
+	--navTopActiveItemBg: #eed1ab;
 	--overlayBg: rgba(0,30,30,0.5);
 	--overlayBoxBordercolor: rgba(0,30,30,0.5);
 	--overlayBoxShadow: #345;
 	--formHintBg: #fff1e4;
 	--requiredColor: #c00;
 	--iconcolor: #2ac;
+
+	/** background secondary badges **/
+	--bs-secondary-rgb: 160,160,170;
 	/** colors from AdminLTE 3
 	--blue: #007bff;
 	--indigo: #6610f2;
@@ -46,6 +51,7 @@
 
 main {
 	background-color: #f4f6f9;
+	background: url(assets/bg-rauschen.jpg);
 }
 blockquote{background-color: #f4f6f9; margin-left: 2em; padding: 1em;}
 button{border: 1px solid rgba(0,0,0,0.1) !important;}

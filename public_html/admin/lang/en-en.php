@@ -51,7 +51,7 @@ return [
         Author: <strong>Axel Hahn</strong><br>
         Programming language: PHP 8<br>
         License: GNU GPL 3.0<br>
-        Sourcecode: Github<br>
+        Sourcecode: <a href="https://github.com/axelhahn/axelOM" target="_blank">Github</a><br>
         Documentation: axel-hahn.de/docs/<br>
         <br>
         <strong>Used Products</strong>:<br>
