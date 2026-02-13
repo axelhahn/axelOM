@@ -17,12 +17,20 @@ $BANNER='{{userprofile.banner}}';
 
 $sPerms='';
 
+// ------------------------------------------------------------------------
+// functions
+// ------------------------------------------------------------------------
+
 function yesno($bValue){
     return $bValue 
         ? '<span class="btn btn-success">'.icon::get('yes') .'</span>'
         : '<span class="btn btn-default">'.icon::get('no').'</span>'
         ;
 }
+
+// ------------------------------------------------------------------------
+// main
+// ------------------------------------------------------------------------
 
 foreach ($adminmetainfos->getApps(1) as $sApp => $aAppData){
     $appmeta=new appmetainfos($sAppRootDir.'/'.$sApp);
@@ -60,6 +68,7 @@ $s=''
             <td>{{userprofile.name}}</td>
             <td>'.$acl->getUserDisplayname().'</td>
         </tr>
+        {{CONTENT_HOOK_1}}
         <tr>
             <td>'.icon::get('users').' {{userprofile.groups}}</td>
             <td><ul><li>'.implode('</li><li>',$acl->getGroups()).'</li></td>

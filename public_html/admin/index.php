@@ -15,7 +15,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 const APP_NAME='axel :: OM';
-const APP_VERSION='0.0.43';
+const APP_VERSION='0.0.44';
 const DELIM_TITLE='<span></span>';
 
 require_once('../classes/render-adminlte4.class.php');
@@ -59,7 +59,7 @@ $aReplace=include("./config/page_replacements.php");
 // $aTopnav=$adminmetainfos->getTopNavArray();
 $aTopnav=[];
 $aTopnav[]=['label'=> '='];
-$aTopnav[]=['label'=> '{{nav.apps}}:'];
+
 $sAppRootDir=$adminmetainfos->getAppRootDir();
 
 $aSidebarNav=[];
@@ -70,6 +70,9 @@ $bAppFound=false;
 foreach(array_keys($adminmetainfos->getApps(1)) as $sApp){
     $appmeta=new appmetainfos($sAppRootDir.'/'.$sApp);
     if ($acl->canView($sApp)){
+        if(count($aTopnav)==1){
+            $aTopnav[]=['label'=> '{{nav.apps}}:'];
+        }
         if($sApp==$sTabApp){
             // tab is active
             $bAppFound=true;
@@ -320,6 +323,8 @@ $aReplace['{{PAGE_HEADER_LEFT}}']='<h2 class="page-title">'.$TITLE.'</h2>';
 // $aReplace['{{PAGE_HEADER_RIGHT}}']=$sBreadcrumb;
 $aReplace['{{PAGE_BANNER}}']=$BANNER;
 $aReplace['{{JS_BODY_END}}']=$JS_BODYEND ?: '';
+
+$aReplace['{{CONTENT_HOOK_1}}']=$CONTENT_HOOK_1 ?? '';
 
 // simple translate
 foreach([

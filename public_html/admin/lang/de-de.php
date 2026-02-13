@@ -174,6 +174,7 @@ return [
     "userprofile.banner" => "Benutzerprofil",
     "userprofile.userid" => "User-ID",
     "userprofile.name" => "Angezeigter Name",
+    "userprofile.mfasetup" => "2. Anmelde-Faktor",
     "userprofile.groups" => "Gruppen",
     "userprofile.permissions" => "Berechtigungen",
     "perms.view" => "Anzeigen",
