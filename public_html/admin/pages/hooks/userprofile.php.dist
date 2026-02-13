@@ -5,23 +5,24 @@
 
 $CONTENT_HOOK_1="";
 
-if ($_SERVER['REMOTE_USER']??false){
-    // load class
+if ($acl->getUser()){
 
+    // load class
     require_once realpath(__DIR__ ."/../../../../vendor/mfa-client/src/mfaclient.class.php");
 
     // initialize client
     $oMfa = new mfaclient();
+    $oMfa->setUser($acl->getUser());
 
     // show a button; set a complete url where to jump back
     $CONTENT_HOOK_1='
         <tr>
-            <td></td>
+            <td>{{userprofile.mfasetup}}</td>
             <td>'
             .$oMfa->getButtonSetup(
                 "<button class=\"btn btn-secondary\">MFA Setup</button>",
             )
-            .'<br><br>
+            .'<br>
         </tr>
 ';
 }

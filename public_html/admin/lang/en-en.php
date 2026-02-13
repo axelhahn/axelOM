@@ -175,6 +175,7 @@ return [
     "userprofile.banner" => "User profile",
     "userprofile.userid" => "User id",
     "userprofile.name" => "Shown name",
+    "userprofile.mfasetup" => "2nd login factor",
     "userprofile.groups" => "Groups",
     "userprofile.permissions" => "Permissions",
     "perms.view" => "View",
