@@ -18,7 +18,9 @@
  */
 
 global $_aIconClassData;
-$_aIconClassData=include_once 'icon.class_include.php';
+if(is_null($_aIconClassData)) {
+    $_aIconClassData=require 'icon.class_include_fontawesome.php';
+}
 
 class icon{
     

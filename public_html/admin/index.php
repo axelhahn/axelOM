@@ -57,7 +57,7 @@ $aReplace=include("./config/page_replacements.php");
 
 // see ../classes/icon.class.php
 $sIconSet=$aSettings['iconset'] ?? "fontawesome";
-$_aIconClassData=include_once '../classes/icon.class_include_'.$sIconSet.'.php';
+$_aIconClassData=require '../classes/icon.class_include_'.$sIconSet.'.php';
 $aReplace['{{HTML_HEAD}}'].="\n<!-- load icon set '$sIconSet' -->\n".icon::getclass("htmlhead")."\n\n";
 
 // $aTopnav=$adminmetainfos->getTopNavArray();
