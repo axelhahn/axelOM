@@ -28,9 +28,6 @@
     <script type="text/javascript" src="../vendor/datatables/1.10.15/js/jquery.dataTables.min.js"></script>
     <link href="../vendor/datatables/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
     
-    <!-- fontawesome -->
-    <link href="../vendor/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css"/>
-
     <!-- bootstrap-select -->
     <link rel="stylesheet" href="../vendor/bootstrap-select/1.13.18/css/bootstrap-select.min.css">
     <script src="../vendor/bootstrap-select/1.13.18/js/bootstrap-select.min.js"></script>

@@ -15,7 +15,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 const APP_NAME='axel :: OM';
-const APP_VERSION='0.0.44';
+const APP_VERSION='0.0.45-dev';
 const DELIM_TITLE='<span></span>';
 
 require_once('../classes/render-adminlte4.class.php');
@@ -55,6 +55,10 @@ $aReplace=include("./config/page_replacements.php");
 
 // $aProjects=include("./config/objects.php");
 
+// see ../classes/icon.class.php
+$sIconSet=$aSettings['iconset'] ?? "fontawesome";
+$_aIconClassData=include_once '../classes/icon.class_include_'.$sIconSet.'.php';
+$aReplace['{{HTML_HEAD}}'].="\n<!-- load icon set '$sIconSet' -->\n".icon::getclass("htmlhead")."\n\n";
 
 // $aTopnav=$adminmetainfos->getTopNavArray();
 $aTopnav=[];
