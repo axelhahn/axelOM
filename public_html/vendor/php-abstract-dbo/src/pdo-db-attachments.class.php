@@ -8,7 +8,7 @@
  * Author: Axel Hahn
  * Licence: GNU GPL 3.0
  * ----------------------------------------------------------------------
- * 2025-11-17  ___  ah  last changes
+ * 2026-02-20  ___  ah  last changes - lint fixes using Mago
  * ======================================================================
  */
 
@@ -36,7 +36,11 @@ class pdo_db_attachments extends pdo_db_base{
         'height'         => ['create' => 'INTEGER',],
     ];
 
-    public function __construct(object $oDB)
+    /**
+     * Constructor
+     * @param  pdo_db $oDB          instance of database object class
+     */
+    public function __construct(pdo_db $oDB)
     {
         parent::__construct(__CLASS__, $oDB);
     }
@@ -94,7 +98,7 @@ class pdo_db_attachments extends pdo_db_base{
      *                      - tmp_name  {string} => location of uploaded file eg. /tmp/php2hi7k4315in34bgFjGz/tmp/php2hi7k4315in34bgFjGz 
      *                      - error     {int}    => error code, eg 0 for OK
      *                      - size      {int}    => filesize in byte eg. 312039
-     * @return void
+     * @return bool|int
      */
     public function uploadFile(array $aFile = []): bool|int{
         // print_r($aFile);
@@ -109,12 +113,12 @@ class pdo_db_attachments extends pdo_db_base{
         }
         
         $sTargetFolder=date("Y/m/d");
-        $sTargetFilemae=md5($aFile["name"].microtime(true)).'.'.pathinfo($aFile["name"], PATHINFO_EXTENSION);;
+        $sTargetFilemae=md5((string) $aFile["name"].microtime(true)).'.'.pathinfo((string) $aFile["name"], PATHINFO_EXTENSION);;
         $target_file=$this->_sUploadDir.'/'.$sTargetFolder. '/'.$sTargetFilemae;
-        if($aFile['error']==0){
+        if((int) $aFile['error']===0){
             if(!is_dir($this->_sUploadDir.'/'.$sTargetFolder)){
                 $this->_wd(__METHOD__." Create $this->_sUploadDir.'/'.$sTargetFolder");
-                if(!mkdir($this->_sUploadDir.'/'.$sTargetFolder, 0750, true)){
+                if(!mkdir($this->_sUploadDir.'/'.$sTargetFolder, 0o750, true)){
                     $this->_log(
                         PB_LOGLEVEL_ERROR, 
                         __METHOD__, 
@@ -123,11 +127,11 @@ class pdo_db_attachments extends pdo_db_base{
                 }
             }
             $this->_wd(__METHOD__." Move tmpname to $target_file");
-            if (move_uploaded_file($aFile["tmp_name"], $target_file)) {
+            if (move_uploaded_file((string) $aFile["tmp_name"], $target_file)) {
                 $this->_wd(__METHOD__." Create item for uploaded file");
                 $this->new();
                 $this->setItem([
-                    'label'=>basename($aFile["name"]),
+                    'label'=>basename((string) $aFile["name"]),
                     'filename'=>$sTargetFolder. '/'.$sTargetFilemae,
                     'mime'=>$aFile["type"],
                     'description'=>'',
@@ -167,7 +171,7 @@ class pdo_db_attachments extends pdo_db_base{
      * Add a file that is located in the upload base path as attachment object
      * 
      * @param string $sFileWithFullPath
-     * @param mixed $aProperties         array with settings to write; possible keys are
+     * @param array $aProperties         array with settings to write; possible keys are
      *                                   - label
      *                                   - description
      *                                   - mime
@@ -210,7 +214,7 @@ class pdo_db_attachments extends pdo_db_base{
      */
     protected function hookDelete(): bool
     {
-        $sFile=$this->get('filename');
+        $sFile=(string) $this->get('filename');
         $target_file="$this->_sUploadDir/$sFile";
         if(file_exists($target_file)){
             if(unlink($target_file)){
@@ -250,13 +254,13 @@ class pdo_db_attachments extends pdo_db_base{
         }
         if((int)$aFile['id']<1){
             // there is no object for preview
-            return false;
+            return '';
         }
         if($aOptions['baseurl']??false){
-            $this->setUrlBase($aOptions['baseurl']);
+            $this->setUrlBase((string) $aOptions['baseurl']);
         }
 
-        $sAttachmentUrl=$this->_sUrlBase . '/' . $aFile['filename'];
+        $sAttachmentUrl=$this->_sUrlBase . '/' . (string) $aFile['filename'];
 
         switch($aFile['mime']){
             // ---- audio
@@ -283,8 +287,8 @@ class pdo_db_attachments extends pdo_db_base{
 
         $sReturn.=''
             . ($sReturn ? '<br><br>' : '')
-            . '<a href="' . $sAttachmentUrl . '" target="_blank">' . basename($aFile['filename']) . '</a><br>'
-            .$aFile['mime'].'<br>'
+            . '<a href="' . $sAttachmentUrl . '" target="_blank">' . basename((string) $aFile['filename']) . '</a><br>'
+            .(int) $aFile['mime'].'<br>'
             ;
 
         return $sReturn ? "<div class=\"preview\">$sReturn</div>" : '';

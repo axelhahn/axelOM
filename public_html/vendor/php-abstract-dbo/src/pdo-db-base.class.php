@@ -2,29 +2,28 @@
 /**
  * ======================================================================
  * 
+ * PDO OBJECT :: Attachment
  * base class with database CRUD actions and other general methods for 
  * any custom database objects
  * 
- * ----------------------------------------------------------------------
- * 
- * TODO:
- * 
+ * @TODO:
  * - validate values in method set() - WIP
  * - More useful debugging _wd()
  * - find a sexy name
- * 
  * ----------------------------------------------------------------------
  * Author: Axel Hahn
  * Licence: GNU GPL 3.0
  * ----------------------------------------------------------------------
  * 2023-08-26  0.1  ah  first lines
  * 2025-05-22  ___  ah  add input type "range"
+ * 2026-02-17  ___  ah  change _pdo private -> protected
+ * 2026-02-20  ___  ah  lint fixes using Mago
  * ======================================================================
  */
 
 namespace axelhahn;
 
-use Exception, PDO, PDOException;
+use Exception;
 
 // for relation table
 require_once 'pdo-db-attachments.class.php';
@@ -48,7 +47,7 @@ class pdo_db_base
      * object of pdo database instance
      * @var object
      */
-    private object $_pdo;
+    protected pdo_db $_pdo;
 
     /**
      * a single object
@@ -115,12 +114,10 @@ class pdo_db_base
      * Constructor - sets internal environment variables and checks existence 
      * of the database
      * @param  string $sObjectname  object name to generate a tablename from it
-     * @param  string $sDbConfig    database config file
-     * @return boolean
+     * @param  pdo_db $oDB          instance of database object class
      */
-    public function __construct(string $sObjectname, object $oDB)
+    public function __construct(string $sObjectname, pdo_db $oDB)
     {
-
         $this->_table = $this->getTablename($sObjectname);
 
         $this->_pdo = $oDB;
@@ -134,7 +131,7 @@ class pdo_db_base
         }
 
         // generate item
-        $this->_aRelations = ($sObjectname == 'axelhahn\pdo_db_relations') ? NULL : [];
+        $this->_aRelations = ($sObjectname === 'axelhahn\pdo_db_relations') ? NULL : [];
         $this->new();
 
         //  return true;
@@ -172,7 +169,7 @@ class pdo_db_base
      */
     protected function _wd(string $s): bool
     {
-        return $this->_pdo->_wd($s, $this->_table);
+        return (bool) $this->_pdo->_wd($s, $this->_table);
     }
 
     /**
@@ -195,7 +192,7 @@ class pdo_db_base
      */
     public function makeQuery(string $sSql, array $aData = []): array|bool
     {
-        $this->_wd(__METHOD__ . " ($sSql, " . (count($aData) ? "DATA[" . count($aData) . "]" : "NODATA") . ")");
+        $this->_wd(__METHOD__ . " ($sSql, " . (count($aData??[]) ? "DATA[" . count($aData??[]) . "]" : "NODATA") . ")");
         return $this->_pdo->makeQuery($sSql, $aData, $this->_table);
     }
 
@@ -228,7 +225,7 @@ class pdo_db_base
 
         // db columns are default colums + columns for my object
         foreach (array_merge($this->_aDefaultColumns, $this->_aProperties) as $sCol => $aData) {
-            if (isset($aData['create'])) {
+            if ($aData['create']??false) {
                 $sColumnType = str_ireplace(array_keys($aDB), array_values($aDB), $aData['create']);
                 $sSql .= ($sSql ? ",\n" : '')
                     . "    $sCol {$sColumnType}";
@@ -262,7 +259,7 @@ class pdo_db_base
     protected function _createDbTableIndex():bool
     {
         foreach (array_merge($this->_aDefaultColumns, $this->_aProperties) as $sCol => $aData) {
-            if (($aData['index']??false) || ($aData['overview']??false) ) {
+            if ((bool) ($aData['index']??false) || (bool) ($aData['overview']??false) ) {
                 $sIndexType='';
                 $sIndexId = "IDX_{$this->_table}_$sCol";
 

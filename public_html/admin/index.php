@@ -12,10 +12,9 @@
 $iTimerStart=microtime(true);
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
 
 const APP_NAME='axel :: OM';
-const APP_VERSION='0.0.44';
+const APP_VERSION='0.0.45';
 const DELIM_TITLE='<span></span>';
 
 require_once('../classes/render-adminlte4.class.php');
@@ -51,10 +50,14 @@ $appmetainfos=new appmetainfos();
 $acl=new adminacl();
 
 $renderAdminLTE=new renderadminlte();
-$aReplace=include("./config/page_replacements.php");
+$aReplace=(array) (include("./config/page_replacements.php") ?? []);
 
 // $aProjects=include("./config/objects.php");
 
+// see ../classes/icon.class.php
+$sIconSet=(string) ($aSettings['iconset'] ?? "fontawesome");
+$_aIconClassData=require '../classes/icon.class_include_'.$sIconSet.'.php';
+$aReplace['{{HTML_HEAD}}'].="\n<!-- load icon set '$sIconSet' -->\n".icon::getclass("htmlhead")."\n\n";
 
 // $aTopnav=$adminmetainfos->getTopNavArray();
 $aTopnav=[];
@@ -73,7 +76,7 @@ foreach(array_keys($adminmetainfos->getApps(1)) as $sApp){
         if(count($aTopnav)==1){
             $aTopnav[]=['label'=> '{{nav.apps}}:'];
         }
-        if($sApp==$sTabApp){
+        if($sApp===$sTabApp){
             // tab is active
             $bAppFound=true;
             $aSidebarNav[]=['href'=>'?page=home', 'label'=>'{{back}}', 'icon'=>icon::getclass('back')];

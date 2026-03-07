@@ -9,7 +9,7 @@ A web ui using AdminLTE for visual editing of objects for multiple apps.
 
 - - -
 
-I initiated my own abstracted class for databases. For developng an application with several tables that can be linked there is a repository https://github.com/axelhahn/php-abstract-dbo
+I initiated my own abstracted class for databases. For developing an application with several tables that can be linked there is a repository https://github.com/axelhahn/php-abstract-dbo
 
 This project offers a web ui to edit a single application or multiple applications that are using multiple php-abstract-dbo objects.
 

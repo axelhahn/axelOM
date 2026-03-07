@@ -8,6 +8,7 @@
 
 */
 :root{
+
 	--navSidebarActiveItemBg: #489;
 	--navSidebarActiveItemBg: #647;
 	--navSidebarActiveItemColor: white;
@@ -21,8 +22,6 @@
 	--requiredColor: #c00;
 	--iconcolor: #2ac;
 
-	/** background secondary badges **/
-	--bs-secondary-rgb: 160,160,170;
 	/** colors from AdminLTE 3
 	--blue: #007bff;
 	--indigo: #6610f2;
