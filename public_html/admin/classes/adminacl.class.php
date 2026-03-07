@@ -69,8 +69,8 @@ class adminacl
     {
 
         // read config
-        $aCfg = @include(__DIR__ . '/../config/settings.php');
-        $this->_aConfig = $aCfg['acl'] ?? [];
+        $aCfg = include(__DIR__ . '/../config/settings.php');
+        $this->_aConfig = (array) $aCfg['acl'] ?? [];
 
         $this->_detectUser();
     }

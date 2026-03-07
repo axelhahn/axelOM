@@ -156,6 +156,9 @@ function editorInit(array $aOptions = []): string
     }
     
     static $iIdCounter;
+    if($iIdCounter===null){
+        $iIdCounter=0;
+    }
     $iIdCounter++;
     $sIdBase="editor-$iIdCounter";
 

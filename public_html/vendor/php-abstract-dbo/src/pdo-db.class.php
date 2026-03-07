@@ -17,6 +17,7 @@
 namespace axelhahn;
 
 use Exception, PDO, PDOException;
+use PDOStatement;
 
 require_once 'pdo-db-base.constants.php';
 
@@ -32,7 +33,7 @@ class pdo_db
      * object of pdo database instance
      * @var object
      */
-    public object|null $db;
+    public object $db;
 
     /**
      * collected array of log messages
@@ -139,25 +140,23 @@ class pdo_db
     public function __construct(array $aOptions = [])
     {
 
-        $sDbConfig = (isset($aOptions['cfgfile']) && is_file($aOptions['cfgfile']))
-            ? $aOptions['cfgfile']
+        $sDbConfig = is_file(((string) ($aOptions['cfgfile']??'')))
+            ? (string) $aOptions['cfgfile']
             : __DIR__ . '/pdo-db.config.php';
 
         $aDefaults = file_exists($sDbConfig) ? include $sDbConfig : [];
 
-        if (isset($aOptions['showdebug'])) {
-            $this->setDebug($aOptions['showdebug']);
-        }
-        if (isset($aOptions['showerrors'])) {
-            $this->showErrors($aOptions['showerrors']);
+        $this->setDebug((bool) ($aOptions['showdebug']??false));
+        if ($aOptions['showerrors']??false) {
+            $this->showErrors((bool) $aOptions['showerrors']);
         }
 
-        if (isset($aOptions['db'])) {
-            $aDefaults = $aOptions['db'];
+        if ($aOptions['db']??false) {
+            $aDefaults = (array) $aOptions['db'];
         }
 
         $this->_bHtml = !!($_SERVER['HTTP_HOST'] ?? false);
-        $this->setDatabase($aDefaults);
+        $this->setDatabase((array) $aDefaults);
     }
 
     // ----------------------------------------------------------------------
@@ -222,32 +221,32 @@ class pdo_db
      */
     public function setDatabase(array $aOptions): bool
     {
-        $this->db = null;
+        unset($this->db);
 
         // echo '<pre>'.print_r($aOptions, 1).'</pre>';
-        if (!$aOptions || !is_array($aOptions)) {
+        if (!$aOptions) {
             $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, 'To init a database you need an array as parameter.');
             return false;
         }
 
         $sDsn = '';
-        if (!isset($aOptions['dsn'])) {
+        if ($aOptions['dsn']===null) {
             $this->_log(PB_LOGLEVEL_ERROR, '[DB]', __METHOD__, 'No key [dsn] was found in the options.');
             return false;
         } else {
-            $sDsn = $aOptions['dsn'];
+            $sDsn = (string) $aOptions['dsn'];
         }
         try {
             $this->_wd(__METHOD__ . " new PDO($sDsn,[...])");
             $this->db = new PDO(
                 $sDsn,
-                (isset($aOptions['user']) ? $aOptions['user'] : NULL),
-                (isset($aOptions['password']) ? $aOptions['password'] : NULL),
-                (isset($aOptions['options']) ? $aOptions['options'] : NULL)
+                (string) ($aOptions['user'] ?? NULL),
+                (string) ($aOptions['password'] ?? NULL),
+                (array) ($aOptions['options'] ?? [])
             );
-            $type = $this->driver();
+            $type = (string) $this->driver();
             // If the database type is not supported, throw an exception
-            if (!isset($this->_aSql[$type])) {
+            if (!($this->_aSql[$type]??false)) {
                 throw new Exception("Ooops: " . __CLASS__ . " does not support db type [" . $type . "] yet :-/");
             }
 
@@ -276,7 +275,7 @@ class pdo_db
 
     /**
      * Enable/ disable debug; show error message if they occur
-     * @param  string|bool  $bNewValue  new debug mode; false = off; true = on
+     * @param  bool  $bNewValue  new debug mode; false = off; true = on
      * @return bool
      */
     public function showErrors(bool $bNewValue): bool
@@ -298,7 +297,7 @@ class pdo_db
      */
     public function driver(): string|bool
     {
-        return $this->db ? $this->db->getAttribute(PDO::ATTR_DRIVER_NAME) : false;
+        return ($this->db??false) ? (string) $this->db->getAttribute(PDO::ATTR_DRIVER_NAME) : false;
     }
 
     /**
@@ -307,7 +306,7 @@ class pdo_db
      */
     public function getSpecialties(): array
     {
-        return $this->_aSql[$this->driver()]['specialties'] ?? false;
+        return (array) ($this->_aSql[(string) $this->driver()]['specialties'] ?? []);
     }
 
     /**
@@ -323,7 +322,7 @@ class pdo_db
     public function error(): string
     {
         if ($this->_iLastError >= 0) {
-            return $this->_aLogmessages[$this->_iLastError]['message'];
+            return (string) ($this->_aLogmessages[$this->_iLastError]['message']??'');
         }
         return '';
     }
@@ -348,15 +347,9 @@ class pdo_db
     public function lastquery(bool $bLastError = false): array|bool
     {
         if ($bLastError) {
-            return $this->_iLastDBError === false
-                ? false
-                : $this->_aQueries[$this->_iLastDBError]
-            ;
+            return (array) ($this->_aQueries[$this->_iLastDBError]??[]);
         }
-        if (count($this->_aQueries)) {
-            return $this->_aQueries[count($this->_aQueries) - 1];
-        }
-        return false;
+        return (array) $this->_aQueries[count($this->_aQueries) - 1] ?? false;
     }
 
     /**
@@ -402,7 +395,7 @@ class pdo_db
         $type = $this->driver();
 
         // If the database type is not supported, throw an exception
-        if (!isset($this->_aSql[$type]['tableexists'])) {
+        if ($this->_aSql[(string) $type]['tableexists']===null) {
             throw new Exception("Ooops: " . __CLASS__ . " has no SQL for [tableexists] for type [" . $type . "] yet :-/");
         }
 
@@ -443,9 +436,21 @@ class pdo_db
         $aLastQuery = ['method' => __METHOD__, 'sql' => $sSql];
         $_timestart = microtime(true);
         try {
-            if (is_array($aData) && count($aData)) {
+            if (count($aData)) {
                 $aLastQuery['data'] = $aData;
                 $result = $this->db->prepare($sSql);
+                if($result===false){
+                    $aLastQuery['error'] = 'PDO prepare() failed';
+                    $this->_log(
+                        PB_LOGLEVEL_ERROR,
+                        $_table,
+                        __METHOD__,
+                        'prepare() failed.'
+                    );
+                    $this->_aQueries[] = $aLastQuery;
+                    $this->_iLastDBError = (count($this->_aQueries) - 1);
+                    return false;
+                }
                 $result->execute($aData);
             } else {
                 $result = $this->db->query($sSql);
@@ -464,8 +469,8 @@ class pdo_db
 
             return false;
         }
-        $_aData = $result->fetchAll(PDO::FETCH_ASSOC);
-        $aLastQuery['records'] = count($_aData) ?: $result->rowCount();
+        $_aData = (array) $result->fetchAll(PDO::FETCH_ASSOC);
+        $aLastQuery['records'] = count((array) $_aData) ?: $result->rowCount();
 
         $this->_aQueries[] = $aLastQuery;
         return $_aData;

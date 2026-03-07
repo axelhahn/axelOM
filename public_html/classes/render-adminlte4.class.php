@@ -590,7 +590,7 @@ class renderadminlte
 
     /**
      * render a page by using template 
-     * @param  string  $stemplate  html template with placeholders
+     * @param  string  $sTemplate  html template with placeholders
      * @param  array   $aReplace   key = what to replace .. value = new value
      * @return string
      */
@@ -1670,6 +1670,11 @@ class renderadminlte
         foreach ($aOptions['options'] as $aField) {
             $optionText = $aField['label'];
             unset($aField['label']);
+
+            // mark selected single item
+            if($aOptions['value']===$aField['value']){
+                $aField['selected'] = 'selected';
+            }
             $sOptionTags .= $this->_tag('option', $aField, $optionText) . "\n";
         }
 

@@ -20,7 +20,11 @@ class pdo_db_relations extends pdo_db_base{
 
     ];
 
-    public function __construct(object $oDB)
+    /**
+     * Constructor
+     * @param  pdo_db $oDB          instance of database object class
+     */
+    public function __construct(pdo_db $oDB)
     {
         parent::__construct(__CLASS__, $oDB);
     }

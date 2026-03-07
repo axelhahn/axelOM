@@ -85,6 +85,129 @@ Based on the `create` value and the name of the property the backend ui tries to
 
 You can extend the detected form element with the `attr` key. Or you can force the form element with the `force` key - where all detected form elements will be ignored.
 
+#### Static override
+
+For all items of an objecttype you want to get the same selection.
+
+But it is not completely static to put these options into `$_aProperties` of the object. You want to read a configuration array and apply it.
+
+As anexample here is the definition for a column of an object that will show a dropdown. In the `_aProperties` array the options are defined as an empty array.
+
+```php
+class objprogramminglanguages extends pdo_db_base{
+
+    /**
+     * hash for a table
+     * create database column, draw edit form
+     * @var array 
+     */
+    protected array $_aProperties = [
+        'label'       => [
+            ...
+        ],
+        'type'       => [
+            'create' => 'varchar(32)',
+            'validate_is'=>'string', 
+            'overview'=>1,
+            'attr' => [
+                'label' => 'Type (for Codemirror)',
+                'required' => 1,
+                // 'placeholder' => 'Type (for Codemirror)',
+                'bootstrap-select' => true,
+                'tag' => 'select',
+                "options" => [],
+            ],
+        ],
+        ...
+    ];
+    ...
+}
+```
+
+To fill in whatever into the options[] you can add some logic into the constructor
+
+```php
+
+    public function __construct(object $oDB)
+    {
+        parent::__construct(__CLASS__, $oDB);
+
+        // load codemirror languages and apply it to the metadata
+        $aOptions=[];
+        foreach((array) include __DIR__."/../../../classes/cm-helper.lang.php" as $sType => $aDefs){
+            $aOptions[]=[
+                'value'=>$sType,
+                'label'=>"$sType ... mode: $aDefs[mode] - load: ".implode(", ", $aDefs['load']),
+            ];
+        }
+        $this->_aProperties['type']['attr']['options']=$aOptions;
+    }
+
+```
+
+#### Dynamic overrides
+
+Next to the static atttributes with key and value for the form elements you can use dynamic overrides.
+
+Create a key `hooks`. Below set as 
+
+* key - the attribute name you want to set as dynamic value.
+* value - the name of a public method you want call.
+
+Example.
+
+I want to create a snippet collection. 
+
+* I have an object for the programming languages, like javascript, ruby, php. It has a field for the syntax highlight name
+* And there is a object for snippets that references a programming language and wants to set a highlight name.
+
+```php
+class objsnippets extends pdo_db_base{
+    protected array $_aProperties = [
+        'label'       => [
+            ...
+        ],
+
+        'snippet' => [
+            'create' => 'text', 
+            'validate_is'=>'string', 
+            'attr'=>[
+            ],
+            'force'=>[
+                'label' => 'Snippet',
+                'tag'=>'textarea', 'type'=> 'highlight-text',
+                'hooks' => [
+                    'type'=> 'hookGetSnippetType'
+                ],
+            ],
+        ],
+    ];
+    ...
+}
+```
+
+I referenced the method name "hookGetSnippetType".
+
+This must be a public class in the snippet object:
+
+```php
+
+    /**
+     * Hook for column snippet
+     * Get the current value of "programminglang" and return it to hihghlight
+     * the code window using codemirror
+     * @return string
+     */
+    public function hookGetSnippetType(): string{
+        $sReturn="text";
+        if($this->id()){
+            $aRel=$this->relReadLookupItem('programminglang');
+            $sReturn = (string) $aRel['type']??"text";
+        }
+        return "highlight-$sReturn";
+    }
+```
+
 ### markup-*
 
 Some edit forms can grow an you want to add optical delimters, spaces or headers with information.
