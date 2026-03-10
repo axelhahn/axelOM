@@ -28,3 +28,11 @@ Each of other lines follows JSON syntax.
 {"objcalendars":{"data":[1,"2025-02-02 22:38:55","2025-02-03 22:38:58",0,"IML Sysadmins","","#1c71d8"]}}
 {":done:":{"timestamp":"2025-07-05 20:37:59"}}
 ```
+
+### Related methods
+
+the class **pdo_db** offers these backup related methods
+
+* dump() 
+* dumpAnalyzer()
+* import()

@@ -392,26 +392,40 @@ if ($iItems == 0) {
     if (!$bShowEdit) {
         // ---------- overview page with all entries (rows)
 
-        $aBasicAttributes = $o->getBasicAttributes();
-        $aItems = $o->search(['columns' => $aBasicAttributes]);
-        // print_r($aBasicAttributes);echo "<hr>"; print_r($aItems); die();
+        $aBasicAttributes = $o->getBasicAttributes(true);
 
-        $sTable = "\n";
-        $sTable .= '<table class="table table-bordered table-striped dataTable dtr-inline">
-        <thead>
-            <tr>';
-        foreach ($aBasicAttributes as $sField) {
+        # TODO: handle sortorder (mow: js only) ... maybe paging
+        $aItems = $o->search(['columns' => array_keys($aBasicAttributes)]);
+
+        $iColCount=0;
+        $sJsSort='';
+        $sThead="";
+        foreach ($aBasicAttributes as $sField=>$sSort) {
             $sLabel = $o->getFormtype($sField)['label'] ?? $sField;
-            $sTable .= $sField == 'id' ? '' : '<th>' . $sLabel . '</th>';
+            $sThead .= $sField == 'id' ? '' : "<th>$sLabel</th>";
+            $sJsSort.= $sSort 
+                ? (
+                    ($sJsSort ? ", " : "") ."[$iColCount, '$sSort']"
+                )
+                : ""
+            ;
+            $iColCount++;
         }
-        $sTable .= "<th class=\"actions\">{{td-actions}}</th></tr>
+        $sJsSort=$sJsSort ? "[$sJsSort]" : "";
+        $JS_BODYEND = "<script>var ORDER=$sJsSort</script><script type=\"text/javascript\" src=\"js/page_object_overview.js\"></script>";
+
+        $sTable = "\n<table class=\"table table-bordered table-striped dtr-inline\" id=\"objlist\" data-tableorder=\"$sJsSort\">
+            <thead>
+                <tr>
+                    $sThead<th class=\"actions\">{{td-actions}}</th>
+                </tr>
             </thead>
             <tbody>\n";
 
         foreach ($aItems as $aRow) {
             $sTable .= '<tr>';
             $iCol = 0;
-            foreach ($aBasicAttributes as $sField) {
+            foreach (array_keys($aBasicAttributes) as $sField) {
                 if ($sField == 'id') {
                     continue;
                 }

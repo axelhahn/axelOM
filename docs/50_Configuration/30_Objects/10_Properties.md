@@ -15,6 +15,7 @@ Custom properties:
 | ---            | ---      | ---     | --- |
 | attr           | {array}  | -       | Attributes to extend the detected form element |
 | overview       | {bool}   | false   | if true or 1 this property is shown in overview table of the admin. |
+| sort           | {string} | null    | optional: sortorder in admin ui for listing all objects; one of "asc"\|"desc" |
 | force          | {array}  | -       | Ignore autodetection and apply the given attributes |
 | lookup         | {array}  | -       | this property is a lookup to another object. You can setup the lookup parameters here. |
 | markup-pre     | {string} | -       | for editing an object: html code before the form element |
@@ -73,6 +74,30 @@ The validation is applied when using `$object->set(<KEY>, <VALUE>)` or `$object-
 The overview flag is for the list of object items in the overview table. If set to true or 1, the property will be shown in the overview table.
 
 If you have objects with many properties you can influence the visibility of wanted and unwanted properties.
+
+### Key 'sort'
+
+This flag is relevant for coilumns with `overview => true` only. It is optional.
+
+By default in the admin ui all objects are listed alphabetically by the first column (a label or title).
+
+If you have objects that should be ordered by another column then it can defined by giving an extra key "sort" that must have the value "asc" or "desc" for its sort order.
+
+Example: if you vae a blog or logbook and want to sort the admin view by the date:
+
+```php
+// class objlogbook extends pdo_db_base{
+
+    protected array $_aProperties = [
+        ...
+        'datetime_start' => [
+            'create' => 'datetime',
+            'overview'=>1,
+            'sort'=>'desc',   // <<<<< 
+        ],
+        ....
+    ];
+```
 
 ### Key 'index'
 
