@@ -1319,15 +1319,23 @@ class pdo_db_base
      * Get array of main attributes to show in overview or to select a relation 
      * @return array
      */
-    public function getBasicAttributes(): array
+    public function getBasicAttributes(bool $bWithSortkey=false): array
     {
         $aReturn = [];
         foreach ($this->_aProperties as $sKey => $aDefs) {
             if (isset($aDefs['overview']) && $aDefs['overview']) {
-                $aReturn[] = $sKey;
+                if($bWithSortkey){
+                    $aReturn[$sKey] = $aDefs['sort']??false;
+                } else {
+                    $aReturn[] = $sKey;
+                }
             }
         }
-        $aReturn[] = 'id';
+        if($bWithSortkey){
+            $aReturn['id'] = false;
+        } else {
+            $aReturn[] = 'id';
+        }
         if (count($aReturn) == 1) {
             $this->_log(
                 PB_LOGLEVEL_WARN, 

@@ -134,6 +134,11 @@ class cmhelper {
                 foreach($this->aSHLangs[$sMode]['load'] as $sJsfile){
                     $this->_sHtmlHead.="<script src=\"$this->_sCmbaseUrl/mode/$sJsfile/$sJsfile.js\"></script>";
                 }
+            } else {
+                echo "Unknown type 'highlight-<strong>$sMode</strong>'.<br>Known types are: "
+                    . implode(", ", array_keys($this->aSHLangs))
+                    .'<br>'
+                    ;
             }
 
             if($sMode=='htmlmixed'){
