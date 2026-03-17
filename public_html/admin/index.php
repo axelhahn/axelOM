@@ -14,7 +14,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 
 const APP_NAME='axel :: OM';
-const APP_VERSION='0.0.46';
+const APP_VERSION='0.0.47';
 const DELIM_TITLE='<span></span>';
 
 require_once('../classes/render-adminlte4.class.php');
@@ -25,18 +25,18 @@ require_once('../classes/queryparam.class.php');
 require_once('../classes/icon.class.php');
 
 
-$sPage=queryparam::get('page', '/^[a-z]*$/');
-$sObject=queryparam::get('object', '/^[a-z\_]*$/');
+$sPage=(string) queryparam::get('page', '/^[a-z]*$/');
+$sObject=(string) queryparam::get('object', '/^[a-z\_]*$/');
 
-$sTabApp=queryparam::get('app', '/^[a-z\-0-9]*$/');
+$sTabApp=(string) queryparam::get('app', '/^[a-z\-0-9]*$/');
 if(!file_exists('config/settings.php')){
     $sPage='install';
 } else {
-    $aSettings=include('config/settings.php');
+    $aSettings=(array) include('config/settings.php');
 }
-$sUiLang=$aSettings['lang'] ?? "en-en";
+$sUiLang=(string) ($aSettings['lang'] ?? "en-en");
 $sUiLang=queryparam::get('lang', '/^[a-z\-]*$/')
-    ?: ($aSettings['lang'] ?? "en-en");
+    ?: (string) ($aSettings['lang'] ?? "en-en");
 
 if(!$sTabApp && !$sPage){
     // $sTabApp=array_key_first($aObjects);
@@ -70,10 +70,10 @@ $aTopnavRight=[];
 $aObjects=[];
 
 $bAppFound=false;
-foreach(array_keys($adminmetainfos->getApps(1)) as $sApp){
+foreach(array_keys($adminmetainfos->getApps(true)) as $sApp){
     $appmeta=new appmetainfos($sAppRootDir.'/'.$sApp);
-    if ($acl->canView($sApp)){
-        if(count($aTopnav)==1){
+    if ($acl->canView((string) $sApp)){
+        if(count($aTopnav)===1){
             $aTopnav[]=['label'=> '{{nav.apps}}:'];
         }
         if($sApp===$sTabApp){
@@ -148,16 +148,16 @@ $aTopnavRight[]=[
     'icon'    => icon::getclass('user'), 
     'label'   => $acl->getUserDisplayname(), 
 
-    'class'   => ($sPage=='userprofile' ? 'active' : ''),
-    'onclick' => ($sPage=='userprofile' ? 'history.back();' : ''),
-    'title'   => ($sPage=='userprofile'  ? '{{back}}' : $acl->getUser()."\n- ".implode("\n- ",$acl->getGroups()) ), 
+    'class'   => ($sPage==='userprofile' ? 'active' : ''),
+    'onclick' => ($sPage==='userprofile' ? 'history.back();' : ''),
+    'title'   => ($sPage==='userprofile'  ? '{{back}}' : $acl->getUser()."\n- ".implode("\n- ",$acl->getGroups()) ), 
 ];
 
 // highlight menu item
 for($i=0; $i<count($aSidebarNav); $i++){
     if (
-        $aSidebarNav[$i]['href']==$_SERVER['REQUEST_URI']
-        || $aSidebarNav[$i]['href']=='?'.$_SERVER['QUERY_STRING']
+        $aSidebarNav[$i]['href']===($_SERVER['REQUEST_URI']??'')
+        || $aSidebarNav[$i]['href']==='?'.($_SERVER['QUERY_STRING']??'')
 
         // activate nav item when editing an object
         || ($sTabApp && $sObject && preg_match('/\?app='.$sTabApp.'&page=object.*&object='.$sObject.'/', $aSidebarNav[$i]['href']) )
@@ -223,7 +223,7 @@ $sBreadcrumb='<a href="?page=home">{{nav.home}}</a>'.$sBcSpacer
         $sDEBUG='';
         $sDB_DEBUG='';
         $sDB_LOG='';
-        if (isset($oDB) && !is_null($oDB)){
+        if ($oDB??false){
 
             // dump test
             // $oDB->setDebug(1); echo '<pre>DUMP: '; print_r($oDB->dump()); die();
@@ -231,8 +231,8 @@ $sBreadcrumb='<a href="?page=home">{{nav.home}}</a>'.$sBcSpacer
             $iQueries=0;
             foreach($oDB->queries() as $aQuery){
                 $iQueries++;
-                $bIsError=isset($aQuery['error'])   && $aQuery['error'];
-                $sDB_DEBUG.='<tr'.($bIsError ? ' class="error"' : '').'>
+                $bIsError=$aQuery['error']??false;
+                $sDB_DEBUG.='<tr'.(string) ($bIsError ? ' class="error"' : '').'>
                 <td>'.(isset($aQuery['time'])    && $aQuery['time']    ? htmlentities($aQuery['time'])    : '-').'</td>
                 <td>'.(isset($aQuery['records']) && $aQuery['records'] ? htmlentities($aQuery['records']) : '-').'</td>
                 <td>
@@ -257,11 +257,11 @@ $sBreadcrumb='<a href="?page=home">{{nav.home}}</a>'.$sBcSpacer
             )
             */
             foreach($oDB->logs() as $aLogentry){
-                $sDB_LOG.='<tr class="'.$aLogentry['loglevel'].'">
-                    <td>'.$aLogentry['loglevel'].'</td>
-                    <td>'.$aLogentry['table'].'</td>
-                    <td>'.$aLogentry['method'].'</td>
-                    <td>'.$aLogentry['message'].'</td>
+                $sDB_LOG.='<tr class="'.(string) ($aLogentry['loglevel']??'').'">
+                    <td>'.(string) ($aLogentry['loglevel']??'').'</td>
+                    <td>'.(string) ($aLogentry['table']??'').'</td>
+                    <td>'.(string) ($aLogentry['method']??'').'</td>
+                    <td>'.(string) ($aLogentry['message']??'').'</td>
                 </tr>';
             }
     

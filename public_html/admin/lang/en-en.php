@@ -95,7 +95,7 @@ return [
 
     "404-obj-id.title" => "404 :: Page not found",
     "404-obj-id.banner" => "Object id is wrong",
-    "404-obj-id.subtitle" => "The requested object id doe not exist (anymore).",
+    "404-obj-id.subtitle" => "The requested object id doesn't exist (anymore).",
     "404-obj-id.message" => "Check the url. The url parameter id=... is wrong. Select the current object type in the left navigation to see existing items. Or go back to the last page or start again from home page.",
 
     // ----- page :: installer
@@ -217,6 +217,7 @@ return [
     "save"=> "Save",
     "save_and_continue"=> "Save and continue",
     "select_no_data_set"=>"No data in target table yet",
+    "select_wrong_table"=>"Target table does not exist",
     "select_relation_item"=> "Select related item",
     "td-actions" => "Actions",
     "td-rel-target"=> "Target",

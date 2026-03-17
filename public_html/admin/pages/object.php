@@ -98,7 +98,7 @@ if (isset($_POST['action'])) {
     $aItemData = [];
     if ($_POST['action'] == 'new' || $_POST['action'] == 'edit') {
         foreach (array_keys($aAttributes) as $sAttr) {
-            $aItemData[$sAttr] = $_POST[$sAttr];
+            $aItemData[$sAttr] = $_POST[$sAttr]??null;
         }
     }
 
@@ -588,7 +588,6 @@ if ($bShowEdit && $bDbTableOk) {
     } else {
         $aItem = $o->getItem();
         $aBasicAttributes = $o->getBasicAttributes();
-        // echo ''; print_r($aItem);die();
 
         // DEBUG
         // $sMainContent.='<pre>'.print_r($aItem, 1).'</pre>';
@@ -779,8 +778,8 @@ if ($bShowEdit && $bDbTableOk) {
 
             // check relations
             $iRelErrors = 0;
-            foreach ($aRelations['_targets'] ?? [] as $sRelKey => $aRel) {
-                if (!$appmeta->isRelationAllowed($sObject, $aRel['table'])) {
+            foreach ($aRelations ?? [] as $aRel) {
+                if (!$appmeta->isRelationAllowed($sObject, $aRel['_totable'])) {
                     $iRelErrors++;
                     addMsg('error', "{{msgerr.relation_not_allowed}}: $sObject -> <strong>$aRel[table]</strong>");
                 } else {
@@ -1005,9 +1004,9 @@ if ($bShowEdit && $bDbTableOk) {
             // ---------- show existing relations
             $sRelObjects = '';
             $sRelTable = '';
-            // echo '<pre>'; print_r($aRelations); echo '</pre>'; die(__FILE__.':'.__LINE__);
-            if (isset($aRelations['_targets'])) {
-                foreach ($aRelations['_targets'] as $sRelKey => $aRelation) {
+            if (count($aRelations)) {
+                foreach ($aRelations as $sRelKey => $aRelation) {
+                    $sRelKey=$aRelation['id'];
                     $sTargetLabel =
                         $aRelation['_target']['label'] ?? $aRelation['_target']['displayname'] ?? $aRelation['_target']['filename'] ?? $sRelObjectname
                             ?? '?';
@@ -1020,12 +1019,12 @@ if ($bShowEdit && $bDbTableOk) {
                             'location.href=\''
                             . $sBaseAppUrl
                             . '&object='
-                            . $aRelation['table']
+                            . $aRelation['_totable']
                             . '&id='
-                            . $aRelation['id']
+                            . $aRelation['_toid']
                             . '\'',
                     ]);
-                    $sBtnDel = $aRelation['column']
+                    $sBtnDel = $aRelation['_column']
                         ? $renderAdminLTE->getButton([
                             'disabled' => 'disabled',
                             'text' => icon::get('delete') . '{{delete}}',
@@ -1046,26 +1045,26 @@ if ($bShowEdit && $bDbTableOk) {
 
                     $sRelTable .=
                         '<tr'
-                        . ($appmeta->isRelationAllowed($sObject, $aRelation['table']) ? '' : ' class="table-danger"')
+                        . ($appmeta->isRelationAllowed($sObject, $aRelation['_totable']) ? '' : ' class="table-danger"')
                         . '>'
                         . '<td>'
                         . '<a href="'
                         . $sBaseAppUrl
                         . '&object='
-                        . $aRelation['table']
+                        . $aRelation['_totable']
                         . '&id='
-                        . $aRelation['id']
+                        . $aRelation['_toid']
                         . '"><strong>'
-                        . icon::get($appmeta->getObjectIcon($aRelation['table']))
+                        . icon::get($appmeta->getObjectIcon($sObject))
                         . ' '
                         . $sTargetLabel
                         . '</strong></a>'
                         . '</td>'
                         . '<td>'
-                        . $aRelation['column']
+                        . $aRelation['_column']
                         . '</td>'
                         . '<td>'
-                        . $sRelKey
+                        . $sObject . ' &raquo; ' . $aRelation['_totable'].( $aRelation['_tocolumn'] ? " : ". $aRelation['_tocolumn'] : '')
                         . '</td>'
                         . '<td align="right"><nobr>'
                         . $sBtnEdit

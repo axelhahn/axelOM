@@ -13,6 +13,9 @@
 declare(strict_types=1);
 
 return [
+        // default
+        'text'=>      ['load'=>[],        'mode'=> ""],
+
         'c'=>         ['load'=>['clike'], 'mode'=> "text/x-csrc"],
         'cpp'=>       ['load'=>['clike'], 'mode'=> "text/x-c++src"],
         'csharp'=>    ['load'=>['clike'], 'mode'=> "text/x-csharp"],
@@ -29,13 +32,13 @@ return [
         'x-less'=>    ['load'=>['css'],   'mode'=> "text/css"],
 
         'javascript'=>['load'=>['javascript'], 'mode'=> "text/javascript"], // text/javascript, application/javascript, application/x-javascript, text/ecmascript, application/ecmascript, application/json, application/x-json, application/manifest+json, application/ld+json, text/typescript, application/typescript
+        'json'=>      ['load'=>['javascript'], 'mode'=> "application/json"],
 
         'htmlmixed'=> ['load'=>['xml', 'javascript', 'css', 'htmlmixed'],                 'mode'=> "htmlmixed"],
         'php'=>       ['load'=>['xml', 'javascript', 'css', 'htmlmixed', 'clike', 'php'], 'mode'=> "application/x-httpd-php"],
 
         'shell'=>     ['load'=>['shell'], 'mode'=> "text/x-sh"], // text/x-sh, application/x-sh
 
-        'json'=>      ['load'=>['javascript'], 'mode'=> "application/json"],
         'yaml'=>      ['load'=>['yaml'],       'mode'=> "text/x-yaml"],
 
 ];

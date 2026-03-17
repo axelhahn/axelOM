@@ -866,7 +866,6 @@ class pdo_db
 
     /**
      * Import data from a json file; reverse function of dump()
-     * TODO: handle options array
      * 
      * @example:
      * $aOptions = [

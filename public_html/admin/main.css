@@ -132,9 +132,9 @@ table.dataTable.no-footer {
 	border-bottom: 1px solid #bcc;
 }
 
-table tr.error{background:#f0e0e0 !important;}
+table tr.error>td {background:#f0e0e0 !important;}
 table tr.info{}
-table tr.warning{background:#f0e0c0 !important;}
+table tr.warning>td{background:#f0e0c0 !important;}
 
 .card-body .preview {border: 1px dotted; padding: 1em;}
 .card-body .preview *{max-width: 100%;max-height: 100%;}
