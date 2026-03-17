@@ -14,7 +14,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 
 const APP_NAME='axel :: OM';
-const APP_VERSION='0.0.47-dev';
+const APP_VERSION='0.0.47';
 const DELIM_TITLE='<span></span>';
 
 require_once('../classes/render-adminlte4.class.php');
@@ -156,8 +156,8 @@ $aTopnavRight[]=[
 // highlight menu item
 for($i=0; $i<count($aSidebarNav); $i++){
     if (
-        $aSidebarNav[$i]['href']===$_SERVER['REQUEST_URI']??''
-        || $aSidebarNav[$i]['href']==='?'.$_SERVER['QUERY_STRING']??''
+        $aSidebarNav[$i]['href']===($_SERVER['REQUEST_URI']??'')
+        || $aSidebarNav[$i]['href']==='?'.($_SERVER['QUERY_STRING']??'')
 
         // activate nav item when editing an object
         || ($sTabApp && $sObject && preg_match('/\?app='.$sTabApp.'&page=object.*&object='.$sObject.'/', $aSidebarNav[$i]['href']) )

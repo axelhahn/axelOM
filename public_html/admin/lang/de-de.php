@@ -216,6 +216,7 @@ return [
     "save"=> "Speichern",
     "save_and_continue"=> "Zwischenspeichern",
     "select_no_data_set"=>"Noch keine Daten in Ziel-Tabelle",
+    "select_wrong_table"=>"Ziel-Tabelle existiert nicht",
     "select_relation_item"=> "Verkn&uuml;pfung w&auml;hlen",
     "td-actions"=> "Aktionen",
     "td-rel-target"=> "Ziel-Item",

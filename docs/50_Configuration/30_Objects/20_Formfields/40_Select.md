@@ -38,7 +38,7 @@ A simple example is given above.
 
 TODO - describe options
 
-### Lookup
+### Lookup - single item
 
 The lookup is a lookup to a single item of another object type (1:1).
 Your property must be an `integer` and is used as foreign key to the lookup table.
@@ -82,6 +82,41 @@ When adding the `where` key then it add a `WHERE mime = "image/png"` to the look
         'columns' => ['filename'], 
         'bootstrap-select' => true,
         'where' => 'mime = "image/png"',
+    ]
+],
+```
+
+### Lookup - multiple selection
+
+You can define a lookup with multiple selection. 
+
+* Your `create` property must be a `text` 
+* Your `validate_is` property must be a `array` 
+
+With these options an array is expected. To store all data in one column the given array will be serialized (in PHP the function `serialize()` will be used). Because of hten unknown size we suggest the type `text`. If you are sure that your array is small you can also use the type `varchar(N)`
+
+Options for the admin ui:
+
+* In the attributes section set `multiple`to `true`
+* Set `bootstrap-select` to `true` to get a comfortable select box with a filter. 
+
+Example:
+
+```php
+'tags'=> [
+    'create' => 'text',
+    'validate_is'=>'array', 
+    'overview'=>false,
+    'attr' => [
+        'label' => 'Tags',
+        'required' => false,
+        'multiple' => true,
+    ],
+    'lookup'=> [
+        'table' => 'objtags', 
+        'relations' => false, 
+        'columns' => ['label'], 
+        'bootstrap-select' => true,
     ]
 ],
 ```
