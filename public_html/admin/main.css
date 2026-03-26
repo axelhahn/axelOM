@@ -11,16 +11,20 @@
 
 	--navSidebarActiveItemBg: #489;
 	--navSidebarActiveItemBg: #647;
+	--navSidebarActiveItemBg: linear-gradient(13deg, #647, #489);
 	--navSidebarActiveItemColor: white;
 	--navSidebarActiveIconColor: #acd;
 	--navTopActiveItemBg: #cee;
 	--navTopActiveItemBg: #eed1ab;
+	--navTopActiveItemBg: linear-gradient(13deg, #ede, #fefcde);
 	--overlayBg: rgba(0,30,30,0.5);
 	--overlayBoxBordercolor: rgba(0,30,30,0.5);
 	--overlayBoxShadow: #345;
 	--formHintBg: #fff1e4;
 	--requiredColor: #c00;
 	--iconcolor: #2ac;
+	--cardBg: linear-gradient(10deg, #faf6ff, #fff 80%);
+	--cardHeaderBg: none;
 
 	/** colors from AdminLTE 3
 	--blue: #007bff;
@@ -67,7 +71,7 @@ ins{background-color: #cfc}
 
 .app-header li.nav-item a{border-top: 2px solid #fff; }
 .app-header li.nav-item a[href*="?"]:hover{background-color: #f0f0f0; border-top: 2px solid #0001; }
-.app-header li.nav-item .active{background-color: var(--navTopActiveItemBg) !important; border-top: 2px solid #0001;}
+.app-header li.nav-item .active{background: var(--navTopActiveItemBg) !important; border-top: 2px solid #0001;}
 li.nav-item .active i {color:var(--iconcolor);}
 
 .sidebar-wrapper .sidebar-menu > .nav-item > .nav-link.active:not(:hover),
@@ -136,6 +140,7 @@ table tr.error>td {background:#f0e0e0 !important;}
 table tr.info{}
 table tr.warning>td{background:#f0e0c0 !important;}
 
+.card{background: var(--cardBg);}
 .card-body .preview {border: 1px dotted; padding: 1em;}
 .card-body .preview *{max-width: 100%;max-height: 100%;}
 
@@ -146,9 +151,9 @@ table tr.warning>td{background:#f0e0c0 !important;}
 
 h2 a, h3 a, h4 a, .callout a, .card-header a, table a{color: #479; text-decoration: none;}
 h2 i{color: var(--iconcolor);}
-.card-header a{font-size: 130%;;}
+.card-header a{font-size: 110%;;}
 .callout a:hover, .card-header a:hover{color: #09a;}
-.card-header { border-bottom: 2px solid rgba(0,0,0,.05);}
+.card-header { background: var(--cardHeaderBg); border-bottom: 2px solid rgba(0,0,0,.05);}
 .card-title i {color:rgba(0,80,80,0.3)}
 .card-title i, .callout i {color:rgba(0,80,80,0.3);}
 .card-title i, .callout i {color:var(--iconcolor);}

@@ -112,6 +112,15 @@ $sContextbar = ''
                 ? str_replace(';', '<br>', preg_replace('/^.*:/', '', $appmeta->getDbsettings()['dsn'] ?? ''))
                 : ''
             )
+            .($acl->isAppAdmin($sTabApp) 
+                ? '<br><br>'.$renderAdminLTE->getButton([
+                    'type' => '',
+                    'text' => icon::get('tools').'{{tools}}',
+                    'onclick' => 'location.href=\'?app='.$appmeta->getId().'&page=tools\';',
+                ]).'<br>'
+                : ""
+            )
+
         ,
     ])
     .$renderAdminLTE->getCallout([
@@ -128,11 +137,6 @@ $sContextbar = ''
         )
         .($acl->isAppAdmin($sTabApp) 
             ? $renderAdminLTE->getButton([
-                'type' => '',
-                'text' => icon::get('tools').'{{tools}}',
-                'onclick' => 'location.href=\'?app='.$appmeta->getId().'&page=tools\';',
-            ]).'<br>'
-            .$renderAdminLTE->getButton([
                 'type' => '',
                 'text' => icon::get('config').'{{config}}',
                 'onclick' => 'location.href=\'?app='.$appmeta->getId().'&page=config\';',

@@ -14,7 +14,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 
 const APP_NAME='axel :: OM';
-const APP_VERSION='0.0.47';
+const APP_VERSION='0.0.48';
 const DELIM_TITLE='<span></span>';
 
 require_once('../classes/render-adminlte4.class.php');

@@ -828,7 +828,7 @@ if ($bShowEdit && $bDbTableOk) {
                                 ]))
                                 : ''
                         ),
-                    'text' => '<h3>' . (isset($aRelations['_targets']) ? count($aRelations['_targets']) : 0) . '</h3>',
+                    'text' => '<h3>' . (isset($aRelations) ? count($aRelations) : 0) . '</h3>',
                 ])
                 . (
                     $sFormAttach
@@ -909,16 +909,17 @@ if ($bShowEdit && $bDbTableOk) {
                     $aRelItems = $oRel->search(['columns' => $aRelAtributes, 'order' => $aRelAtributes]);
 
                     // relations of current object
-                    $aRelationsOfType = $o->relRead(['table' => $sRelobjectname])['_targets'] ?? [];
+                    // $aRelationsOfType = $o->relRead(['table' => $sRelobjectname])['_targets'] ?? [];
+                    $aRelationsOfType = $o->relRead(['table' => $sRelobjectname]) ?? [];
                     $aLinkedIds = [];
                     $aLinkedTableIds = [];
 
                     foreach ($aRelationsOfType as $aRel) {
                         // add id of linked relation that are between objects and not connected with a column
-                        if (!$aRel['column']) {
-                            $aLinkedIds[] = $aRel['id'];
+                        if (!$aRel['_tocolumn']) {
+                            $aLinkedIds[] = $aRel['_toid'];
                         } else {
-                            $aLinkedTableIds[] = $aRel['id'];
+                            $aLinkedTableIds[] = $aRel['_toid'];
                         }
                     }
 
