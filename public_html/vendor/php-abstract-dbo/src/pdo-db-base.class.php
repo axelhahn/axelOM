@@ -1103,14 +1103,20 @@ class pdo_db_base
     }
 
     /**
-     * Get array with all relations of the current item
+     * Get array with all relations of the current item.
+     * It can be filtered by a given target table and optional column.
+     * By default it returns information to the relation.
+     * 
+     * By adding filter 'targetonly' => true only the target items of 
+     * subkey "_target" will be returned (without relation).
      * 
      * @see relReadLookupItem()
      * 
      * @param  array  $aFilter  optional: filter existing relations by table and column
      *                          Keys:
-     *                            table => TARGETTABLE  target table must match
-     *                            column => COLNAME     column name must match
+     *                            table      => TARGETTABLE  target table must match
+     *                            column     => COLNAME      column name must match
+     *                            targetonly => bool         Flag to return not the relation but linked items only
      * @return array
      */
     public function relRead(array $aFilter = []): array
@@ -1132,7 +1138,10 @@ class pdo_db_base
             }
 
             if($bAdd){
-                $aReturn[] = $aRelation;
+                $aReturn[] = ($aFilter['targetonly']??false) 
+                    ? $aRelation['_target']??null
+                    : $aRelation
+                ;
             }
         }
         return $aReturn;
@@ -1158,7 +1167,8 @@ class pdo_db_base
         return $this->relRead([
             'table' => $sTargetTable,
             'column' => $sColumn,
-        ]);
+            'targetonly' => true,
+        ])[0]??[];
     }
 
     /**

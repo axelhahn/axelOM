@@ -34,11 +34,17 @@
 # 2025-05-13  v1.27 <axel.hahn@unibe.ch>      handle addition variables config file for non sharable values 
 # 2025-06-30  v1.28 <axel.hahn@unibe.ch>      supress grep errors on missing init.sh_not_shared.cfg; support mariadb tools
 # 2025-06-30  v1.29 <axel.hahn@unibe.ch>      short docker ps output for all containers; small fixes
+# 2025-07-25  v1.30 <axel.hahn@unibe.ch>      Hide DB info block if no database is configured
+# 2025-09-16  v1.31 <axel.hahn@unibe.ch>      adpations for new docker dev setup
+# 2025-09-18  v1.32 <axel.hahn@unibe.ch>      add select menu
+# 2025-12-19  v1.33 <axel.hahn@unibe.ch>      Fix linter when using proxy + php-fpm, more select menus
+# 2025-12-19  v1.34 <axel.hahn@unibe.ch>      2x esc or 'q' abort menu selection
+# 2025-12-22  v1.35 <axel.hahn@unibe.ch>      Select menus: single esc to abort; suport home + end
 # ======================================================================
 
 cd "$( dirname "$0" )" || exit 1
 
-_version="1.29"
+_version="1.35"
 
 # init used vars
 gittarget=
@@ -142,8 +148,8 @@ function _getStatus_docker(){
         DC_PS=$( docker-compose -p "$APP_NAME" ps | grep "$APP_NAME")
     fi
 
-    grep -q "${APP_NAME}-web" <<< "$DC_PS" && DC_WEB_UP=1
-    grep -q "${APP_NAME}-db"  <<< "$DC_PS" && DC_DB_UP=1
+    grep -q ":${APP_PORT}->" <<< "$DC_PS" && DC_WEB_UP=1
+    grep -q ":${DB_PORT}->"  <<< "$DC_PS" && DC_DB_UP=1
 
     if [ "$DB_ADD" != "false" ] && [ ! -d "${DC_DUMP_DIR}" ]; then
         echo "INFO: creating subdir ${DC_DUMP_DIR} to import/ export databases ..."
@@ -164,18 +170,214 @@ function _getStatus_docker(){
 # Get web url of the application
 # It is for support of Nginx Docker Proxy
 # https://github.com/axelhahn/nginx-docker-proxy
-# It returns http://localhost:<port> or a https://<appname> plus $WEBURL
+# It puts http://localhost:<port> or a https://<appname> plus $WEBURL
+# into global var DC_WEB_URL
 function _getWebUrl(){
-    if grep -q "^[0-9\.]* ${APP_NAME}-web" /etc/hosts; then
-        DC_WEB_URL="https://${APP_NAME}-web$WEBURL"
-    else
-        DC_WEB_URL=http://localhost:${APP_PORT}$WEBURL
+    local protocol=http
+    local hosts_line="127.0.0.1  ${APP_NAME} # ADDED BY DOCKER INIT"
+    
+    grep -q "ssl" <<< "$APP_APACHE_MODULES" && protocol=https
+    DC_WEB_URL="${protocol}://${APP_NAME}:${APP_PORT}$WEBURL"
+
+    if ! grep -q "$hosts_line" /etc/hosts; then
+        echo "INFO: need to add /etc/hosts: $hosts_line"
+        if ! echo "$hosts_line - created at $(date)" | sudo tee -a /etc/hosts ; then
+            echo "ERROR: Failed. Using fallback to localhost"
+            DC_WEB_URL="${protocol}://localhost:${APP_PORT}$WEBURL"
+        fi
     fi
-    set +vx
 }
 
 # ----------------------------------------------------------------------
 # OUTPUT
+
+# select menu
+# used in _selectFromList()
+# taken from https://github.com/axelhahn/bash-input-tab-completion/tree/main
+function input.select {
+    local options=("$@")
+    local itemsPre="   "
+
+    # helpers for terminal print control and key input
+    ESC=$(printf "\033")
+
+    cursor_blink_on()       { printf "$ESC[?25h"; }
+    cursor_blink_off()      { printf "$ESC[?25l"; }
+    cursor_to()             { printf "$ESC[$1;${2:-1}H"; }
+    print_option()          { printf "${itemsPre} $1 "; }
+    print_selected()        { printf "${itemsPre}${COLOR_GREEN}$ESC[7m $1 $ESC[27m${NC}"; }
+    get_cursor_row()        { IFS=';' read -sdR -p $'\E[6n' ROW COL; echo ${ROW#*[}; }
+
+    key_input() {
+
+        typeset -A input_aKeymap
+
+        input_aKeymap['#00']='enter'
+        input_aKeymap['#1b']='esc'
+        input_aKeymap['#1b5b41']='up'
+        input_aKeymap['#1b5b42']='down'
+        input_aKeymap['#1b5b43']='right'
+        input_aKeymap['#1b5b44']='left'
+
+        input_aKeymap['#1b5b327e']='insert'
+        input_aKeymap['#1b5b337e']='del'
+        input_aKeymap['#1b5b48']='home'
+        input_aKeymap['#1b5b46']='end'
+        input_aKeymap['#1b5b357e']='pgup'
+        input_aKeymap['#1b5b367e']='pgdown'
+
+        input_aKeymap['#1b4f50']='f1'
+        input_aKeymap['#1b4f51']='f2'
+        input_aKeymap['#1b4f52']='f3'
+        input_aKeymap['#1b4f53']='f4'
+        input_aKeymap['#1b5b31357e']='f5'
+        input_aKeymap['#1b5b31377e']='f6'
+        input_aKeymap['#1b5b31387e']='f7'
+        input_aKeymap['#1b5b31397e']='f8'
+        input_aKeymap['#1b5b32307e']='f9'
+        input_aKeymap['#1b5b32317e']='f10'
+        input_aKeymap['#1b5b32337e']='f11' # could be mapped to full screen
+        input_aKeymap['#1b5b32347e']='f12'
+
+        input_aKeymap['#7f']='backspace'
+
+        local input
+        local input2
+        local input3
+        local input4
+        local input5
+        local hex='#'
+
+        read -s -r -n1 input >/dev/null 2>&1
+        hex+=$(printf "%02x" "'$input")
+        if [ "$hex" = '#1b' ]; then
+            # read four more chars (needed for f5 ..f12)
+            read -s -r -n1 -t 0.01 input2 >/dev/null 2>&1
+            read -s -r -n1 -t 0.01 input3 >/dev/null 2>&1
+            read -s -r -n1 -t 0.01 input4 >/dev/null 2>&1
+            read -s -r -n1 -t 0.01 input5 >/dev/null 2>&1
+            hex+=$(printf "%02x%02x%02x%02x" "'$input2" "'$input3" "'$input4" "'$input5")
+            hex="$( echo "$hex" | sed 's/00$//g' | sed 's/00$//g' | sed 's/00$//g' | sed 's/00$//g')"
+        fi
+
+        if [ -n "${input_aKeymap[$hex]}" ] ; then
+            echo "${input_aKeymap[$hex]}"
+        else
+            echo "$input"
+        fi
+
+    }
+
+    function cursorUp() { printf "$ESC[A"; }
+    function clearRow() { printf "$ESC[2K\r"; }
+    function eraseMenu() {
+        cursor_to $lastrow
+        clearRow
+        numHeaderRows=$(printf "$header" | wc -l)
+        numOptions=${#options[@]}
+        numRows=$(($numHeaderRows + $numOptions))
+        for ((i=0; i<$numRows; ++i)); do
+        cursorUp; clearRow;
+        done
+    }
+
+    # initially print empty new lines (scroll down if at bottom of screen)
+    for opt in "${options[@]}"; do printf "\n"; done
+
+    # determine current screen position for overwriting the options
+    local lastrow=$( get_cursor_row )
+    local startrow=$(($lastrow - $#))
+    local selected=0
+    typeset -i selected
+
+    # ensure cursor and input echoing back on upon a ctrl+c during read -s
+    trap "cursor_blink_on; stty echo; printf '\n'; exit" 2
+    cursor_blink_off
+
+    while true; do
+        # print options by overwriting the last lines
+        local idx=0
+        for opt in "${options[@]}"; do
+            cursor_to $(($startrow + $idx))
+            # add an index to the option
+            local label="$(($idx + 1)). $opt"
+            if [ $idx -eq $selected ]; then
+                print_selected "$label"
+            else
+                print_option "$label"
+            fi
+            ((idx++))
+        done
+
+        # user key control
+        input=$(key_input)
+
+        case $input in
+            esc|q) selected=-1; break;;
+            enter) break;;
+            [1-9])
+                # If a digit is encountered, consider it a selection (if within range)
+                if [ $input -lt $(($# + 1)) ]; then
+                selected=$(($input - 1))
+                break
+                fi
+                ;;
+            up)     ((selected--));
+                if [ $selected -lt 0 ]; then selected=$(($# - 1)); fi;;
+            down)  ((selected++));
+                if [ $selected -ge $# ]; then selected=0; fi;;
+            home) selected=0;;
+            end) selected=$#-1;;
+        esac
+    done
+
+    eraseMenu
+    cursor_blink_on
+
+    return $selected
+}
+
+# helper: select from list
+# Render a selection list of multiline items and return the 1st text column of
+# the selected line.
+# By Flag "last" the last item will be returned.
+# If the text has a single line only then this line will be used for return value.
+#
+# The return value is in variable $SELECTED
+#
+# param  string   list of multiline items
+# param  string   optional: set to "last" to return the last item
+# return void
+function _selectFromList(){
+    local lines
+    local _multilinetext="$1"
+    local _pos="${2:-first}"
+    local inputval
+
+    local _replacer='###I_AM_A_REPLACER###'
+    SELECTED=""
+
+    test -z "$_multilinetext" && return
+
+    lines=()
+    for line in $( echo "$_multilinetext" | sed "s/ /$_replacer/g" )
+    do
+        lines+=( "${line//$_replacer/ }" )
+    done
+    if [ "${#lines[@]}" -eq 1 ]; then
+        inputval="${lines[0]}"
+    else
+        # lines+=( "<< back" )
+        input.select "${lines[@]}"
+        inputval="${lines[$?]}"
+        test "$inputval" = "<< back" && return
+    fi
+    if [ "$_pos" = "last" ]; then
+        SELECTED="$( rev <<< "$inputval" | cut -d' ' -f1 | rev )"
+    else
+        SELECTED="$( echo "${inputval}" | awk '{ print $1 }' )"
+    fi
+}
 
 # draw a headline 2
 function h2(){
@@ -546,7 +748,6 @@ function _showContainers(){
     local sUp=".. UP"
     local sDown=".. down"
 
-    local Status=
     local StatusWeb="$sDown"
     local StatusDb="$sDown"
     local colWeb=
@@ -567,8 +768,7 @@ function _showContainers(){
 
     if [ "$DB_ADD" = "false" ]; then
         colDb="$fgGray"
-        local StatusDb=".. N/A"
-        Status="This app has no database container."
+        StatusDb=""
     fi
 
     h2 CONTAINERS
@@ -577,16 +777,11 @@ function _showContainers(){
     echo "$DC_PS" | sed 's#^#  #g'
 
     echo
-    printf "  $colWeb$fgInvert  %-32s  $fgReset   $colDb$fgInvert  %-32s  $fgReset\n"     "WEB ${StatusWeb}"  "DB ${StatusDb}"
-    printf "    %-32s  $fgReset     %-32s  $fgReset\n"      "PHP ${APP_PHP_VERSION}"      "${MYSQL_IMAGE}"
-    printf "    %-32s  $fgReset     %-32s  $fgReset\n"      ":${APP_PORT}"                ":${DB_PORT}"
+    printf "  $colWeb$fgInvert  %-32s  $fgReset   $colDb$fgInvert  %-32s  $fgReset\n"     "WEB ${StatusWeb}"  "$( test -n "$StatusDb" && echo DB ${StatusDb} )"
+    printf "    %-32s  $fgReset     %-32s  $fgReset\n"      "PHP ${APP_PHP_VERSION}"      "$( test -n "$StatusDb" && echo ${MYSQL_IMAGE} || echo "(no database)" )"
+    printf "    %-32s  $fgReset     %-32s  $fgReset\n"      ":${APP_PORT}"                "$( test -n "$StatusDb" && echo :${DB_PORT} )"
 
     echo
-
-    if [ -n "$Status" ]; then
-        echo "  $Status"
-        echo
-    fi
 
     if [ -n "$bLong" ]; then
         echo "$_out"
@@ -616,9 +811,13 @@ function _dbDump(){
         echo "Database container is not running. Aborting."
         return
     fi
+
+    dockerid="${APP_NAME}-db"
+    grep -q "$dockerid" <<< "$DC_PS" || dockerid="db"
+    
     outfile=${DC_DUMP_DIR}/${MYSQL_DB}_$( date +%Y%m%d_%H%M%S ).sql
     echo -n "dumping ${MYSQL_DB} ... "
-    if docker exec -i "${APP_NAME}-db" ${DBDUMP} -uroot -p${MYSQL_ROOT_PASS} ${MYSQL_DB} > "$outfile"; then
+    if docker exec -i "$dockerid" ${DBDUMP} -uroot -p${MYSQL_ROOT_PASS} ${MYSQL_DB} > "$outfile"; then
         echo -n "OK ... Gzip ... "
         if gzip "${outfile}"; then
             echo "OK"
@@ -641,21 +840,26 @@ function _dbDump(){
             rm -f "$outfile"
         fi
     else
-        echo "ERROR: docker exec -i "${APP_NAME}-db" ${DBDUMP} failed."
+        echo "ERROR: docker exec -i "$dockerid" ${DBDUMP} failed."
         rm -f "$outfile"
     fi
 }
 
 # DB TOOL - import local database dump into container
 function _dbImport(){
-    echo "--- Available dumps:"
-    ls -ltr ${DC_DUMP_DIR}/*.gz | sed "s#^#    #g"
     if [ $DC_DB_UP -eq 0 ]; then
         echo "Database container is not running. Aborting."
         return
     fi
-    echo -n "Dump file to import into ${MYSQL_DB} > "
-    read -r dumpfile
+
+    local dumpfile
+
+    echo "--- Available dumps, newest first (Use cursor and return; ESC to abort):"
+    _selectFromList "$( ls -lt ${DC_DUMP_DIR}/*.gz )" "last"
+    dumpfile="$SELECTED"
+
+    # echo -n "Dump file to import into ${MYSQL_DB} > "
+    # read -r dumpfile
     if [ -z "$dumpfile" ]; then
         echo "Abort - no value was given."
         return
@@ -665,11 +869,13 @@ function _dbImport(){
         return
     fi
 
-    echo -n "Importing $dumpfile ... "
-
+    dockerid="${APP_NAME}-db"
+    grep -q "$dockerid" <<< "$DC_PS" || dockerid="db"
+    
+    echo -n "Importing file '$dumpfile' into container '$dockerid' ... "
     # Mac OS compatibility
     # if zcat "$dumpfile" | docker exec -i "${APP_NAME}-db" mysql -uroot -p${MYSQL_ROOT_PASS} "${MYSQL_DB}"
-    if cat "$dumpfile" | zcat | docker exec -i "${APP_NAME}-db" ${DBTOOL} -uroot -p${MYSQL_ROOT_PASS} "${MYSQL_DB}"
+    if cat "$dumpfile" | zcat | docker exec -i "$dockerid" ${DBTOOL} -uroot -p${MYSQL_ROOT_PASS} "${MYSQL_DB}"
     then
         echo "OK"
     else
@@ -769,41 +975,44 @@ while true; do
             ;;
         c)
             h2 "Console"
-            _containers=$( docker-compose -p "$APP_NAME" ps | sed -n "2,\$p" | awk '{ print $1}' )
-            if [ "$DB_ADD" = "false" ]; then
-                dockerid=$_containers
-            else
-                echo "Select a container:"
-                sed "s#^#    #g" <<< "$_containers"
-                echo -n "id or name >"
-                read -r dockerid
-            fi
-            test -z "$dockerid" || (
+            echo "Select a container (Use cursor and return; ESC to abort):"
+            _selectFromList "$DC_PS"
+            dockerid="$SELECTED"
+
+            test -n "$dockerid" && test "$dockerid" != "<< back" && (
                 echo
                 echo "> docker exec -it $dockerid /bin/bash     (type 'exit' + Return when finished)"
                 docker exec -it "$dockerid" /bin/bash
             )
             ;;
         p)
-            h2 "PHP $APP_PHP_VERSION linter"
+            h2 "PHP linter with version $APP_PHP_VERSION"
 
-            dockerid="${APP_NAME}-web"
-            echo -n "Scanning ... "
-            typeset -i _iFiles
-            _iFiles=$( docker exec -it "$dockerid" /bin/bash -c "find . -name '*.php' " | wc -l )
+            # dockerid="${APP_NAME}-web"
+            # grep -q "$dockerid" <<< "$DC_PS" || dockerid="${APP_NAME}-php-fpm"
 
-            if [ $_iFiles -gt 0 ]; then
-                echo "found $_iFiles [*.php] files ... errors from PHP $APP_PHP_VERSION linter:"
-                time if echo "$APP_PHP_VERSION" | grep -E "([567]\.|8\.[012])" >/dev/null ; then
-                    docker exec -it "$dockerid" /bin/bash -c "find . -name '*.php' -exec php -l {} \; | grep -v '^No syntax errors detected'"
+            echo "Select a container (Use cursor and return; ESC to abort):"
+            _selectFromList "$( echo "$DC_PS" | grep -v ">3306/tcp" )"
+            dockerid="$SELECTED"
+
+            test -n "$dockerid" && test "$dockerid" != "<< back" && (
+                echo -n "Scanning php files in '$dockerid' ... "
+                typeset -i _iFiles
+                _iFiles=$( docker exec -it "$dockerid" /bin/bash -c "find . -name '*.php' " | wc -l )
+
+                if [ $_iFiles -gt 0 ]; then
+                    echo "found $_iFiles [*.php] files ... errors from PHP $APP_PHP_VERSION linter:"
+                    time if echo "$APP_PHP_VERSION" | grep -E "([567]\.|8\.[012])" >/dev/null ; then
+                        docker exec -it "$dockerid" /bin/bash -c "find . -name '*.php' -exec php -l {} \; | grep -v '^No syntax errors detected'"
+                    else
+                        docker exec -it "$dockerid" /bin/bash -c "php -l \$( find . -name '*.php' ) | grep -v '^No syntax errors detected' "
+                    fi
+                    echo
+                    _wait
                 else
-                    docker exec -it "$dockerid" /bin/bash -c "php -l \$( find . -name '*.php' ) | grep -v '^No syntax errors detected' "
+                    echo "Start your docker container first."
                 fi
-                echo
-                _wait
-            else
-                echo "Start your docker container first."
-            fi
+            )
             ;;
         d) 
             h2 "DB tools :: dump"
