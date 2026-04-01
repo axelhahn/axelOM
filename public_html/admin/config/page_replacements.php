@@ -20,8 +20,8 @@ return [
     '{{PAGE_TITLE}}'   =>'',
     '{{PAGE_LAYOUT}}'  =>'layout-navbar-fixed layout-fixed sidebar-mini',
     // '{{NAVI_TOP}}'     =>'<nav class="main-header navbar navbar-expand navbar-white navbar-light"><ul class="navbar-nav" id="instances"></ul></nav>',
-    '{{BRAND}}'        =>'<div class="sidebar-brand bg-navy">
-                            <a href="?" class="brand-link bg-navy">
+    '{{BRAND}}'        =>'<div class="sidebar-brand">
+                            <a href="?" class="brand-link">
                             <i class="fa-solid fa-cubes"></i> 
                             <span class="brand-text">'.APP_NAME.'</span>
                             <span class="brand-text font-weight-light">v'.APP_VERSION.'</span>
