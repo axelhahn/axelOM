@@ -8,15 +8,28 @@
 
 */
 :root{
+	/*
+	--navSidebarBg: rgb(39, 38, 63);
+	--navSidebarBg: none;
+	*/
+	--navSidebarBg: #fff3;
+	--navSidebarBrandBg: #fff;
+	--navSidebarBrandColor: #000;
 
+	--navSidebarItemBg: none;
+	--navSidebarItemColor: #457;
+	--navSidebarItemHoverBg: #fff8;
+	--navSidebarItemHoverColor: #457;
+	/*
 	--navSidebarActiveItemBg: #489;
 	--navSidebarActiveItemBg: #647;
-	--navSidebarActiveItemBg: linear-gradient(13deg, #647, #489);
+	*/
+	--navSidebarActiveItemBg: linear-gradient(13deg, #86a, #8bc);
 	--navSidebarActiveItemColor: white;
 	--navSidebarActiveIconColor: #acd;
 	--navTopActiveItemBg: #cee;
 	--navTopActiveItemBg: #eed1ab;
-	--navTopActiveItemBg: linear-gradient(13deg, #ede, #fefcde);
+	--navTopActiveItemBg: linear-gradient(13deg, #ece, #eda);
 	--overlayBg: rgba(0,30,30,0.5);
 	--overlayBoxBordercolor: rgba(0,30,30,0.5);
 	--overlayBoxShadow: #345;
@@ -52,9 +65,8 @@
 
 }
 
-main {
-	background-color: #f4f6f9;
-	background: url(assets/bg-rauschen.jpg);
+body{
+	background: url(assets/bg-rauschen.jpg) fixed;
 }
 blockquote{background-color: #f4f6f9; margin-left: 2em; padding: 1em;}
 button{border: 1px solid rgba(0,0,0,0.1) !important;}
@@ -69,16 +81,46 @@ ins{background-color: #cfc}
 .required:after{color: var(--requiredColor); content: ' *';}
 .in-overview{background: #eff; }
 
-.app-header li.nav-item a{border-top: 2px solid #fff; }
-.app-header li.nav-item a[href*="?"]:hover{background-color: #f0f0f0; border-top: 2px solid #0001; }
-.app-header li.nav-item .active{background: var(--navTopActiveItemBg) !important; border-top: 2px solid #0001;}
+.app-header{border: none; }
+.app-header li.nav-item a{border-radius: 0.5em;}
+.app-header li.nav-item a[href*="?"]:hover{background-color: #f0f0f0;}
+.app-header li.nav-item .active{background: var(--navTopActiveItemBg) !important; }
+
+.app-footer{background: none; }
+
 li.nav-item .active i {color:var(--iconcolor);}
+
+
+.bg-body-secondary{
+	background: var(--navSidebarBg) !important;
+	box-shadow: none !important;
+}
+.sidebar-brand, .sidebar-brand a, .sidebar-brand .brand-text, .sidebar-brand .brand-text:hover{
+	background: var(--navSidebarBrandBg) !important;
+	border: none;
+	color: var(--navSidebarBrandColor);
+}
+.sidebar-brand .brand-text:hover{
+	text-decoration: underline;
+}
+
+.sidebar-menu .nav-item > .nav-link{
+	background: var(--navSidebarItemBg);
+	color: var(--navSidebarItemColor);
+}
+.sidebar-menu .nav-item:hover{
+	background: var(--navSidebarItemHoverBg) !important;
+	color: var(--navSidebarItemHoverColor) !important;
+}
+.sidebar-menu .nav-item:hover a{
+	color: var(--navSidebarItemHoverColor) !important;
+}
 
 .sidebar-wrapper .sidebar-menu > .nav-item > .nav-link.active:not(:hover),
 .sidebar-wrapper .sidebar-menu > .nav-item > .nav-link.active:hover
  {
 	background: var(--navSidebarActiveItemBg);
-	color: var(--navSidebarActiveItemColor);
+	color: var(--navSidebarActiveItemColor) !important;
 }
 .sidebar-wrapper .nav-item i {
 	color:var(--iconcolor);
@@ -92,7 +134,7 @@ li.nav-item .active i {color:var(--iconcolor);}
 .page-title {color: #123}
 .page-title span::before {color: #d72; content: ' / '; margin: 0 0.3em;}
 .page-hint {
-	color: #757; 
+	color: #969; 
 	font-size: 120%; 
 }
 
