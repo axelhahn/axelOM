@@ -100,9 +100,6 @@ li.nav-item .active i {color:var(--iconcolor);}
 	border: none;
 	color: var(--navSidebarBrandColor);
 }
-.sidebar-brand .brand-text:hover{
-	text-decoration: underline;
-}
 
 .sidebar-menu .nav-item > .nav-link{
 	background: var(--navSidebarItemBg);
@@ -191,7 +188,7 @@ table tr.warning>td{background:#f0e0c0 !important;}
 .callout, .card, .info-box {box-shadow: 0 0 1px rgba(0,0,0,.125),0 0.3em 1em rgba(0,150,200,.1); }
 .card{border: none; margin-bottom: 1rem;}
 
-h2 a, h3 a, h4 a, .callout a, .card-header a, table a{color: #479; text-decoration: none;}
+h2 a, h3 a, h4 a, .callout a, .card-header a, table a{color: #459; text-decoration: none;}
 h2 i{color: var(--iconcolor);}
 .card-header a{font-size: 110%;;}
 .callout a:hover, .card-header a:hover{color: #09a;}
