@@ -168,7 +168,8 @@ table.dataTable thead th.actions{
 }
 
 table.dataTable tr:hover td{
-	background-color: #fff5e8 !important;
+	background: #ffecd7 !important;
+	box-shadow: none;;
 }
 
 table.dataTable.no-footer {
@@ -185,8 +186,13 @@ table tr.warning>td{background:#f0e0c0 !important;}
 
 .nav-item hr{color: #bbb; border-top: 1px solid; height: 1px; padding: 0; margin: 0; }
 
-.callout, .card, .info-box {box-shadow: 0 0 1px rgba(0,0,0,.125),0 0.3em 1em rgba(0,150,200,.1); }
+.callout, .card, .info-box {
+	box-shadow: 0 0 1px rgba(0,0,0,.125),0 0.3em 1em rgba(0,150,200,.1); 
+}
 .card{border: none; margin-bottom: 1rem;}
+.col-md-2 .callout{
+	background: #fffa;
+}
 
 h2 a, h3 a, h4 a, .callout a, .card-header a, table a{color: #459; text-decoration: none;}
 h2 i{color: var(--iconcolor);}

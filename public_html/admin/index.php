@@ -53,10 +53,10 @@ $sUserCfgFile='config/users/'.$acl->getUser().'/settings.php';
 $aUserSettings=(array) (file_exists($sUserCfgFile) ? include($sUserCfgFile) : []);
 
 $sUiLang=queryparam::get('lang', '/^[a-z\-]*$/')
-    ?: (string) ($aUserSettings['lang'] ?? ($aSettings['lang'] ?? "en-en"));
+    ?: (string) (($aUserSettings['lang'] ?? '') ? $aUserSettings['lang'] : ($aSettings['lang'] ?? "en-en"));
 
 $sUiTheme=queryparam::get('theme', '/^[a-z\-]*$/')
-    ?: (string) ($aUserSettings['theme'] ?? ($aSettings['theme'] ?? "default"));
+    ?: (string) (($aUserSettings['theme'] ?? '') ? $aUserSettings['theme'] : ($aSettings['theme'] ?? "default"));
 
 // see ../classes/icon.class.php
 $sIconSet=(string) ($aSettings['iconset'] ?? "fontawesome");

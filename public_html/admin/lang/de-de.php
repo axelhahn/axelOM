@@ -175,6 +175,12 @@ return [
     "userprofile.userid" => "User-ID",
     "userprofile.name" => "Angezeigter Name",
     "userprofile.mfasetup" => "2. Anmelde-Faktor",
+
+    "userprofile.config" => "User-Konfiguration",
+    "userprofile.language" => "Sprache",
+    "userprofile.theme" => "Skin",
+    "userprofile.system_default" => "System-Vorgabe",
+
     "userprofile.groups" => "Gruppen",
     "userprofile.permissions" => "Berechtigungen",
     "perms.view" => "Anzeigen",
