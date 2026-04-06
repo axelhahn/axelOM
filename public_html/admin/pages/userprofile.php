@@ -34,7 +34,10 @@ function yesno($bValue){
 function getLanguages():array{
     $aLanguages=[];
     foreach (glob(__DIR__.'/../lang/*.php') as $sFile){
-        $aLanguages[]=basename($sFile,'.php');
+        if(!is_file($sFile)) continue;
+        $a=include $sFile;
+        $aLanguages[basename($sFile,'.php')]=$a['id'];
+        unset($a);
     }
     return $aLanguages;
 }
@@ -51,6 +54,8 @@ function getThemes():array{
 
 function getUserconfig(){
     global $acl;
+    global $aSettings;
+
     $renderAdminLTE=new renderadminlte();
 
     $sReturn='';
@@ -58,13 +63,13 @@ function getUserconfig(){
     
     // $sReturn.=print_r(getThemes(), true);
     $sSelectLang='';
-    $sSelectLang.='<option value="" '.(!$aCfg->getConfig()['lang'] ? 'selected' : '').'>{{userprofile.system_default}}</option>';
-    foreach(getLanguages() as $sLang){
-        $sSelectLang.='<option value="'.$sLang.'" '.($sLang==$aCfg->getConfig()['lang'] ? 'selected' : '').'>'.$sLang.'</option>';
+    $sSelectLang.='<option value="" '.(!$aCfg->getConfig()['lang'] ? 'selected' : '').'>{{userprofile.system_default}} - '.(string) ($aSettings['lang']??'')." - ".(string) getLanguages()[$aSettings['lang']]??''.'</option>';
+    foreach(getLanguages() as $sLang=>$sId){
+        $sSelectLang.='<option value="'.$sLang.'" '.($sLang==$aCfg->getConfig()['lang'] ? 'selected' : '').'>'.$sLang." - ".$sId.'</option>';
     }
 
     $sSelectTheme='';
-    $sSelectTheme.='<option value="" '.(!$aCfg->getConfig()['theme'] ? 'selected' : '').'>{{userprofile.system_default}}</option>';
+    $sSelectTheme.='<option value="" '.(!$aCfg->getConfig()['theme'] ? 'selected' : '').'>{{userprofile.system_default}} - '.(string) $aSettings['theme'].'</option>';
     foreach(getThemes() as $sTheme){
         $sSelectTheme.='<option value="'.$sTheme.'" '.($sTheme==$aCfg->getConfig()['theme'] ? 'selected' : '').'>'.$sTheme.'</option>';
     }
@@ -93,16 +98,24 @@ function getUserconfig(){
             </div>
         </div>
     </div>
-    <hr>
+    ';
 
-
-    '.
+    if($acl->is("admin")){
+        $sReturn.='<div class="row">
+            <label class="col-sm-2 col-form-label">{{userprofile.adminoptions}}:</label> 
+            <div class="col-sm-9">
+                <label for="cbdebug" class="col-form-label pure-checkbox">
+                    <input id="cbdebug" type="checkbox" name="debug" '.($aCfg->getConfig()['debug'] ? 'checked' : '').'> {{userprofile.showdebug}}
+                </label>
+            </div>
+        </div>';
+    }
+    $sReturn.='<hr>'.
     $renderAdminLTE->getButton([
-        'type' => 'primary',
+        'type' => 'secondary',
         'text' => icon::get('save') . '{{save}}',
     ])
     .'
-
     </form>';
 
     return $sReturn;
@@ -115,6 +128,8 @@ function getUserconfig(){
 if(($_POST['action']??'')==='save'){
     $oCfg = new usersettings($acl->getUser());
     unset($_POST['action']);
+
+    $_POST['debug']=($_POST['debug']??false) ? true : false;
     $oCfg->setValues($_POST);
 
     if ($oCfg->save()) {
@@ -167,17 +182,17 @@ $s=''
                 <!-- hook -->
                 {{CONTENT_HOOK_1}}
 
+                <tr>
+                    <td>'.icon::get('users').' {{userprofile.groups}}</td>
+                    <td><ul><li>'.implode('</li><li>',$acl->getGroups()).'</li></td>
+                </tr>
+
                 <!-- user specific config -->
                 <tr>
                     <td>'.icon::get('config').' {{userprofile.config}}</td>
                     <td>'.getUserconfig().'<br><br></td>
                 </tr>
 
-
-                <tr>
-                    <td>'.icon::get('users').' {{userprofile.groups}}</td>
-                    <td><ul><li>'.implode('</li><li>',$acl->getGroups()).'</li></td>
-                </tr>
                 <tr>
                     <td>'.icon::get('yes') .' {{userprofile.permissions}}</td>
                     <td>'.$sPerms.'</td>

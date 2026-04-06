@@ -229,7 +229,9 @@ $sBreadcrumb='<a href="?page=home">{{nav.home}}</a>'.$sBcSpacer
 // ---------- add debug info
 
 
-    if ($aSettings['debug']??false) {
+    // if ($aSettings['debug']??false) {
+    if (($aUserSettings['debug'] ?? '') ? $aUserSettings['debug'] : ($aSettings['debug'] ?? false)) {
+
         $sDEBUG='';
         $sDB_DEBUG='';
         $sDB_LOG='';

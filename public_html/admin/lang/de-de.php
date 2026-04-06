@@ -183,6 +183,9 @@ return [
 
     "userprofile.groups" => "Gruppen",
     "userprofile.permissions" => "Berechtigungen",
+    "userprofile.adminoptions" => "Admin-Berechtigungen",
+    "userprofile.showdebug" => "Debug Infos anzeigen",
+
     "perms.view" => "Anzeigen",
     "perms.edit" => "Bearbeiten",
     "perms.admin" => "Admin",
