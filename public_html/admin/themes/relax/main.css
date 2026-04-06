@@ -14,6 +14,8 @@
 	--navSidebarBg: rgb(39, 38, 63);
 	--navSidebarBg: none;
 	*/
+	--navIconColor: #abc;
+
 	--navSidebarBg: #fff3;
 	--navSidebarBrandBg: none;
 	--navSidebarBrandColor: #000;
