@@ -67,7 +67,7 @@ return [
 
 !!! warning "Warning"
     For production environment
-    * Set "debug" to `false`
+    * Set "debug" to `false`. This option every admin can override in the user specific settings.
     * Limit access to the web ui: 
       * enable "acl" for a single user/ multiple users and/ or 
       * limit access by ip address
