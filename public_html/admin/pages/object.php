@@ -546,18 +546,7 @@ if ($iItems == 0) {
                     ? $renderAdminLTE->getCallout([
                         'type' => '',
                         'title' => icon::get('database') . '{{object.tablecheck}}',
-                        'text' =>
-                            '<h3>{{object.tablecheck_ok}}</h3>'
-                            . (
-                                $acl->isAppAdmin($sTabApp)
-                                    ? '<hr>'
-                                    . $renderAdminLTE->getButton([
-                                        'class' => 'btn-outline-dark',
-                                        'text' => icon::get('config') . '{{config}}',
-                                        'onclick' => 'location.href=\'' . $sObjEditUrl . '\';',
-                                    ])
-                                    : ''
-                            ),
+                        'text' =>'<h3>{{object.tablecheck_ok}}</h3>',
                     ])
                     : $renderAdminLTE->getAlert([
                         'type' => 'danger',
@@ -565,18 +554,22 @@ if ($iItems == 0) {
                         'text' =>
                             icon::get('database')
                             . '{{object.tablecheck}}'
-                            . (
-                                $acl->isAppAdmin($sTabApp)
-                                    ? '<hr>' // .'{{object.tablecheck_update_required}}'
-                                    . $renderAdminLTE->getButton([
-                                        'type' => 'dark',
+                            ,
+                    ])
+            )
+            .($acl->isAppAdmin($sTabApp) 
+                ? $renderAdminLTE->getCallout([
+                        'type' => '',
+                        'title' => '',
+                        'text' => $renderAdminLTE->getButton([
+                                        'class' => $bDbTableOk ? 'btn-outline-dark' : 'btn-danger',
                                         'text' => icon::get('config') . '{{config}}',
                                         'onclick' => 'location.href=\'' . $sObjEditUrl . '\';',
-                                    ])
-                                    : ''
-                            ),
-                    ])
-            );
+                                    ]),
+                    ]) 
+                : ''
+            )
+            ;
     }
 }
 

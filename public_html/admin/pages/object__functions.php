@@ -83,7 +83,7 @@ function getClassnameFromObjname($sObjname) {
 
 /**
  * initialize an object from givem object name.
- * I finds the class file and initializes it.
+ * It finds the class file and initializes it.
  * The function returns a string with error message or an object on success.
  * 
  * @param PDO     $oDB      database conection pobject

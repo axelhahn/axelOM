@@ -144,15 +144,7 @@ $sMainContent.= $renderAdminLTE->addRow(
 $sContextbar .= $renderAdminLTE->getCallout([
         'type' => '',
         'title' => icon::get('items').'{{items}}',
-        'text' => '<h3>' . $o->count() . '</h3><hr>'
-            .$renderAdminLTE->getButton([
-                'class' => 'btn-outline-dark',
-                'text' => icon::get('edit').' {{edit}}',
-                'onclick' => 'document.location.href=\''.$sObjectUrl.'\';',
-            ]),
-
-        $sObjectUrl
-        ,
+        'text' => '<h3>' . $o->count() . '</h3>',
     ])
     .($bDbTableOk
         ? $renderAdminLTE->getCallout([
@@ -169,6 +161,16 @@ $sContextbar .= $renderAdminLTE->getCallout([
         
         ])
     )
+    . $renderAdminLTE->getCallout([
+        'type' => '',
+        'title' => '',
+        'text' => $renderAdminLTE->getButton([
+                'class' => 'btn-outline-dark',
+                'text' => icon::get('edit').' {{edit}}',
+                'onclick' => 'document.location.href=\''.$sObjectUrl.'\';',
+            ]),
+    ]) 
+
     ;
 
 
