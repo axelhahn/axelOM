@@ -50,12 +50,23 @@
 	--pagehintColor: #969;
 	--tileNumberColor: #09a;
 
-	--bs-body-bg-rgb: none;
-	.bg-success, .card-success, .text-bg-success{
-		--lte-card-variant-bg: #6a8;
-	}
-	.bg-success, .btn-success, .card-success, .text-bg-success{
-		--bs-btn-bg: #6a8;
-	}
+	--datatable-header-bg: #e8e0e8;
 
+	--bs-body-bg-rgb: none;
+
+	/*
+	--main-color-success: #6a8;
+	--main-color-info: #bcd;
+	--main-color-primary: #89d;
+
+	.bg-success, .card-success, .text-bg-success{--lte-card-variant-bg: var(--main-color-success);}
+	.bg-success, .btn-success, .card-success, .text-bg-success{--bs-btn-bg: var(--main-color-success);}
+
+	.bg-info, .card-info, .text-bg-info{--lte-card-variant-bg: var(--main-color-info);}
+	.bg-info, .btn-info, .card-info, .text-bg-info{--bs-btn-bg: var(--main-color-info);}
+
+	.bg-primary, .card-primary, .text-bg-primary{--lte-card-variant-bg: var(--main-color-primary);}
+	.bg-primary, .btn-primary, .card-primary, .text-bg-primary{--bs-btn-bg: var(--main-color-primary);}
+	*/
+	
 }

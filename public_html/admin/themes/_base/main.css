@@ -42,6 +42,8 @@
 
 	--pagehintColor: #555;
 
+	--datatable-header-bg: #ddd;
+
 	/** colors from AdminLTE 3
 	--blue: #007bff;
 	--indigo: #6610f2;
@@ -152,7 +154,7 @@ div#overlay-text{position: fixed; height: 80%; width: 60%; top: 5em; left: 20%; 
 pre.config{background:#f4f4f4; color:#448; border-radius: 0.5em; max-height: auto; transition: all ease-in-out 0.2s;}
 .hidden{max-height: 0px; padding: 0; margin: 0;}
 
-.dataTables_length select{ border: 1px solid #eee; border-radius: 0.3em; padding: 0.1em 0.5em; background-color: #dee;}
+.dataTables_length select{ border: 1px solid #eee; border-radius: 0.3em; padding: 0.1em 0.5em; background: var(--datatable-header-bg);}
 
 .dataTables_filter label input {
 	border: 1px solid #ced4da;
@@ -163,8 +165,8 @@ pre.config{background:#f4f4f4; color:#448; border-radius: 0.5em; max-height: aut
 }
 
 table.dataTable thead th{
-	border-bottom: 1px solid #bcc;
-	background-color: #dee;
+	border-bottom: 1px solid rgba(0,0,0,0.1);
+	background: var(--datatable-header-bg);
 }	
 table.dataTable thead th.actions{
 	width: 50px;
