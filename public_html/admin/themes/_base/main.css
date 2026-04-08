@@ -27,6 +27,9 @@
 
 	--navTopItemHoverBg: #f0f0f0;
 	--navTopActiveItemBg: #ddd;
+	--navTopActiveItemBorder: none;
+	--navTopActiveItemBoxShadow: none;
+
 	--overlayBg: rgba(0,30,30,0.5);
 	--overlayBoxBordercolor: rgba(0,30,30,0.5);
 	--overlayBoxShadow: #345;
@@ -89,7 +92,10 @@ ins{background-color: #cfc}
 .app-header{border: none; }
 .app-header li.nav-item a{border-radius: 0.5em;}
 .app-header li.nav-item a[href*="?"]:hover{background: var(--navTopItemHoverBg);}
-.app-header li.nav-item .active{background: var(--navTopActiveItemBg) !important; }
+.app-header li.nav-item .active{background: var(--navTopActiveItemBg) !important; 
+	border: var(--navTopActiveItemBorder);
+	box-shadow: var(--navTopActiveItemBoxShadow);
+}
 
 .app-footer{background: none; }
 

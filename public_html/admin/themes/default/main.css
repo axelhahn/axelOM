@@ -27,6 +27,8 @@
 
 	--navTopItemHoverBg: #f0f0f0;
 	--navTopActiveItemBg: #cee;
+	--navTopActiveItemBoxShadow: none;
+
 	--overlayBg: rgba(0,30,30,0.5);
 	--overlayBoxBordercolor: rgba(0,30,30,0.5);
 	--overlayBoxShadow: #345;
