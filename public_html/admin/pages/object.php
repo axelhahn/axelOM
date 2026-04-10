@@ -395,7 +395,7 @@ if ($iItems == 0) {
         $aBasicAttributes = $o->getBasicAttributes(true);
 
         # TODO: handle sortorder (mow: js only) ... maybe paging
-        $aItems = $o->search(['columns' => array_keys($aBasicAttributes)]);
+        $aItems = $o->search(['columns' => array_keys($aBasicAttributes), 'order' => [array_key_first($aBasicAttributes)." asc"]]);
 
         $iColCount=0;
         $sJsSort='';
@@ -783,7 +783,7 @@ if ($bShowEdit && $bDbTableOk) {
             // $sMainContent.='<pre>'.print_r($aRelations, 1).'</pre>';
 
             // add attachment - for all objects but not the attachment object
-            $sFormAttach = $sObject == 'pdo_db_attachments'
+            $sFormAttach = $sObject === 'pdo_db_attachments'
                 ? ''
                 : '<form action="'
                 . $sBaseUrl
