@@ -8,7 +8,7 @@
 
 */
 :root{
-	--bodyBg: url(../../assets/bg-rauschen.jpg) fixed;
+	--bodyBg: url(../relax/bg-rauschen.jpg) fixed;
 	
 	/*
 	--navSidebarBg: rgb(39, 38, 63);
@@ -31,6 +31,9 @@
 	--navSidebarActiveItemBg: linear-gradient(13deg, #86a, #8bc);
 	--navSidebarActiveItemColor: white;
 	--navSidebarActiveIconColor: #acd;
+
+	--navSidebarActiveItemBorder: 1px solid #fff;
+	--navSidebarActiveItemBoxShadow: 0.1em 0.1em 0.6em #abc;
 
 	--navTopItemHoverBg: #fff;
 	--navTopActiveItemBg: linear-gradient(13deg, #ece, #eda);

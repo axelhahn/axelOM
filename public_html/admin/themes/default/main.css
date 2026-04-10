@@ -9,7 +9,7 @@
 */
 :root{
 
-	--bodyBg: url(../../assets/bg-rauschen.jpg) fixed;
+	--bodyBg: url() fixed;
 	--navSidebarBg: #223;
 	--navSidebarBrandBg: #345;
 	--navSidebarBrandColor: #acd;

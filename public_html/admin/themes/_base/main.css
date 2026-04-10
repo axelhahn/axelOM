@@ -25,6 +25,9 @@
 	--navSidebarActiveItemColor: white;
 	--navSidebarActiveIconColor: #ccc;
 
+	--navSidebarActiveItemBorder: none;
+	--navSidebarActiveItemBoxShadow: none;
+
 	--navTopItemHoverBg: #f0f0f0;
 	--navTopActiveItemBg: #ddd;
 	--navTopActiveItemBorder: none;
@@ -130,6 +133,8 @@ li.nav-item .active i {color:var(--iconcolor);}
  {
 	background: var(--navSidebarActiveItemBg);
 	color: var(--navSidebarActiveItemColor) !important;
+	border: var(--navSidebarActiveItemBorder);
+	box-shadow: var(--navSidebarActiveItemBoxShadow);
 }
 .nav-item i {
 	color:var(--navSidebarIconColor, default);
