@@ -402,7 +402,7 @@ if ($iItems == 0) {
         $sThead="";
         foreach ($aBasicAttributes as $sField=>$sSort) {
             $sLabel = $o->getFormtype($sField)['label'] ?? $sField;
-            $sThead .= $sField == 'id' ? '' : "<th>$sLabel</th>";
+            $sThead .= $sField === 'id' ? '' : "<th>$sLabel</th>";
             $sJsSort.= $sSort 
                 ? (
                     ($sJsSort ? ", " : "") ."[$iColCount, '$sSort']"
