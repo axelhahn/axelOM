@@ -33,7 +33,7 @@
 	--navSidebarActiveIconColor: #acd;
 
 	--navSidebarActiveItemBorder: 1px solid #fff;
-	--navSidebarActiveItemBoxShadow: 0.1em 0.1em 0.6em #abc;
+	--navSidebarActiveItemBoxShadow: 0.1em 0.1em 0.5em #cde;
 
 	--navTopItemHoverBg: #fff;
 	--navTopActiveItemBg: linear-gradient(13deg, #ece, #eda);
@@ -53,7 +53,7 @@
 	--pagehintColor: #969;
 	--tileNumberColor: #09a;
 
-	--datatable-header-bg: #e8e0e8;
+	--datatable-header-bg: #e8dae8;
 
 	--bs-body-bg-rgb: none;
 
