@@ -395,14 +395,14 @@ if ($iItems == 0) {
         $aBasicAttributes = $o->getBasicAttributes(true);
 
         # TODO: handle sortorder (mow: js only) ... maybe paging
-        $aItems = $o->search(['columns' => array_keys($aBasicAttributes)]);
+        $aItems = $o->search(['columns' => array_keys($aBasicAttributes), 'order' => [array_key_first($aBasicAttributes)." asc"]]);
 
         $iColCount=0;
         $sJsSort='';
         $sThead="";
         foreach ($aBasicAttributes as $sField=>$sSort) {
             $sLabel = $o->getFormtype($sField)['label'] ?? $sField;
-            $sThead .= $sField == 'id' ? '' : "<th>$sLabel</th>";
+            $sThead .= $sField === 'id' ? '' : "<th>$sLabel</th>";
             $sJsSort.= $sSort 
                 ? (
                     ($sJsSort ? ", " : "") ."[$iColCount, '$sSort']"
@@ -546,18 +546,7 @@ if ($iItems == 0) {
                     ? $renderAdminLTE->getCallout([
                         'type' => '',
                         'title' => icon::get('database') . '{{object.tablecheck}}',
-                        'text' =>
-                            '<h3>{{object.tablecheck_ok}}</h3>'
-                            . (
-                                $acl->isAppAdmin($sTabApp)
-                                    ? '<hr>'
-                                    . $renderAdminLTE->getButton([
-                                        'class' => 'btn-outline-dark',
-                                        'text' => icon::get('config') . '{{config}}',
-                                        'onclick' => 'location.href=\'' . $sObjEditUrl . '\';',
-                                    ])
-                                    : ''
-                            ),
+                        'text' =>'<h3>{{object.tablecheck_ok}}</h3>',
                     ])
                     : $renderAdminLTE->getAlert([
                         'type' => 'danger',
@@ -565,18 +554,22 @@ if ($iItems == 0) {
                         'text' =>
                             icon::get('database')
                             . '{{object.tablecheck}}'
-                            . (
-                                $acl->isAppAdmin($sTabApp)
-                                    ? '<hr>' // .'{{object.tablecheck_update_required}}'
-                                    . $renderAdminLTE->getButton([
-                                        'type' => 'dark',
+                            ,
+                    ])
+            )
+            .($acl->isAppAdmin($sTabApp) 
+                ? $renderAdminLTE->getCallout([
+                        'type' => '',
+                        'title' => '',
+                        'text' => $renderAdminLTE->getButton([
+                                        'class' => $bDbTableOk ? 'btn-outline-dark' : 'btn-danger',
                                         'text' => icon::get('config') . '{{config}}',
                                         'onclick' => 'location.href=\'' . $sObjEditUrl . '\';',
-                                    ])
-                                    : ''
-                            ),
-                    ])
-            );
+                                    ]),
+                    ]) 
+                : ''
+            )
+            ;
     }
 }
 
@@ -735,7 +728,7 @@ if ($bShowEdit && $bDbTableOk) {
             . $renderAdminLTE->getButton([
                 'type' => 'secondary',
                 'text' => icon::get('abort') . '{{abort}}',
-                'onclick' => 'location.href=\'' . ($o->id() ? $sBaseUrl : $sHomeAppUrl) . '\'; return false;',
+                'onclick' => 'location.href=\'' . $sBaseUrl . '\'; return false;',
             ])
             . ' '
             . $renderAdminLTE->getButton([
@@ -790,7 +783,7 @@ if ($bShowEdit && $bDbTableOk) {
             // $sMainContent.='<pre>'.print_r($aRelations, 1).'</pre>';
 
             // add attachment - for all objects but not the attachment object
-            $sFormAttach = $sObject == 'pdo_db_attachments'
+            $sFormAttach = $sObject === 'pdo_db_attachments'
                 ? ''
                 : '<form action="'
                 . $sBaseUrl

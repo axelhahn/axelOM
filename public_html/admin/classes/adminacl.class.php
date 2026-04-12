@@ -23,6 +23,7 @@
  * 2024-06-12        <axel>  first lines
  * 2024-11-05        <axel>  update PHPDOC, short syntax
  * 2025-01-23        <axel>  rename isAdmin to isGlobalAdmin
+ * 2026-04-06        <axel>  use in_array() instead of array_search()
  * ======================================================================
  */
 
@@ -69,7 +70,8 @@ class adminacl
     {
 
         // read config
-        $aCfg = include(__DIR__ . '/../config/settings.php');
+        $sCfgfile=__DIR__ . '/../config/settings.php';
+        $aCfg = file_exists($sCfgfile) ? (array) include(__DIR__ . '/../config/settings.php') : [];
         $this->_aConfig = (array) ($aCfg['acl'] ?? []);
 
         $this->_detectUser();
@@ -223,7 +225,9 @@ class adminacl
      */
     public function is(string $sWantedGroup): bool
     {
-        return array_search('admin', $this->_aGroups) !== false || array_search($sWantedGroup, $this->_aGroups) !== false;
+        return in_array('admin', $this->_aGroups, true)
+            || in_array($sWantedGroup, $this->_aGroups, true)
+        ;
     }
 
     /**
@@ -233,7 +237,7 @@ class adminacl
      */
     public function isGlobalAdmin(): bool
     {
-        return array_search('admin', $this->_aGroups) !== false;
+        return in_array('admin', $this->_aGroups, true);
     }
 
     /**
@@ -246,7 +250,7 @@ class adminacl
     {
         $sAppname = $sAppname ?: $this->_sApp;
         return $this->isGlobalAdmin()
-            || array_search($sAppname . '_admin', $this->_aGroups) !== false
+            || in_array($sAppname . '_admin', $this->_aGroups, true)
         ;
     }
 
@@ -260,7 +264,7 @@ class adminacl
     {
         $sAppname = $sAppname ?: $this->_sApp;
         return $this->isAppAdmin($sAppname)
-            || array_search($sAppname . '_manager', $this->_aGroups) !== false
+            || in_array($sAppname . '_manager', $this->_aGroups, true)
         ;
     }
 
@@ -274,7 +278,7 @@ class adminacl
     {
         $sAppname = $sAppname ?: $this->_sApp;
         return $this->canEdit($sAppname)
-            || array_search($sAppname, $this->_aGroups) !== false
+            || in_array($sAppname, $this->_aGroups, true)
         ;
     }
 }

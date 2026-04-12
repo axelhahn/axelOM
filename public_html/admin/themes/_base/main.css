@@ -8,36 +8,47 @@
 
 */
 :root{
-	/*
-	--navSidebarBg: rgb(39, 38, 63);
-	--navSidebarBg: none;
-	*/
-	--navSidebarBg: #fff3;
-	--navSidebarBrandBg: #fff;
-	--navSidebarBrandColor: #000;
+	--bodyBg: none;
+
+	--navSidebarBg: #333;
+	--navSidebarBrandBg: var(--navSidebarBg);
+	--navSidebarBrandColor: #aaa;
+
+	--navIconColor: #bbb;
 
 	--navSidebarItemBg: none;
-	--navSidebarItemColor: #457;
-	--navSidebarItemHoverBg: #fff8;
-	--navSidebarItemHoverColor: #457;
-	/*
-	--navSidebarActiveItemBg: #489;
-	--navSidebarActiveItemBg: #647;
-	*/
-	--navSidebarActiveItemBg: linear-gradient(13deg, #86a, #8bc);
+	--navSidebarItemColor: #fffa;
+	--navSidebarItemHoverBg: none;
+	--navSidebarItemHoverColor: #fff;
+
+	--navSidebarActiveItemBg: #555;
 	--navSidebarActiveItemColor: white;
-	--navSidebarActiveIconColor: #acd;
-	--navTopActiveItemBg: #cee;
-	--navTopActiveItemBg: #eed1ab;
-	--navTopActiveItemBg: linear-gradient(13deg, #ece, #eda);
+	--navSidebarActiveIconColor: #ccc;
+
+	--navSidebarActiveItemBorder: none;
+	--navSidebarActiveItemBoxShadow: none;
+
+	--navTopItemHoverBg: #f0f0f0;
+	--navTopActiveItemBg: #ddd;
+	--navTopActiveItemBorder: none;
+	--navTopActiveItemBoxShadow: none;
+
 	--overlayBg: rgba(0,30,30,0.5);
 	--overlayBoxBordercolor: rgba(0,30,30,0.5);
 	--overlayBoxShadow: #345;
-	--formHintBg: #fff1e4;
+
+	--breadcrumbDelimterColor: #444;
+
+	--formHintBg: #eee;
 	--requiredColor: #c00;
-	--iconcolor: #2ac;
-	--cardBg: linear-gradient(10deg, #faf6ff, #fff 80%);
-	--cardHeaderBg: none;
+	--iconcolor: #aaa;
+
+	--cardBg: #fff;
+	--tileNumberColor: #aaa;
+
+	--pagehintColor: #555;
+
+	--datatable-header-bg: #ddd;
 
 	/** colors from AdminLTE 3
 	--blue: #007bff;
@@ -64,10 +75,10 @@
 	 */
 
 }
-
 body{
-	background: url(assets/bg-rauschen.jpg) fixed;
+	background: var(--bodyBg);
 }
+
 blockquote{background-color: #f4f6f9; margin-left: 2em; padding: 1em;}
 button{border: 1px solid rgba(0,0,0,0.1) !important;}
 button.btn:disabled{
@@ -83,11 +94,15 @@ ins{background-color: #cfc}
 
 .app-header{border: none; }
 .app-header li.nav-item a{border-radius: 0.5em;}
-.app-header li.nav-item a[href*="?"]:hover{background-color: #f0f0f0;}
-.app-header li.nav-item .active{background: var(--navTopActiveItemBg) !important; }
+.app-header li.nav-item a[href*="?"]:hover{background: var(--navTopItemHoverBg);}
+.app-header li.nav-item .active{background: var(--navTopActiveItemBg) !important; 
+	border: var(--navTopActiveItemBorder);
+	box-shadow: var(--navTopActiveItemBoxShadow);
+}
 
 .app-footer{background: none; }
 
+li.nav-item i {color:var(--navIconColor);}
 li.nav-item .active i {color:var(--iconcolor);}
 
 
@@ -118,20 +133,21 @@ li.nav-item .active i {color:var(--iconcolor);}
  {
 	background: var(--navSidebarActiveItemBg);
 	color: var(--navSidebarActiveItemColor) !important;
+	border: var(--navSidebarActiveItemBorder);
+	box-shadow: var(--navSidebarActiveItemBoxShadow);
 }
-.sidebar-wrapper .nav-item i {
-	color:var(--iconcolor);
+.nav-item i {
+	color:var(--navSidebarIconColor, default);
 }
 .sidebar-wrapper .nav-item .active i {
 	color:var(--navSidebarActiveIconColor);
 }
 
 /** AdminLTE 3 **/
-.bg-navy {background-color: #001f3f !important;}.bg-navy, .bg-navy > a {color: #fff !important;}
 .page-title {color: #123}
-.page-title span::before {color: #d72; content: ' / '; margin: 0 0.3em;}
+.page-title span::before {color: var(--breadcrumbDelimterColor); content: ' / '; margin: 0 0.3em;}
 .page-hint {
-	color: #969; 
+	color: var(--pagehintColor);
 	font-size: 120%; 
 }
 
@@ -149,7 +165,7 @@ div#overlay-text{position: fixed; height: 80%; width: 60%; top: 5em; left: 20%; 
 pre.config{background:#f4f4f4; color:#448; border-radius: 0.5em; max-height: auto; transition: all ease-in-out 0.2s;}
 .hidden{max-height: 0px; padding: 0; margin: 0;}
 
-.dataTables_length select{ border: 1px solid #eee; border-radius: 0.3em; padding: 0.1em 0.5em; background-color: #dee;}
+.dataTables_length select{ border: 1px solid #eee; border-radius: 0.3em; padding: 0.1em 0.5em; background: var(--datatable-header-bg);}
 
 .dataTables_filter label input {
 	border: 1px solid #ced4da;
@@ -160,15 +176,16 @@ pre.config{background:#f4f4f4; color:#448; border-radius: 0.5em; max-height: aut
 }
 
 table.dataTable thead th{
-	border-bottom: 1px solid #bcc;
-	background-color: #dee;
+	border-bottom: 1px solid rgba(0,0,0,0.1);
+	background: var(--datatable-header-bg);
 }	
 table.dataTable thead th.actions{
 	width: 50px;
 }
 
 table.dataTable tr:hover td{
-	background-color: #fff5e8 !important;
+	background: #ffecd7 !important;
+	box-shadow: none;;
 }
 
 table.dataTable.no-footer {
@@ -185,8 +202,13 @@ table tr.warning>td{background:#f0e0c0 !important;}
 
 .nav-item hr{color: #bbb; border-top: 1px solid; height: 1px; padding: 0; margin: 0; }
 
-.callout, .card, .info-box {box-shadow: 0 0 1px rgba(0,0,0,.125),0 0.3em 1em rgba(0,150,200,.1); }
+.callout, .card, .info-box {
+	box-shadow: 0 0 1px rgba(0,0,0,.125),0 0.3em 1em rgba(0,150,200,.1); 
+}
 .card{border: none; margin-bottom: 1rem;}
+.col-md-2 .callout{
+	background: #fffa;
+}
 
 h2 a, h3 a, h4 a, .callout a, .card-header a, table a{color: #459; text-decoration: none;}
 h2 i{color: var(--iconcolor);}
@@ -197,7 +219,7 @@ h2 i{color: var(--iconcolor);}
 .card-title i, .callout i {color:rgba(0,80,80,0.3);}
 .card-title i, .callout i {color:var(--iconcolor);}
 
-.info-box .info-box-number {font-size: 200%; margin: 0; color: #09a;}
+.info-box .info-box-number {font-size: 200%; margin: 0; color: var(--tileNumberColor);}
 
 input.form-control[required]{ border-right: 0.3em solid var(--requiredColor); background: linear-gradient(90deg, #fffcfc 85%, #fee);}
 .row .hint{

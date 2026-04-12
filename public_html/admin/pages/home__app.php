@@ -115,6 +115,7 @@ $sContextbar = ''
             .($acl->isAppAdmin($sTabApp) 
                 ? '<br><br>'.$renderAdminLTE->getButton([
                     'type' => '',
+                    'class' => 'btn-outline-dark',
                     'text' => icon::get('tools').'{{tools}}',
                     'onclick' => 'location.href=\'?app='.$appmeta->getId().'&page=tools\';',
                 ]).'<br>'
@@ -130,6 +131,7 @@ $sContextbar = ''
         .($acl->canEdit($sTabApp) 
             ? $renderAdminLTE->getButton([
                 'type' => '',
+                'class' => 'btn-outline-dark',
                 'text' => icon::get('file').'{{files}}',
                 'onclick' => 'location.href=\'?app='.$appmeta->getId().'&page=object&object=pdo_db_attachments\';',
             ]).'<br><br>' 
@@ -138,6 +140,7 @@ $sContextbar = ''
         .($acl->isAppAdmin($sTabApp) 
             ? $renderAdminLTE->getButton([
                 'type' => '',
+                'class' => 'btn-outline-dark',
                 'text' => icon::get('config').'{{config}}',
                 'onclick' => 'location.href=\'?app='.$appmeta->getId().'&page=config\';',
             ]).'<br>'

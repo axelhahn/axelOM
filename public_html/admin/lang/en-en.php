@@ -176,8 +176,17 @@ return [
     "userprofile.userid" => "User id",
     "userprofile.name" => "Shown name",
     "userprofile.mfasetup" => "2nd login factor",
+
+    "userprofile.config" => "User configuration",
+    "userprofile.language" => "Language",
+    "userprofile.theme" => "Skin",
+    "userprofile.system_default" => "System default",
+
     "userprofile.groups" => "Groups",
     "userprofile.permissions" => "Permissions",
+    "userprofile.adminoptions" => "Admin permissions",
+    "userprofile.showdebug" => "Show debug infos",
+
     "perms.view" => "View",
     "perms.edit" => "Edit",
     "perms.admin" => "Admin",

@@ -2,7 +2,7 @@
 
 return [
     // special item: line for html head section to load icon set
-    'htmlhead' => '<link href="../vendor/font-awesome/7.0.1/css/all.min.css" rel="stylesheet" type="text/css"/>',
+    'htmlhead' => 'font-awesome/7.0.1/css/all.min.css',
 
     // home page
     'apps' => 'fa-solid fa-box-open',

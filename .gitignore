@@ -4,3 +4,4 @@ public_html/admin/config/settings.php
 
 public_html/apps/*
 !public_html/apps/inc_require.php
+public_html/admin/config/users/*

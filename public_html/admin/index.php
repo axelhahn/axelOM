@@ -14,7 +14,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 
 const APP_NAME='axel :: OM';
-const APP_VERSION='0.0.49';
+const APP_VERSION='0.0.51';
 const DELIM_TITLE='<span></span>';
 
 require_once('../classes/render-adminlte4.class.php');
@@ -34,9 +34,6 @@ if(!file_exists('config/settings.php')){
 } else {
     $aSettings=(array) include('config/settings.php');
 }
-$sUiLang=(string) ($aSettings['lang'] ?? "en-en");
-$sUiLang=queryparam::get('lang', '/^[a-z\-]*$/')
-    ?: (string) ($aSettings['lang'] ?? "en-en");
 
 if(!$sTabApp && !$sPage){
     // $sTabApp=array_key_first($aObjects);
@@ -52,12 +49,25 @@ $acl=new adminacl();
 $renderAdminLTE=new renderadminlte();
 $aReplace=(array) (include("./config/page_replacements.php") ?? []);
 
-// $aProjects=include("./config/objects.php");
+$sUserCfgFile='config/users/'.$acl->getUser().'/settings.php';
+$aUserSettings=(array) (file_exists($sUserCfgFile) ? include($sUserCfgFile) : []);
+
+$sUiLang=queryparam::get('lang', '/^[a-z\-]*$/')
+    ?: (string) (($aUserSettings['lang'] ?? '') ? $aUserSettings['lang'] : ($aSettings['lang'] ?? "en-en"));
+
+$sUiTheme=queryparam::get('theme', '/^[a-z\-]*$/')
+    ?: (string) (($aUserSettings['theme'] ?? '') ? $aUserSettings['theme'] : ($aSettings['theme'] ?? "default"));
 
 // see ../classes/icon.class.php
 $sIconSet=(string) ($aSettings['iconset'] ?? "fontawesome");
 $_aIconClassData=require '../classes/icon.class_include_'.$sIconSet.'.php';
-$aReplace['{{HTML_HEAD}}'].="\n<!-- load icon set '$sIconSet' -->\n".icon::getclass("htmlhead")."\n\n";
+$aReplace['{{HTML_HEAD}}'].="\n"
+    ."<!-- load icon set '$sIconSet' -->"
+        ."<link href=\"../vendor/".icon::getclass("htmlhead")."\" rel=\"stylesheet\" type=\"text/css\"/>\n"
+    ."<!-- load theme '$sUiTheme' -->"
+        ."<link rel=\"stylesheet\" href=\"themes/$sUiTheme/main.css\">\n"
+    ."\n"
+    ;
 
 // $aTopnav=$adminmetainfos->getTopNavArray();
 $aTopnav=[];
@@ -219,7 +229,9 @@ $sBreadcrumb='<a href="?page=home">{{nav.home}}</a>'.$sBcSpacer
 // ---------- add debug info
 
 
-    if ($aSettings['debug']??false) {
+    // if ($aSettings['debug']??false) {
+    if (($aUserSettings['debug'] ?? '') ? $aUserSettings['debug'] : ($aSettings['debug'] ?? false)) {
+
         $sDEBUG='';
         $sDB_DEBUG='';
         $sDB_LOG='';

@@ -7,12 +7,13 @@ The file `./admin/config/settings.php` will be included automatically when using
 ```php
 return [
 
-    // show debug window?
-    'debug' => false,
+    // backend ui settings
+    'lang' => 'en-en',          // --> admin/lang/<lang>.php
 
-    // language of backnd ui
-    'lang' => 'en-en',
-    // 'lang' => 'de-de',
+    'iconset' => 'fontawesome', // --> classes/icon.class_include_<iconset>.php
+    'theme' => 'relax',         // --> admin/themes/<theme>/main.css
+
+    'debug' => true,            // --> true for dev environments only
     
     // if "acl" is missing or empty --> sets admin user for everything
     'acl'=>[
@@ -55,16 +56,18 @@ return [
 
 ### Behaviour of the web ui
 
-| Key       | Type        | Description
-|--         |--           |-- 
-| `'lang'`  | {string}    | Language of web ui.<br>The file *./admin/lang/**[language]**.php*  will be loaded.<br>default: `"en-en"` |
-| `'debug'` | {bool}      | Enable / disable debugging window.<br>The debugging window shows<br>- processing time on server<br>- max memory usage<br>- _GET + _POST values<br>- excuted database queries with used time and affected rows<br>- log messages and errors
-| `'acl'`   | {array}     | Enable and configure access with users and permissions.<br>If this key is missing or empty it enables global admin access for each request (for the dev environment).<br>See next chapter for details.
+| Key         | Type        | Description
+|--           |--           |-- 
+| `'lang'`    | {string}    | Language of web ui.<br>The file *./admin/lang/**[language]**.php*  will be loaded.<br>default: `"en-en"` |
+| `'iconset'` | {string}    | Icon set to use <br>The file *./classes/icon.class_include_**[iconset]**.php*  will be loaded.<br>default: `"fontawesome"` |
+| `'theme'`   | {string}    | Language of web ui.<br>The file *./admin/themes/**[theme]**/main.css*  will be loaded.<br>default: `"relax"` |
+| `'debug'`   | {bool}      | Enable / disable debugging window.<br>The debugging window shows<br>- processing time on server<br>- max memory usage<br>- _GET + _POST values<br>- excuted database queries with used time and affected rows<br>- log messages and errors
+| `'acl'`     | {array}     | Enable and configure access with users and permissions.<br>If this key is missing or empty it enables global admin access for each request (for the dev environment).<br>See next chapter for details.
 
 
 !!! warning "Warning"
     For production environment
-    * Set "debug" to `false`
+    * Set "debug" to `false`. This option every admin can override in the user specific settings.
     * Limit access to the web ui: 
       * enable "acl" for a single user/ multiple users and/ or 
       * limit access by ip address

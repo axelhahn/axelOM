@@ -501,7 +501,7 @@ class pdo_db_base
      * Read an entry from database by known row id
      * @param int   $iId           row id to read
      * @param bool $bReadRelations read relation too? default: false
-     * @return bool|int
+     * @return bool
      */
     public function read(int $iId, bool $bReadRelations = false): bool
     {

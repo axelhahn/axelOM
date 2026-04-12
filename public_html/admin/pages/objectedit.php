@@ -20,6 +20,7 @@
 
 require_once('inc_functions.php');
 
+$sHomeAppUrl = '?app=' . $sTabApp . '&page=home';
 $sBaseUrl    = '?app='.$sTabApp.'&page='.$sPage.'&object=' . $sObject;
 $sObjectUrl  = '?app='.$sTabApp.'&page=object&object=' . $sObject;
 
@@ -28,9 +29,18 @@ $sObjLabel= ''
     . (isset($aObjdata['icon']) ? icon::get($aObjdata['icon']) : '')
     . ($aObjdata['label'] ?? '');
 
-$TITLE=''.icon::get($appmeta->getAppicon()) . $appmeta->getAppname().' ' 
-    . '<strong>'.($sObjLabel ? '  ' . $sObjLabel : '') .'</strong> ';
-$BANNER='{{home.banner}}';
+$TITLE=''
+    . '<strong>'
+    . '<a href="'
+    . $sHomeAppUrl
+    . '">'
+    . icon::get($appmeta->getAppicon())
+    . $appmeta->getAppname()
+    . '</a></strong> '
+    . DELIM_TITLE
+    .($sObjLabel ? '  ' . $sObjLabel : '')
+    ;
+$BANNER = $appmeta->getApphint() . ' -> <strong>' . $appmeta->getObjectHint($sObject) . '</strong>';
 
 
 // addMsg('ok', 'OK: I am a test');
@@ -104,15 +114,6 @@ if(!$bDbTableOk){
 }
 
 
-$sMainContent .= ''
-. ($appmeta->getApphint() && $appmeta->getApphint() 
-    ? $renderAdminLTE->getCallout(array (
-        'type' => 'gray',
-        'text' => $appmeta->getApphint() . ' -> <strong>' . $appmeta->getObjectHint($sObject).'</strong>',
-    )).'<br>'
-    : '');
-
-
 $aAttributes = $o->getAttributes(true);
 
 $sProperties='';
@@ -144,15 +145,7 @@ $sMainContent.= $renderAdminLTE->addRow(
 $sContextbar .= $renderAdminLTE->getCallout([
         'type' => '',
         'title' => icon::get('items').'{{items}}',
-        'text' => '<h3>' . $o->count() . '</h3><hr>'
-            .$renderAdminLTE->getButton([
-                'class' => 'btn-outline-dark',
-                'text' => icon::get('edit').' {{edit}}',
-                'onclick' => 'document.location.href=\''.$sObjectUrl.'\';',
-            ]),
-
-        $sObjectUrl
-        ,
+        'text' => '<h3>' . $o->count() . '</h3>',
     ])
     .($bDbTableOk
         ? $renderAdminLTE->getCallout([
@@ -169,6 +162,16 @@ $sContextbar .= $renderAdminLTE->getCallout([
         
         ])
     )
+    . $renderAdminLTE->getCallout([
+        'type' => '',
+        'title' => '',
+        'text' => $renderAdminLTE->getButton([
+                'class' => 'btn-outline-dark',
+                'text' => icon::get('edit').' {{edit}}',
+                'onclick' => 'document.location.href=\''.$sObjectUrl.'\';',
+            ]),
+    ]) 
+
     ;
 
 
