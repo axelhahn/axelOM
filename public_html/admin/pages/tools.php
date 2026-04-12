@@ -290,7 +290,7 @@ if($sTabApp){
     }
 
     $sTable = $sTable 
-        ? '<table class="table table-bordered table-striped dataTable dtr-inline">
+        ? '<table class="table table-bordered table-striped dataTable dtr-inline" data-tableorder="[ 1, \'desc\' ]">
         <thead>
             <tr>
                 <th>{{backup.file}}</th>
