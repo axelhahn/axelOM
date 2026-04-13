@@ -113,6 +113,9 @@ class usersettings {
         $this->_bChanged = false;
         $this->_aValues = $this->_aDefaultValues;
         $this->_sCfgFile = __DIR__ . '/../config/users/' . $sUser . '/settings.php';
+        if (!is_dir(dirname($this->_sCfgFile))) {
+            mkdir(dirname($this->_sCfgFile));
+        }
         if (file_exists($this->_sCfgFile)) {
             $this->_aValues = (array) include($this->_sCfgFile);
         }
