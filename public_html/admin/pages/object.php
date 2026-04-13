@@ -1049,7 +1049,7 @@ if ($bShowEdit && $bDbTableOk) {
                         . '&id='
                         . $aRelation['_toid']
                         . '"><strong>'
-                        . icon::get($appmeta->getObjectIcon($sObject))
+                        . icon::get($appmeta->getObjectIcon($aRelation['_totable']))
                         . ' '
                         . $sTargetLabel
                         . '</strong></a>'
