@@ -63,13 +63,15 @@ function getUserconfig(){
     
     // $sReturn.=print_r(getThemes(), true);
     $sSelectLang='';
-    $sSelectLang.='<option value="" '.(!$aCfg->getConfig()['lang'] ? 'selected' : '').'>{{userprofile.system_default}} - '.(string) ($aSettings['lang']??'')." - ".(string) getLanguages()[$aSettings['lang']]??''.'</option>';
+    // $sSelectLang.='<option value="" '.(!$aCfg->getConfig()['lang'] ? 'selected' : '').'>{{userprofile.system_default}} - '.(string) ($aSettings['lang']??'')." - ".(string) getLanguages()[$aSettings['lang']]??''.'</option>';
+    $sSelectLang.='<option value="">{{userprofile.system_default}} - '.(string) ($aSettings['lang']??'')." - ".(string) getLanguages()[$aSettings['lang']]??''.'</option>';
     foreach(getLanguages() as $sLang=>$sId){
         $sSelectLang.='<option value="'.$sLang.'" '.($sLang==$aCfg->getConfig()['lang'] ? 'selected' : '').'>'.$sLang." - ".$sId.'</option>';
     }
 
     $sSelectTheme='';
-    $sSelectTheme.='<option value="" '.(!$aCfg->getConfig()['theme'] ? 'selected' : '').'>{{userprofile.system_default}} - '.(string) $aSettings['theme'].'</option>';
+    // $sSelectTheme.='<option value="" '.(!($aCfg->getConfig()['theme']??false) ? 'selected' : '').'>{{userprofile.system_default}} - '.(string) $aSettings['theme'].'</option>';
+    $sSelectTheme.='<option value="">{{userprofile.system_default}} - '.(string) ($aSettings['theme']??'').'</option>';
     foreach(getThemes() as $sTheme){
         $sSelectTheme.='<option value="'.$sTheme.'" '.($sTheme==$aCfg->getConfig()['theme'] ? 'selected' : '').'>'.$sTheme.'</option>';
     }
