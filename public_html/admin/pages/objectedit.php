@@ -121,7 +121,19 @@ foreach($aAttributes as $sKey=>$aProperty){
     $sProperties.='<strong>'.$sKey.'</Strong>: <em>'.$aProperty['create'].'</em><br>';
 }
 
-$sCfgdata='<pre class="config hidden" id="objattributes">{{properties}}:<br><br>'.print_r($o->getAttributes(true), 1).'</pre>';
+$sClassfile=getClassfileFromObjectname($sObject);
+// $sCfgdata='<pre class="config hidden" id="objattributes">{{properties}}:<br><br>'.print_r($o->getAttributes(true), 1).'</pre>';
+$sCfgdata=$sClassfile.'<br><br><textarea name="" class="hidden" id="objclassfile">'.file_get_contents($sClassfile).'</textarea>';
+
+require_once __DIR__.'/../../classes/cm-helper.class.php';
+$codemirror=new cmhelper();
+
+$codemirror->addEditor(
+    'php', 
+    "objclassfile", 
+    ['readonly'=>true]
+);
+
 
 $sMainContent.= $renderAdminLTE->addRow(
     
@@ -130,17 +142,27 @@ $sMainContent.= $renderAdminLTE->addRow(
             'type' => 'info',
             'variant' => 'outline',
             'title' => icon::get('properties').'{{properties}}',
-            'text' => $sProperties .'<hr>'
+            'text' => $sProperties 
+                /*
+                .'<hr>'
                 .$renderAdminLTE->getButton([
                     'class' => 'btn-outline-dark',
                     'text' => icon::get('code').'{{raw}}',
-                    'onclick' => '$(\'#objattributes\').toggleClass(\'hidden\');',
-                ]). '<br><br>'.$sCfgdata,
+                    'onclick' => '$(\'#objsource\').toggleClass(\'hidden\');',
+                ])
+                */
+                .'<hr>'
+                .$sCfgdata
+                ,
             // 'footer' => $sFooterRelations,
         ]),
         12
     )
-);
+)
+        .$codemirror->getHtmlHead()
+        .$codemirror->getJs()
+
+;
 
 $sContextbar .= $renderAdminLTE->getCallout([
         'type' => '',

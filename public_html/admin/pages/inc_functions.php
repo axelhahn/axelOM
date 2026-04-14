@@ -80,6 +80,21 @@ function getClassnameFromObjname($sObjname) {
 }
 
 
+function getClassfileFromObjectname(string $sObjname):string 
+{
+    global $sAppRootDir, $sTabApp;
+    $sMyFile=str_replace('_', '-', $sObjname).'.class.php';
+    foreach([
+        $sAppRootDir.'/'.$sTabApp.'/classes',
+        __DIR__ . '/../../classes',
+        __DIR__ . '/../../vendor/php-abstract-dbo/src',
+    ] as $mydir){
+        if (file_exists($mydir.'/'.$sMyFile)) {
+            return realpath($mydir.'/'.$sMyFile);
+        }
+    }
+    return false;
+}
 
 /**
  * initialize an object from givem object name.
@@ -91,26 +106,13 @@ function getClassnameFromObjname($sObjname) {
  * @return mixed object|string
  */
 function initClass($oDB, $sObject){
-    global $sAppRootDir, $sTabApp;
     if (!$sObject) {
         return renderError(
             '{{msgerr.no_or_invalid_object_name}}',
             '{{msgerr.no_or_invalid_object_name2}}',
         );
     }
-    
-    $sMyFile=str_replace('_', '-', $sObject).'.class.php';
-    $sClassfile='';
-    foreach([
-        $sAppRootDir.'/'.$sTabApp.'/classes',
-        __DIR__ . '/../../classes',
-        __DIR__ . '/../../vendor/php-abstract-dbo/src',
-    ] as $mydir){
-        if (file_exists($mydir.'/'.$sMyFile)) {
-            $sClassfile=$mydir.'/'.$sMyFile;
-            break;
-        }
-    }
+    $sClassfile=getClassfileFromObjectname($sObject);
     if (!$sClassfile) {
         return renderError(
             '{{msgerr.class_file_missing}}',

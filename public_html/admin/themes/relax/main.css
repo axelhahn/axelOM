@@ -32,13 +32,21 @@
 	--navSidebarActiveItemColor: white;
 	--navSidebarActiveIconColor: #acd;
 
+	/*
 	--navSidebarActiveItemBorder: 1px solid #fff;
+	--navSidebarActiveItemBoxShadow: 0.1em 0.1em 0.5em #cde;
+	*/
+	--navSidebarActiveItemBorder: 1px solid #fffc;
 	--navSidebarActiveItemBoxShadow: 0.1em 0.1em 0.5em #cde;
 
 	--navTopItemHoverBg: #fff;
 	--navTopActiveItemBg: linear-gradient(13deg, #ece, #eda);
-	--navTopActiveItemBoxShadow: 0.1em 0.1em 0.5em #cde;
+	/*
 	--navTopActiveItemBorder: 1px solid #fff;
+	--navTopActiveItemBoxShadow: 0.1em 0.1em 0.5em #cde;
+	*/
+	--navTopActiveItemBorder: 1px solid #fff8;
+	--navTopActiveItemBoxShadow: 0.1em 0.1em 0.5em #cde;
 
 	--overlayBg: rgba(0,30,30,0.5);
 	--overlayBoxBordercolor: rgba(0,30,30,0.5);

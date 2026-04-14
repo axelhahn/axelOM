@@ -18,7 +18,7 @@ return [
     'lang' => 'en-en',          // --> admin/lang/<lang>.php
 
     'iconset' => 'fontawesome', // --> classes/icon.class_include_<iconset>.php
-    'theme' => 'relax',         // --> admin/themes/<theme>/main.css
+    'theme' => 'default',       // --> admin/themes/<theme>/main.css
 
     'debug' => true,            // --> true for dev environments only
 
