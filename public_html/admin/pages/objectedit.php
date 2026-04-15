@@ -123,7 +123,12 @@ foreach($aAttributes as $sKey=>$aProperty){
 
 $sClassfile=getClassfileFromObjectname($sObject);
 // $sCfgdata='<pre class="config hidden" id="objattributes">{{properties}}:<br><br>'.print_r($o->getAttributes(true), 1).'</pre>';
-$sCfgdata=$sClassfile.'<br><br><textarea name="" class="hidden" id="objclassfile">'.file_get_contents($sClassfile).'</textarea>';
+$sCfgdata=icon::get('file'). dirname($sClassfile).'/<strong>'.basename($sClassfile).'</strong> ({{readonly}})'
+    .'<br><br>'
+    .'<textarea name="" class="hidden" id="objclassfile">'
+        .file_get_contents($sClassfile)
+    .'</textarea>'
+    ;
 
 require_once __DIR__.'/../../classes/cm-helper.class.php';
 $codemirror=new cmhelper();
