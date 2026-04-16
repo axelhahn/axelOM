@@ -774,7 +774,7 @@ if ($bShowEdit && $bDbTableOk) {
             foreach ($aRelations ?? [] as $aRel) {
                 if (!$appmeta->isRelationAllowed($sObject, $aRel['_totable'])) {
                     $iRelErrors++;
-                    addMsg('error', "{{msgerr.relation_not_allowed}}: $sObject -> <strong>$aRel[table]</strong>");
+                    addMsg('error', "{{msgerr.relation_not_allowed}}: $sObject -> <strong>$aRel[_totable]</strong>");
                 } else {
                     // addMsg('ok', "OK <strong>$aRel[table]</strong>");
                 }

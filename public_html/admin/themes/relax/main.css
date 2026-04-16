@@ -51,7 +51,7 @@
 	--overlayBg: rgba(0,30,30,0.5);
 	--overlayBoxBordercolor: rgba(0,30,30,0.5);
 	--overlayBoxShadow: #345;
-	--formHintBg: #fff1e4;
+	--formHintBg: linear-gradient(13deg, #d0efe8, #f7eee4, #eef);
 	--requiredColor: #c00;
 	--iconcolor: #2ac;
 	--cardBg: #fff4;
