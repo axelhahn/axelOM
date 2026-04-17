@@ -24,6 +24,7 @@ return [
     'yes' => 'fa-solid fa-check',
     'no' => 'fa-solid fa-minus',
     'close' => 'fa-solid fa-ban',
+    'help' => 'fa-solid fa-circle-question',
     // menu icons
 
     'home' => 'fa-solid fa-house',

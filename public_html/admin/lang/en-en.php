@@ -14,6 +14,8 @@ return [
     
     "id" => "English",
 
+    "dateformat" => "m/d/Y",
+
     "nav.home" => "Home",
     "nav.apps" => "Apps",
     "nav.about" => "About ...",
@@ -47,14 +49,21 @@ return [
 
     // ----- page :: about
     "about.title" => "About this backend",
-    "about.text" => '
+
+    "about.source" => "Sourcecode on Github",
+    "about.docs" => "Documentation",
+
+    "about.text.title" => "Information about this tool",
+    "about.text.content" => '
+        Version: <strong>{{APP_VERSION}}</strong><br>
+        Release date: {{APP_DATE}}<br>
+        <br>
         Author: <strong>Axel Hahn</strong><br>
         Programming language: PHP 8<br>
         License: GNU GPL 3.0<br>
-        Sourcecode: <a href="https://github.com/axelhahn/axelOM" target="_blank">Github</a><br>
-        Documentation: axel-hahn.de/docs/<br>
-        <br>
-        <strong>Used Products</strong>:<br>
+        ',
+    "about.thanks.title" => 'Used Products',
+    "about.thanks.content" => '
         Without the inclusion of other products, development takes much longer.<br>
         My thanks go to the developers of the following projects:
         <ul>

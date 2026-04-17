@@ -23,8 +23,8 @@ return [
     '{{BRAND}}'        =>'<div class="sidebar-brand">
                             <a href="?" class="brand-link">
                             <i class="fa-solid fa-cubes"></i> 
-                            <span class="brand-text">'.APP_NAME.'</span>
-                            <span class="brand-text font-weight-light">v'.APP_VERSION.'</span>
+                            <span class="brand-text">{{APP_NAME}}</span>
+                            <span class="brand-text font-weight-light">v{{APP_VERSION}}</span>
                             </a></div>',
     '{{NAVI_LEFT}}'    =>'',
 

@@ -14,6 +14,8 @@ return [
     
     "id" => "Deutsch",
 
+    "dateformat" => "d.m.Y",
+
     "nav.home" => "Start",
     "nav.apps" => "Apps",
     "nav.about" => "&Uuml;ber ...",
@@ -47,14 +49,21 @@ return [
 
     // ----- page :: about
     "about.title" => "&Uuml;ber dieses Backend",
-    "about.text" => '
+
+    "about.source" => "Sourcecode auf Github",
+    "about.docs" => "Dokumentation",
+
+    "about.text.title" => "Programm-Informationen",
+    "about.text.content" => '
+        Version: <strong>{{APP_VERSION}}</strong><br>
+        Release-Datum: {{APP_DATE}}<br>
+        <br>
         Autor: <strong>Axel Hahn</strong><br>
         Programmiersprache: PHP 8<br>
         Lizenz: GNU GPL 3.0<br>
-        Sourcecode: <a href="https://github.com/axelhahn/axelOM" target="_blank">Github</a><br>
-        Dokumentation: axel-hahn.de/docs/<br>
-        <br>
-        <strong>Verwendete Produkte</strong>:<br>
+        ',
+    "about.thanks.title" => 'Verwendete Produkte',
+    "about.thanks.content" => '
         Ohne die Einbindung anderer Produkte w&auml;re die Entwickklung viel aufw&auml;ndiger.<br>
         (M)Ein Dankeschön an die Entwickler der Tools
         <ul>
