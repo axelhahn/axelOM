@@ -168,7 +168,7 @@ class cmhelper {
 
         $this->_sJS.='
             <script>
-                window.onload = function() {
+                window.setTimeout(function() {
                     CodeMorrorEditor'.$iCmCounter.' = CodeMirror.fromTextArea(
                         document.getElementById("'.$sFormid.'"), {
                             '.($sTheme ? "theme: \"$sTheme\"," : '').'
@@ -181,7 +181,7 @@ class cmhelper {
                             '.($aMoreOptions['readonly']??false ? 'readOnly: true,' : '').'
                             mode: "'.($this->aSHLangs[$sMode]['mode'] ?? $sMode).'"
                     });
-                };
+                }, 30);
             </script>            
         ';
 

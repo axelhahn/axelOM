@@ -14,7 +14,8 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 
 const APP_NAME='axel :: OM';
-const APP_VERSION='0.0.55';
+const APP_VERSION='0.0.56';
+const APP_DATE='2026-04-17';
 const DELIM_TITLE='<span></span>';
 
 require_once('../classes/render-adminlte4.class.php');
@@ -333,10 +334,10 @@ $sBreadcrumb='<a href="?page=home">{{nav.home}}</a>'.$sBcSpacer
     }
 
 
+$aReplace['{{PAGE_BANNER}}']=$BANNER;
 $aReplace['{{PAGE_BODY}}']=$BODY;
 $aReplace['{{PAGE_HEADER_LEFT}}']='<h2 class="page-title">'.$TITLE.'</h2>';
 // $aReplace['{{PAGE_HEADER_RIGHT}}']=$sBreadcrumb;
-$aReplace['{{PAGE_BANNER}}']=$BANNER;
 $aReplace['{{JS_BODY_END}}']=$JS_BODYEND ?: '';
 
 $aReplace['{{CONTENT_HOOK_1}}']=$CONTENT_HOOK_1 ?? '';
@@ -354,6 +355,9 @@ foreach([
         };
     }
 }
+$aReplace['{{APP_NAME}}']=APP_NAME;
+$aReplace['{{APP_DATE}}']=date($aReplace['{{dateformat}}'], strtotime(APP_DATE));
+$aReplace['{{APP_VERSION}}']=APP_VERSION;
 
 $sTemplate=file_get_contents('config/page.tpl.php');
 echo $renderAdminLTE->render($sTemplate,$aReplace);

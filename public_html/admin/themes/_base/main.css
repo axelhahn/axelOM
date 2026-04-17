@@ -102,6 +102,13 @@ ins{background-color: #cfc}
 
 .app-footer{background: none; }
 
+.btn-big{
+	padding: 1em;
+}
+.btn-big i{
+	font-size: 200%;
+};
+
 li.nav-item i {color:var(--navIconColor);}
 li.nav-item .active i {color:var(--iconcolor);}
 
