@@ -1582,32 +1582,32 @@ class renderadminlte
             // type = "highlight-<mime>"
             // - highlight-x-php
 
-            if(strstr($aOptions['type'], 'highlight-')){
-                require_once 'cm-helper.class.php';
+            if(strstr((string) $aOptions['type'], 'highlight-')){
+                require_once '../vendor/php-codemirror/classes/cm-helper.class.php';
 
                 if(!($codemirror??false)){
                     $codemirror=new cmhelper();
                 }
-                $codemirror->addEditor($aOptions['type'], $sFormid);
+                $codemirror->addEditor((string) preg_replace('/highlight-/', '', (string) $aOptions['type']), $sFormid);
             }
         }
         $aElement['class'] = ''
             . 'form-control '
-            . ($aOptions['class'] ?? '')
+            . ((string) ($aOptions['class'] ?? ''))
         ;
         $sLabel = $this->_renderLabel($aOptions);
-        $sHint = $aOptions['hint'] ?? '';
+        $sHint = (string) ($aOptions['hint'] ?? '');
         $aElement['id'] = $sFormid;
 
-        $value = $aOptions['value'] ?? '';
+        $value = (string) $aOptions['value'] ?? '';
 
         foreach (['_infos', 'label', 'debug', 'type', 'value', 'hint'] as $sDeleteKey) {
-            if (isset($aElement[$sDeleteKey])) {
+            // if (isset($aElement[$sDeleteKey])) {
                 unset($aElement[$sDeleteKey]);
-            }
+            // }
         }
         // remove required field if it is set to false or 0
-        if(isset($aElement['required']) && !$aElement['required']){
+        if(!($aElement['required']??false)){
             unset($aElement['required']);
         }
 

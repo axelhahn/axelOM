@@ -78,6 +78,7 @@ return [
             <li><a href="https://jquery.com/" target="_blank">jQuery</a></li>
             <li><a href="https://os-docs.iml.unibe.ch/adminlte-renderer/" target="_blank">AdminLTE-Renderer - class</a> (Institut for Medical Education; University of Bern)</li>
             <li><a href="https://github.com/axelhahn/php-abstract-dbo" target="_blank">php-abstract-dbo </a> - Axels Abstract PDO class (Axel Hahn)</li>
+            <li><a href="https://github.com/axelhahn/php-codemirror" target="_blank">php-codemirror</a> - CodeMirror class for input fields with syntax highlighting (Axel Hahn)</li>
         </ul>
         ',
 

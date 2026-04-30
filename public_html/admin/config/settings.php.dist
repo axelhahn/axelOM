@@ -30,6 +30,7 @@ return [
             'appsettings' => true,
         ],
         */
+        'theme' => 'duotone-light',
     ],
 
     // if "acl" is missing or empty --> sets admin user for everything

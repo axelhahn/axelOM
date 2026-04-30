@@ -152,7 +152,7 @@ function initClass($oDB, $sObject){
  */
 function editorInit(array $aOptions = []): string
 {
-    require_once __DIR__.'/../../classes/cm-helper.class.php';
+    require_once __DIR__.'/../../vendor/php-codemirror/classes/cm-helper.class.php';
     if(!($codemirror??false)){
         $codemirror=new cmhelper();
     }
@@ -194,15 +194,14 @@ function editorInit(array $aOptions = []): string
  *                        - content  {string} The initial content of the editor.
  *                        - file     {string} The initial content of the editor loaded from given file
  *                        - mime     {string} mode for syntax highlighting; default: "text/x-php"
- *                        - readonly {bool}   flag: readonly or changes can be saved?
+ *                        - readOnly {bool}   flag: readonly or changes can be saved?
  *                        - theme    {string} Theme to use. See public_html/vendor/codemirror/6.65.7/theme/
  *                        - url      {string} POST url of the form
  * @return string The HTML code for the card with editor
  */
 function editorInCard(array $aOptions = []): string
 {
-    global $oCM;
-    $bReadonly=$aOptions['readonly'] ?? false;
+    $bReadonly=$aOptions['readOnly'] ?? false;
     $renderAdminLTE=new renderadminlte();
     return ''
         .$renderAdminLTE->getCard([

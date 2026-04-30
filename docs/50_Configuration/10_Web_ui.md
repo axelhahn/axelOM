@@ -13,7 +13,16 @@ return [
     'iconset' => 'fontawesome', // --> classes/icon.class_include_<iconset>.php
     'theme' => 'relax',         // --> admin/themes/<theme>/main.css
 
-    'debug' => true,            // --> true for dev environments only
+    'debug' => false,           // --> true for dev environments only
+    
+    // do not edit configurations in web ui    
+    'editor' => [
+        'readonly'=>[
+            'globalsettings' => true,
+            'appsettings' => true,
+        ],
+        'theme' => 'duotone-light',
+    ],
     
     // if "acl" is missing or empty --> sets admin user for everything
     'acl'=>[
@@ -71,6 +80,13 @@ return [
     * Limit access to the web ui: 
       * enable "acl" for a single user/ multiple users and/ or 
       * limit access by ip address
+
+### Editor
+
+| Key          | Type        | Description
+|--            |--           |-- 
+| `'readonly'` | {array}     | Set readonly flags for the editor. Subkeys are<br>- globalsettings<br>- appsettings
+| `'theme'`    | {string}    | Theme for the editor.<br>default: `"duotone-light"`; for available themes see public_html/vendor/php-codemirror/classes/cm-helper.themes.php
 
 ### ACL
 

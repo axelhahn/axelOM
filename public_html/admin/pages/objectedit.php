@@ -130,15 +130,14 @@ $sCfgdata=icon::get('file'). dirname($sClassfile).'/<strong>'.basename($sClassfi
     .'</textarea>'
     ;
 
-require_once __DIR__.'/../../classes/cm-helper.class.php';
+require_once __DIR__.'/../../vendor/php-codemirror/classes/cm-helper.class.php';
 $codemirror=new cmhelper();
 
 $codemirror->addEditor(
     'php', 
     "objclassfile", 
-    ['readonly'=>true]
+    ['readOnly'=>true, 'theme'=>$aSettings['editor']['theme'] ?? "default"]
 );
-
 
 $sMainContent.= $renderAdminLTE->addRow(
     
@@ -164,9 +163,8 @@ $sMainContent.= $renderAdminLTE->addRow(
         12
     )
 )
-        .$codemirror->getHtmlHead()
-        .$codemirror->getJs()
-
+.$codemirror->getHtmlHead()
+.$codemirror->getJs()
 ;
 
 $sContextbar .= $renderAdminLTE->getCallout([
