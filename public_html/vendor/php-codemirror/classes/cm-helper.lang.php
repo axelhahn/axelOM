@@ -6,6 +6,7 @@
  * WORK IN PROGRESS 
  * These are just a few of the supported languages!
  * @see https://codemirror.net/5/mode/index.html
+ * @see https://codemirror.net/5/mode/meta.js  
  * 
  * @var array
  */
@@ -34,11 +35,16 @@ return [
         'javascript'=>['load'=>['javascript'], 'mode'=> "text/javascript"], // text/javascript, application/javascript, application/x-javascript, text/ecmascript, application/ecmascript, application/json, application/x-json, application/manifest+json, application/ld+json, text/typescript, application/typescript
         'json'=>      ['load'=>['javascript'], 'mode'=> "application/json"],
 
-        'htmlmixed'=> ['load'=>['xml', 'javascript', 'css', 'htmlmixed'],                 'mode'=> "htmlmixed"],
+        // 'htmlmixed'=> ['load'=>['xml', 'javascript', 'css', 'htmlmixed'],                 'mode'=> "htmlmixed"],
+        'htmlmixed'=> ['load'=>['htmlmixed'], 'mode'=> "htmlmixed"],
+
+        'markdown' => ['load'=>['markdown'], 'mode'=> "text/x-markdown"],
+
         'php'=>       ['load'=>['xml', 'javascript', 'css', 'htmlmixed', 'clike', 'php'], 'mode'=> "application/x-httpd-php"],
 
         'shell'=>     ['load'=>['shell'], 'mode'=> "text/x-sh"], // text/x-sh, application/x-sh
+        'sql'=>       ['load'=>['shell'], 'mode'=> "text/x-sql"],
 
-        'yaml'=>      ['load'=>['yaml'],       'mode'=> "text/x-yaml"],
+        'yaml'=>      ['load'=>['yaml'],  'mode'=> "text/x-yaml"],
 
 ];

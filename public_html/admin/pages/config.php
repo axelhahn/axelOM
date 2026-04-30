@@ -57,7 +57,8 @@ $s=''
         'url' => "?app=$sTabApp&page=config",
         'title' => icon::get('config') . "./apps/$sTabApp/config/objects.php",
         'file' => $sFile,
-        'readonly' => $aSettings['editor']['readonly']['appsettings'] ?? false
+        'readOnly' => $aSettings['editor']['readonly']['appsettings'] ?? false,
+        'theme' => $aSettings['editor']['theme'] ?? "default"
     ])
 
     /*

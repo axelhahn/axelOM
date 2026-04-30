@@ -76,7 +76,8 @@ return [
             <li><a href="https://fontawesome.com/" target="_blank">Fontawesome</a> (Icons)</li>
             <li><a href="https://jquery.com/" target="_blank">jQuery</a></li>
             <li><a href="https://os-docs.iml.unibe.ch/adminlte-renderer/" target="_blank">AdminLTE-Renderer - Klasse</a> (Institut f&uuml;r Medizinische Lehre; Universit&auml;t Bern)</li>
-            <li><a href="https://github.com/axelhahn/php-abstract-dbo" target="_blank">php-abstract-dbo </a> - Axels Abstract PDO Klasse (Axel Hahn)</li>
+            <li><a href="https://github.com/axelhahn/php-abstract-dbo" target="_blank">php-abstract-dbo</a> - Axels Abstract PDO Klasse (Axel Hahn)</li>
+            <li><a href="https://github.com/axelhahn/php-codemirror" target="_blank">php-codemirror</a> - CodeMirror Klasse für Eingabefelder mit Syntax Highlighting (Axel Hahn)</li>
         </ul>
         ',
 

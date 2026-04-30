@@ -59,7 +59,8 @@ $s = ''
         'url' => '?page=adminconfig',
         'title' => icon::get('config') . "./config/settings.php",
         'file' => $sFile,
-        'readonly' => $aSettings['editor']['readonly']['globalsettings'] ?? false
+        'readOnly' => $aSettings['editor']['readonly']['globalsettings'] ?? false,
+        'theme' => $aSettings['editor']['theme'] ?? "default"
     ])
 ;
 
