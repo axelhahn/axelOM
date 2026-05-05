@@ -44,14 +44,14 @@ if($sTabApp){
     // ----------------------------------------------------------------------
     // Actions
     // ----------------------------------------------------------------------
-    $sAction=queryparam::post('action', '/^[a-z_]*$/');
+    $sAction=queryparam::post('action', '/^[a-z_\-]*$/');
 
     $sOutAction='';
 
     include('inc_set_db.php'); // set $oDB
 
     if($sAction){
-        $sFile=queryparam::post('file', '/^[a-z\.0-9\-]*$/');
+        $sFile=queryparam::post('file', '/^[a-z\.0-9\-\_]*$/');
         $sBackupfile="$sBackuppath/$sFile";
 
         switch ($sAction) {
@@ -200,11 +200,14 @@ if($sTabApp){
             case 'view':
 
                 $sBackupfile="$sBackuppath/$sFile";
+                require_once __DIR__.'/../../vendor/php-codemirror/classes/cm-helper.class.php';
+                $codemirror=new cmhelper();
 
                 header("Content-Type: text/json");
                 // header('Content-Disposition: attachment; filename="'.$sFile.'"');
                 // echo '<link rel="stylesheet" href="/vendor/admin-lte/4.0.0-beta1/css/adminlte.min.css">';
                 // echo '<link rel="stylesheet" href="main.css">';
+
                 echo '<div ondblclick="location.reload();">'
                     .'<pre>'
                     .realpath($sBackuppath)."/<strong>".basename($sBackupfile)."</strong><br>"
@@ -213,9 +216,22 @@ if($sTabApp){
                     .filesize($sBackupfile)." byte<br>"
                     .'</pre>'
                     ."<button onclick='location.reload();' style='padding: 0.6em 1em;'>&laquo; back</button><br>"
-                    ."<textarea readonly style='width:100%;height:85%;'>";
-                readfile($sBackupfile);
+                    ."<textarea readonly id='editor' style='width:100%;height:85%;'>";
+                    readfile($sBackupfile);
                 echo "</textarea></div>";
+
+                $codemirror->addEditor(
+                            'json',
+                            'editor',
+                            [
+                                'readOnly'=>true, 
+                                'theme'=>$aSettings['editor']['theme_readonly'] ?? "default"
+                            ],
+                    )
+                    ;
+                    echo $codemirror->getHtmlHead()
+                    . $codemirror->getJs()
+                    ;
                 die();
 
                 break;

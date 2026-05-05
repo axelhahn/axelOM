@@ -136,7 +136,7 @@ $codemirror=new cmhelper();
 $codemirror->addEditor(
     'php', 
     "objclassfile", 
-    ['readOnly'=>true, 'theme'=>$aSettings['editor']['theme'] ?? "default"]
+    ['readOnly'=>true, 'theme'=>$aSettings['editor']['theme_readonly'] ?? "default"]
 );
 
 $sMainContent.= $renderAdminLTE->addRow(

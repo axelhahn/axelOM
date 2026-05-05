@@ -51,14 +51,17 @@ if (isset($_POST['action'])) {
     }
 }
 
+$bReadOnly = $aSettings['editor']['readonly']['appsettings'] ?? false;
 
 $s=''
     . editorInCard([
         'url' => "?app=$sTabApp&page=config",
         'title' => icon::get('config') . "./apps/$sTabApp/config/objects.php",
         'file' => $sFile,
-        'readOnly' => $aSettings['editor']['readonly']['appsettings'] ?? false,
-        'theme' => $aSettings['editor']['theme'] ?? "default"
+        'readOnly' => $bReadOnly,
+        'theme' => $bReadOnly 
+            ? ($aSettings['editor']['theme_readonly'] ?? "duotone-light")
+            : $aSettings['editor']['theme'] ?? "default"
     ])
 
     /*

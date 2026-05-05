@@ -18,6 +18,7 @@
  * 2026-02-17  ___  ah  change _pdo private -> protected
  * 2026-02-20  ___  ah  lint fixes using Mago
  * 2026-03-15  ___  ah  implement 1:n relations
+ * 2026-04-23  ___  ah  __last_edit__
  * ======================================================================
  */
 
@@ -1053,7 +1054,6 @@ class pdo_db_base
 
         if (is_array($aRelations) && count($aRelations)) {
             foreach ($aRelations as $aEntry) {
-                $aTmp = $this->_getRelationSortorder($aEntry['from_table'], $aEntry['from_id'], $aEntry['from_column'], $aEntry['to_table'], $aEntry['to_id'], $aEntry['to_column']);
                 $sTableKey = $this->_table . ':' . $this->id() == $aEntry['from_table'] . ':' . $aEntry['from_id']
                     ? 'to'
                     : 'from';
