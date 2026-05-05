@@ -54,13 +54,17 @@ foreach(array_keys($aGroups) as $sGroup){
     }
 }
 
+$bReadOnly = $aSettings['editor']['readonly']['globalsettings'] ?? false;
+
 $s = ''
     . editorInCard([
         'url' => '?page=adminconfig',
         'title' => icon::get('config') . "./config/settings.php",
         'file' => $sFile,
-        'readOnly' => $aSettings['editor']['readonly']['globalsettings'] ?? false,
-        'theme' => $aSettings['editor']['theme'] ?? "default"
+        'readOnly' => $bReadOnly,
+        'theme' => $bReadOnly 
+            ? ($aSettings['editor']['theme_readonly'] ?? "duotone-light")
+            : $aSettings['editor']['theme'] ?? "default"
     ])
 ;
 
