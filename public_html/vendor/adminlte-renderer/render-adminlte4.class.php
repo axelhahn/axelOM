@@ -1,5 +1,7 @@
 <?php
 require_once 'htmlelements.class.php';
+@include_once __DIR__.'/../php-codemirror/classes/cm-helper.class.php';
+
 /**
  * ______________________________________________________________________
  * 
@@ -171,6 +173,7 @@ class renderadminlte
      */
     protected object $_oHtml;
 
+    protected object $_oCodemirror;
 
     // ----------------------------------------------------------------------
     // 
@@ -181,7 +184,11 @@ class renderadminlte
     {
         $this->_oHtml = new htmlelements();
         $this->_initElements();
-        // return true;
+
+        // initialize codemirror helper
+        if(class_exists('cmhelper')){
+            $this->_oCodemirror = new cmhelper();
+        }
     }
 
     // ----------------------------------------------------------------------
@@ -1567,28 +1574,37 @@ class renderadminlte
 
         // echo '<pre>'.print_r($aOptions, 1).'</pre>';
         $sFormid = ($aOptions['id']??false
-            ? $aOptions['id']
+            ? (string) $aOptions['id']
             : ($aOptions['name'] ?? 'field') . '-' . md5(microtime(true))
         );
 
         $aOptions['class']??='';
         if($aOptions['type']??''){
 
-            // type = "html"
             if($aOptions['type']=='html'){
                 $aOptions['class'].=' summernote';
             }
 
-            // type = "highlight-<mime>"
-            // - highlight-x-php
-
             if(strstr((string) $aOptions['type'], 'highlight-')){
-                require_once '../vendor/php-codemirror/classes/cm-helper.class.php';
-
-                if(!($codemirror??false)){
-                    $codemirror=new cmhelper();
+                if(!($this->_oCodemirror??false)){
+                    // echo "ERROR: cm-helper.class.php was not loaded before using textarea with <strong>type=$aOptions[type]</strong>.<br>";
+                } else {
+                    $this->_oCodemirror->addEditor(
+                        (string) preg_replace('/highlight-/', '', (string) $aOptions['type']), 
+                        $sFormid,
+                        [
+                            'height' => $aOptions['cm_height'] ?? (
+                                ($aOptions['rows']??false) 
+                                    ? ((int) $aOptions['rows'])*1.5 .'em' 
+                                    : null
+                                ),
+                            'theme' => $aOptions['cm_theme'] ?? 'default',
+                            'readOnly' => $aOptions['cm_readonly'] ?? false,
+                            'lineNumbers' => $aOptions['cm_linenumbers'] ?? true,
+                            'lineWrapping' => $aOptions['cm_linewrapping'] ?? true,
+                        ]
+                    );
                 }
-                $codemirror->addEditor((string) preg_replace('/highlight-/', '', (string) $aOptions['type']), $sFormid);
             }
         }
         $aElement['class'] = ''
@@ -1601,10 +1617,11 @@ class renderadminlte
 
         $value = (string) $aOptions['value'] ?? '';
 
-        foreach (['_infos', 'label', 'debug', 'type', 'value', 'hint'] as $sDeleteKey) {
-            // if (isset($aElement[$sDeleteKey])) {
-                unset($aElement[$sDeleteKey]);
-            // }
+        foreach ([
+            '_infos', 'label', 'debug', 'type', 'value', 'hint',
+            'cm_height', 'cm_theme', 'cm_readonly', 'cm_linenumbers', 'cm_linewrapping'
+        ] as $sDeleteKey) {
+            unset($aElement[$sDeleteKey]);
         }
         // remove required field if it is set to false or 0
         if(!($aElement['required']??false)){
@@ -1617,9 +1634,29 @@ class renderadminlte
             $sFormid,
             $sHint
         ) 
-        . (($codemirror??false) ? $codemirror->getHtmlHead().$codemirror->getJs() : '')
         ;
 
+    }
+
+    /**
+     * Summary of getHtmlHead
+     * @return string
+     */
+    public function getHtmlHead(): string
+    {
+        return ($this->_oCodemirror??false)
+            ? $this->_oCodemirror->getHtmlHead()
+            : ''
+            ;
+            
+    }
+
+    public function getJs(): string
+    {
+        return ($this->_oCodemirror??false)
+            ? $this->_oCodemirror->getJs()
+            : ''
+            ;
     }
 
     /**
