@@ -225,7 +225,8 @@ if($sTabApp){
                             'editor',
                             [
                                 'readOnly'=>true, 
-                                'theme'=>$aSettings['editor']['theme_readonly'] ?? "default"
+                                'theme'=>$aSettings['editor']['theme_readonly'] ?? "default",
+                                'height' => "80vh",
                             ],
                     )
                     ;
