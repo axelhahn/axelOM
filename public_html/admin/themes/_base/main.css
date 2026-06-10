@@ -207,7 +207,7 @@ table tr.info{}
 table tr.warning>td{background:#f0e0c0 !important;}
 
 .card{background: var(--cardBg); border: none; margin-bottom: 1rem;}
-.col-md-3 .card{border: var(--cardHomeBorder); }
+.col-md-3 .card{border: var(--cardHomeBorder); transition: border-color 0.5s ease-in-out;}
 .col-md-3 .card:hover{border-color: var(--cardHomeBorderHover);}
 
 .card-body .preview {border: 1px dotted; padding: 1em;}
