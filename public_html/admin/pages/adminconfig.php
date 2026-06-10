@@ -62,6 +62,7 @@ $s = ''
         'title' => icon::get('config') . "./config/settings.php",
         'file' => $sFile,
         'readOnly' => $bReadOnly,
+        'height' => "50vh",
         'theme' => $bReadOnly 
             ? ($aSettings['editor']['theme_readonly'] ?? "duotone-light")
             : $aSettings['editor']['theme'] ?? "default"

@@ -59,6 +59,7 @@ $s=''
         'title' => icon::get('config') . "./apps/$sTabApp/config/objects.php",
         'file' => $sFile,
         'readOnly' => $bReadOnly,
+        'height' => "60vh",
         'theme' => $bReadOnly 
             ? ($aSettings['editor']['theme_readonly'] ?? "duotone-light")
             : $aSettings['editor']['theme'] ?? "default"
