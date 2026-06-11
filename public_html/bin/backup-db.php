@@ -117,10 +117,10 @@ foreach(array_keys($adminmetainfos->getApps()) as $sAppname){
         exit(1);
     }
 
-    if(file_exists($sBackupfile)){
-        echo "WIP: deleting backup file '$sBackupfile'...\n";
-        unlink($sBackupfile);
-    }
+    // if(file_exists($sBackupfile)){
+    //     echo "WIP: deleting backup file '$sBackupfile'...\n";
+    //     unlink($sBackupfile);
+    // }
 
     $aBackupFiles=[];
     foreach(glob($sBackupBase."*.jsonlines") as $sFile){
