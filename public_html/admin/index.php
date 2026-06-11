@@ -14,11 +14,12 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 
 const APP_NAME='axel :: OM';
-const APP_VERSION='0.0.58';
-const APP_DATE='2026-05-05';
+const APP_VERSION='0.0.59';
+const APP_DATE='2026-06-12';
 const DELIM_TITLE='<span></span>';
 
-require_once('../classes/render-adminlte4.class.php');
+require_once('../vendor/adminlte-renderer/render-adminlte4.class.php');
+
 require_once('classes/adminmeta.class.php');
 require_once('classes/adminacl.class.php');
 require_once('../classes/appmeta.class.php');
@@ -333,6 +334,8 @@ $sBreadcrumb='<a href="?page=home">{{nav.home}}</a>'.$sBcSpacer
             ;    
     }
 
+$aReplace['{{HTML_HEAD}}'].=$renderAdminLTE->getHtmlHead();
+$JS_BODYEND.=$renderAdminLTE->getJs();
 
 $aReplace['{{PAGE_BANNER}}']=$BANNER;
 $aReplace['{{PAGE_BODY}}']=$BODY;

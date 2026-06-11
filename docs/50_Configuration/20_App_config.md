@@ -1,4 +1,4 @@
-## Structure
+## Structure of an application
 
 Each application is below the apps folder.
 That one has this structure:

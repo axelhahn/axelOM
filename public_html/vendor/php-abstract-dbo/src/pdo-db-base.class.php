@@ -18,7 +18,7 @@
  * 2026-02-17  ___  ah  change _pdo private -> protected
  * 2026-02-20  ___  ah  lint fixes using Mago
  * 2026-03-15  ___  ah  implement 1:n relations
- * 2026-04-23  ___  ah  __last_edit__
+ * 2026-06-04  ___  ah  extend delete(): add hook hookDeletePre()
  * ======================================================================
  */
 
@@ -713,13 +713,33 @@ class pdo_db_base
 
     /**
      * Delete entry by a given id or current item
-     * @param  integer  $iId   optional: id of the entry to delete; default: delete current item
+     * It can be extended using hooks (can be private methods) in your object class.
+     * Sequence:
+     * - hookDeletePre() - your optional hook
+     * - delete relations to the current object
+     * - hookDelete()    - your optional hook
+     * - delete item in object
+     * 
+     * @param  integer  $iId   optional: id of the entry to delete; default: 0 (current item)
      * @return bool
      */
     public function delete(int $iId = 0): bool
     {
         $iId = $iId ?: $this->id();
         if ($iId) {
+            if(method_exists($this, 'hookDeletePre')){
+                if($iId){
+                    $this->read($iId,);
+                }
+                if(!$this->{'hookDeletePre'}()) {
+                    $this->_log(
+                        PB_LOGLEVEL_ERROR,
+                        __METHOD__,
+                        "[$this->_table]->hookDeletePre() failed."
+                    );
+                    return false;
+                };
+            }
             if ($this->relDeleteAll($iId)) {
 
                 if(method_exists($this, 'hookDelete')){
@@ -942,7 +962,7 @@ class pdo_db_base
     /**
      * Create a relation from the current item to an id of a target object
      * @param  string  $sToTable     target object
-     * @param  string  $sToId        id of target object
+     * @param  int     $iToId        id of target object
      * @param  string  $sFromColumn  optional: source column
      * @return bool
      */
@@ -1054,6 +1074,7 @@ class pdo_db_base
 
         if (is_array($aRelations) && count($aRelations)) {
             foreach ($aRelations as $aEntry) {
+                $aTmp = $this->_getRelationSortorder($aEntry['from_table'], $aEntry['from_id'], $aEntry['from_column'], $aEntry['to_table'], $aEntry['to_id'], $aEntry['to_column']);
                 $sTableKey = $this->_table . ':' . $this->id() == $aEntry['from_table'] . ':' . $aEntry['from_id']
                     ? 'to'
                     : 'from';
@@ -1211,71 +1232,6 @@ class pdo_db_base
     }
 
     /**
-     * Get array of all related objects of a given object type
-     * 
-     * @param string $sObjectname  name of the object type
-     * @return array
-    public function relReadObjects(string $sObjectname): array
-    {
-        $aRel=$this->relRead(['table' => $sObjectname]);
-        $aReturn=[];
-        foreach($aRel['_targets']??[] as $aTarget){
-            $aReturn[]=$aTarget['_target'];
-        }
-        return $aReturn;
-    }
-     */
-
-    /**
-     * Update a single relation from current item with new value
-     * @param  string   $sRelKey     key of the relation; a string like 'table:id'
-     * @param  integer  $iItemvalue  new id to on target db
-     * @return bool
-    public function relUpdate(string $sRelKey, int $iItemvalue): bool
-    {
-        $this->_wd(__METHOD__ . "($sRelKey, $iItemvalue)");
-
-        if (!isset($this->_aRelations['_targets'][$sRelKey])) {
-            $this->_log(
-                PB_LOGLEVEL_ERROR, 
-                __METHOD__ . "($sRelKey)", 
-                "[$this->_table] The given key does not exist."
-            );
-            return false;
-        }
-        if (!isset($this->_aRelations['_targets'][$sRelKey]['_relid'])) {
-            $this->_log(
-                PB_LOGLEVEL_ERROR, 
-                __METHOD__ . "($sRelKey)", 
-                "[$this->_table] The key [_relid] was not found."
-            );
-            return false;
-        }
-
-        if (
-            is_array(
-                $this->makeQuery(
-                    'UPDATE `pdo_db_relations` SET to_id = :to_id WHERE id = :id',
-                    [
-                        'id' => $this->_aRelations['_targets'][$sRelKey]['_relid'],
-                        'to_id' => $iItemvalue,
-                    ]
-                )
-            )
-        ) {
-            return true;
-        }
-        ;
-        $this->_log(
-            PB_LOGLEVEL_ERROR, 
-            __METHOD__ . "($sRelKey, $iItemvalue)", 
-            "Unable to update relation."
-        );
-        return false;
-    }
-     */
-
-    /**
      * Delete a single relation from current item.
      * If you want to delete all relations of a single item, use relDeleteAll()
      * 
@@ -1298,7 +1254,7 @@ class pdo_db_base
     /**
      * Delete all relations of a single item
      * called by delete(ID) before deleting the item itself
-     * @param  integer  $iId  if of an item; default: false (=current item)
+     * @param  integer  $iId  if of an item; default: 0 (=current item)
      * @return bool
      */
     public function relDeleteAll(int $iId = 0): bool
@@ -1310,9 +1266,10 @@ class pdo_db_base
             $tmpItem = $this->_aItem;
             $tmpRel = $this->_aRelations;
             $this->read($iId, true);
+        } else {
+            $this->_relRead(); // read/ update relations of current item 
         }
 
-        // echo 'Relations: <pre>'.print_r($this->_aRelations, 1).'</pre>'; 
         $bOK = true;
         foreach ($this->_aRelations??[] as $aRelation) {
             $bOK = $bOK && $this->relDelete($aRelation['id']);
@@ -1322,6 +1279,8 @@ class pdo_db_base
         if (isset($tmpItem)) {
             $this->_aItem = $tmpItem;
             $this->_aRelations = $tmpRel;
+        } else {
+            $this->_relRead(); // read/ update relations of current item 
         }
         return $bOK;
     }

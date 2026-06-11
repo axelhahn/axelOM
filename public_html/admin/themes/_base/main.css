@@ -44,6 +44,9 @@
 	--iconcolor: #aaa;
 
 	--cardBg: #fff;
+	--cardHomeBorder: 2px solid #8881;
+	--cardHomeBorderHover: #8886;
+
 	--tileNumberColor: #aaa;
 
 	--pagehintColor: #555;
@@ -203,7 +206,10 @@ table tr.error>td {background:#f0e0e0 !important;}
 table tr.info{}
 table tr.warning>td{background:#f0e0c0 !important;}
 
-.card{background: var(--cardBg);}
+.card{background: var(--cardBg); border: none; margin-bottom: 1rem;}
+.col-md-3 .card{border: var(--cardHomeBorder); transition: border-color 0.5s ease-in-out;}
+.col-md-3 .card:hover{border-color: var(--cardHomeBorderHover);}
+
 .card-body .preview {border: 1px dotted; padding: 1em;}
 .card-body .preview *{max-width: 100%;max-height: 100%;}
 
@@ -212,7 +218,6 @@ table tr.warning>td{background:#f0e0c0 !important;}
 .callout, .card, .info-box {
 	box-shadow: 0 0 1px rgba(0,0,0,.125),0 0.3em 1em rgba(0,150,200,.1); 
 }
-.card{border: none; margin-bottom: 1rem;}
 .col-md-2 .callout{
 	background: #fffa;
 }
@@ -258,13 +263,13 @@ datalist {
 
 /** Codemirror **/
 div.CodeMirror {
-	font-family: 'Courier New', Courier, monospace; font-size: 0.8em; height: 30em;
+	font-family: 'Courier New', Courier, monospace; font-size: 0.8em; height: 20em;
 	resize: vertical;
 	/*overflow: auto !important;*/
-};
+}
 
 
 /* --------- generic classes -----------*/
 
-.height10em{min-height: 10em;}
 .display-none{display: none;}
+.height10em{min-height: 10em; }

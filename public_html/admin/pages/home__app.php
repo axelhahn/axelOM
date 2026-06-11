@@ -19,11 +19,12 @@ if(!$acl->canView($sTabApp)){
 
 $sContextbar='';
 
+$iObjects=count($appmeta->getObjects()??[]);
 $TITLE='<strong>'
         . icon::get($appmeta->getAppicon()) 
         . $appmeta->getAppname()
     .'</strong>'
-    .' ('.count($appmeta->getObjects()??[]).')'
+    ." ($iObjects)"
     ;
 $BANNER=$appmeta->getApphint();
 $s='';
@@ -79,7 +80,7 @@ foreach($appmeta->getObjects() as $sObj=>$aObjData){
             'type'=>$iCount ? 'success' : 'secondary',
             'title'=>"{{items}}: $iCount",
             'text'=>" $iCount ",
-        ]);;
+        ]);
     } else {
         $sItems=$renderAdminLTE->getBadge([
             'type'=>'secondary',
@@ -95,7 +96,7 @@ foreach($appmeta->getObjects() as $sObj=>$aObjData){
                 'text' => ''
                     . ($appmeta->getObjectHint($sObj) ? $appmeta->getObjectHint($sObj).' ' : ''),
                 // 'variant' => '',
-                'class' => 'height10em'
+                'class' => 'height10em',
             ]),
             3
         );

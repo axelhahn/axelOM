@@ -22,7 +22,7 @@ class example extends pdo_db_base{
         // ... more properties
     ];
 
-    public function __construct(object $oDB)
+    public function __construct(pdo_db $oDB)
     {
         parent::__construct(__CLASS__, $oDB);
     }

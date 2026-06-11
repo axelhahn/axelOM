@@ -119,7 +119,7 @@ But it is not completely static to put these options into `$_aProperties` of the
 As anexample here is the definition for a column of an object that will show a dropdown. In the `_aProperties` array the options are defined as an empty array.
 
 ```php
-class objprogramminglanguages extends pdo_db_base{
+class objprogramminglanguagesexample extends pdo_db_base{
 
     /**
      * hash for a table
@@ -153,7 +153,7 @@ To fill in whatever into the options[] you can add some logic into the construct
 
 ```php
 
-    public function __construct(object $oDB)
+    public function __construct(pdo_db $oDB)
     {
         parent::__construct(__CLASS__, $oDB);
 

@@ -55,6 +55,8 @@
 	--requiredColor: #c00;
 	--iconcolor: #2ac;
 	--cardBg: #fff4;
+	--cardHomeBorder: 2px solid #8881;
+	--cardHomeBorderHover: #fcb;
 	--cardHeaderBg: none;
 	--breadcrumbDelimterColor: #d72;
 
