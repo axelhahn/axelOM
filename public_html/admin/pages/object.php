@@ -1058,7 +1058,9 @@ if ($bShowEdit && $bDbTableOk) {
                         . $aRelation['_column']
                         . '</td>'
                         . '<td>'
-                        . $sObject . ' &raquo; ' . $aRelation['_totable'].( $aRelation['_tocolumn'] ? " : ". $aRelation['_tocolumn'] : '')
+                            . ''. $sObject . ' --&rsaquo; ' . $aRelation['_totable']
+                            .( $aRelation['_tocolumn'] ? " :: ". $aRelation['_tocolumn'] : '')
+                            . ":".$aRelation['_toid']
                         . '</td>'
                         . '<td align="right"><nobr>'
                         . $sBtnEdit
