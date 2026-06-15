@@ -19,6 +19,7 @@
  * 2026-02-20  ___  ah  lint fixes using Mago
  * 2026-03-15  ___  ah  implement 1:n relations
  * 2026-06-04  ___  ah  extend delete(): add hook hookDeletePre()
+ * 2026-06-16  ___  ah  fix save lookup relations with multiple values (arrays)
  * ======================================================================
  */
 
@@ -645,7 +646,7 @@ class pdo_db_base
                 foreach($aItemValues as $iItemvalue){
                     $iItemvalue = (int) $iItemvalue;
 
-                    $sRelKey = $this->_getRelationKey($sTargetTable, 0, $sCol);
+                    // $sRelKey = $this->_getRelationKey($sTargetTable, 0, $sCol);
                     if($aLeftover[$iItemvalue]??false){
                         // exists
                     } else {
@@ -660,8 +661,8 @@ class pdo_db_base
                 foreach($aLeftover as $iLeftover){
                     // TO DELETE
                     $bRefresh = true;
-                    $this->_wd(__METHOD__ . ' Delete unneeded relation ' . $sRelKey);
-                    $this->relDelete($iLeftover);
+                    $this->_wd(__METHOD__ . ' Delete unneeded relation id ' . $iLeftover);
+                    $this->relDelete((int) $iLeftover);
                     $bRefresh = true;
                 }
 
@@ -851,7 +852,7 @@ class pdo_db_base
     {
         $sReturn = ''
             . (isset($sSourceCol) && $sSourceCol > '')
-            ? $sToTable . ':column__' . $sSourceCol
+            ? $sToTable . ':' . $iToId . ':column__' . $sSourceCol
             : ((isset($sToCol) && $sToCol > '')
                 ? $sToTable . ':' . $iToId . ':' . $sToCol
                 : $sToTable . ':' . $iToId
@@ -1184,13 +1185,13 @@ class pdo_db_base
         $aReturn = [];
         foreach ($this->_aRelations as $aRelation) {
             $bAdd=true;
-            if (($aFilter['table']??false) && $aRelation['_totable'] !== $aFilter['table']) {
+            if (($aFilter['table']??false) && ($aRelation['_totable']??false) !== $aFilter['table']) {
                 $bAdd=false;
             }
-            if (($aFilter['column']??false) && $aRelation['_tocolumn'] !== $aFilter['column']) {
+            if (($aFilter['column']??false) && ($aRelation['_tocolumn']??false) !== $aFilter['column']) {
                 $bAdd=false;
             }
-            if (($aFilter['property']??false) && $aRelation['_column'] !== $aFilter['property']) {
+            if (($aFilter['property']??false) && ($aRelation['_column']??false) !== $aFilter['property']) {
                 $bAdd=false;
             }
 
