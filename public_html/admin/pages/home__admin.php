@@ -110,7 +110,7 @@ $s=''
         $renderAdminLTE->addCol(
             $renderAdminLTE->getInfobox([
                 'type' => '',
-                'shadow' => '',
+                'shadow' => 'regular',
                 'icon' => icon::getclass('apps'),
                 'iconbg' => '',
                 'text' => '{{home.apps}}',
@@ -158,7 +158,8 @@ foreach ($adminmetainfos->getApps(1) as $sApp => $aAppData){
                     // .$sItems
                     ,
                 'text' => $sBoxContent,
-                'class' => 'height10em'
+                'class' => 'height10em',
+                'onclick' => 'location.href=\'?app='.$sApp.'&page=home\';',
                 // 'variant' => '',
             ]),
             3
