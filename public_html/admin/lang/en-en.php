@@ -24,7 +24,7 @@ return [
     "nav.config" => "Configuration",
 
     // ----- page :: home
-    "home.welcome" => "Welcome to <strong>Axels ObjManager</strong>",
+    "home.welcome" => "Welcome to <strong>Axels Object Manager</strong>",
     "home.banner" => "Backend to edit objects of multiple applications.",
     "home.apps" => "Count of apps",
     "home.objecttypes"=> "Object types",

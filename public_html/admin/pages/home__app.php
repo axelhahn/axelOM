@@ -24,7 +24,7 @@ $TITLE='<strong>'
         . icon::get($appmeta->getAppicon()) 
         . $appmeta->getAppname()
     .'</strong>'
-    ." ($iObjects)"
+    // ." ($iObjects)"
     ;
 $BANNER=$appmeta->getApphint();
 $s='';
@@ -97,11 +97,29 @@ foreach($appmeta->getObjects() as $sObj=>$aObjData){
                     . ($appmeta->getObjectHint($sObj) ? $appmeta->getObjectHint($sObj).' ' : ''),
                 // 'variant' => '',
                 'class' => 'height10em',
+                'onclick' => 'location.href=\'?app='.$appmeta->getId().'&page=object&object='.$sObj.'\';',
             ]),
             3
         );
 }
-$s.=$renderAdminLTE->addRow($sBoxes);
+$s.=
+    $renderAdminLTE->addRow(
+        $renderAdminLTE->addCol(
+            $renderAdminLTE->getInfobox([
+                'type' => '',
+                'shadow' => 'regular',
+                'icon' => icon::getclass('objects'),
+                'iconbg' => '',
+                'text' => '{{home.objecttypes}}',
+                'number' => (count($appmeta->getObjects()??[])) . ' '
+                    ,
+                // 'progressvalue' => 70,
+                // 'progresstext' => '70% Increase in 30 Days',
+                ])
+            , 2
+        )
+    ) . '<br>'
+    . $renderAdminLTE->addRow($sBoxes);
 
 $sContextbar = ''
     .$renderAdminLTE->getCallout([

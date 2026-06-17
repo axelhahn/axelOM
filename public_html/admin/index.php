@@ -14,8 +14,8 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 
 const APP_NAME='axel :: OM';
-const APP_VERSION='0.0.60';
-const APP_DATE='2026-06-16';
+const APP_VERSION='0.0.61';
+const APP_DATE='2026-06-18';
 const DELIM_TITLE='<span></span>';
 
 require_once('../vendor/adminlte-renderer/render-adminlte4.class.php');
@@ -116,9 +116,9 @@ foreach(array_keys($adminmetainfos->getApps(true)) as $sApp){
         
             }
 
-            $aTopnav[]=['href'=>'?app='.$sApp.'&page=home', 'label'=>$appmeta->getAppname(), 'icon'=>$appmeta->getAppicon() ?? icon::getclass('app'), 'class'=>'active' ];
+            $aTopnav[]=['href'=>'?app='.$sApp.'&page=home', 'label'=>$appmeta->getAppname(), 'icon'=>$appmeta->getAppicon() ?? icon::getclass('app'), 'title'=>$appmeta->getApphint(), 'class'=>'active' ];
         } else {
-            $aTopnav[]=['href'=>'?app='.$sApp.'&page=home', 'label'=>$appmeta->getAppname(), 'icon'=>$appmeta->getAppicon() ?? icon::getclass('app')];
+            $aTopnav[]=['href'=>'?app='.$sApp.'&page=home', 'label'=>$appmeta->getAppname(), 'icon'=>$appmeta->getAppicon() ?? icon::getclass('app'), 'title'=>$appmeta->getApphint(), ];
         }
     }
 }

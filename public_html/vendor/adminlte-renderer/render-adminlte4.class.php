@@ -1023,6 +1023,32 @@ class renderadminlte
         // echo '<pre>' . print_r($aOptions, 1) . '</pre>';
         return $aOptions;
     }
+
+    /**
+     * Get an array of base html attributes that will be applied on each 
+     * element. It returns a hash with key (=name of html attribute) and 
+     * value.
+     * 
+     * This method extracts all keys for events (on*) and data 
+     * attributes (data*) and returns them as array.
+     * 
+     * @param array $aOptions  array of html attributes
+     * @return array array of filtered html attributes that will be applied on each element
+     */
+    protected function _getBaseAttributes(array $aOptions): array
+    {
+        $aElement = [];
+        foreach ($aOptions as $sKey => $sValue) {
+            if (
+                preg_match('/^on/', $sKey)
+                || preg_match('/^data/', $sKey)
+                ) {
+                    $aElement[$sKey] = $sValue;
+            }
+        }
+        return $aElement;
+    }
+
     // ----------------------------------------------------------------------
     // 
     // PUBLIC FUNCTIONS :: CONTENT - WIDGETS
@@ -1070,7 +1096,10 @@ class renderadminlte
                 . ($aOptions['dismissible'] ? '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' : '')
         ];
 
-        return $this->_tag('div', $aElement);
+        return $this->_tag(
+            'div', 
+            array_merge($this->_getBaseAttributes($aOptions), $aElement)
+        );
     }
 
     /**
@@ -1111,7 +1140,10 @@ class renderadminlte
         $aElement['title'] = $aOptions['title'];
         $aElement['label'] = $aOptions['text'];
 
-        return $this->_tag('span', $aElement);
+        return $this->_tag(
+            'span', 
+            array_merge($this->_getBaseAttributes($aOptions), $aElement)
+        );
     }
 
     /**
@@ -1145,7 +1177,10 @@ class renderadminlte
         foreach (['_infos', 'type', 'size', 'icon', 'text'] as $sDeleteKey) {
             unset($aElement[$sDeleteKey]);
         }
-        return $this->_tag('button', $aElement);
+        return $this->_tag(
+            'button', 
+            array_merge($this->_getBaseAttributes($aOptions), $aElement)
+        );
     }
 
     /**
@@ -1174,7 +1209,7 @@ class renderadminlte
 
         return $this->addWrapper(
             'div',
-            ['class' => $sClass],
+            array_merge($this->_getBaseAttributes($aOptions), ['class' => $sClass]),
             ($aOptions['title'] ? $this->_tag('h5', ['label' => $aOptions['title']]) : '')
             . ($aOptions['text'] ? $this->_tag('p', ['label' => $aOptions['text']]) : '')
         );
@@ -1270,7 +1305,11 @@ class renderadminlte
         $sCardFooter = $aOptions['footer'] ? $this->_tag('div', ['class' => 'card-footer', 'label' => $aOptions['footer']]) : '';
 
         // merge all
-        return $this->addWrapper('div', ['class' => $sClass], $sCardHeader . $sCardBody . $sCardFooter);
+        return $this->addWrapper(
+            'div', 
+            array_merge($this->_getBaseAttributes($aOptions), ['class' => $sClass]),
+            $sCardHeader . $sCardBody . $sCardFooter
+        );
     }
 
 
@@ -1331,7 +1370,11 @@ class renderadminlte
         );
 
         // merge all
-        return $this->_tag('div', ['class' => $sClass], $sIcon . $sContent);
+        return $this->_tag(
+            'div',
+            array_merge($this->_getBaseAttributes($aOptions), ['class' => $sClass]),
+            $sIcon . $sContent
+        );
     }
 
 
@@ -1402,7 +1445,11 @@ class renderadminlte
         );
 
         // merge all
-        return $this->_tag('div', ['class' => $sClass], $sContent . $sIcon . $sFooter);
+        return $this->_tag(
+            'div', 
+            array_merge($this->_getBaseAttributes($aOptions), ['class' => $sClass]),
+            $sContent . $sIcon . $sFooter
+        );
     }
 
     // ----------------------------------------------------------------------
@@ -1445,7 +1492,7 @@ class renderadminlte
      */
     protected function _renderLabel(array $aOptions): string
     {
-        $sLabel = $aOptions['label'] ?? '';
+        $sLabel = (string) ($aOptions['label'] ?? '');
         if ($aOptions['overview']??false) {
             $sLabel = "<span class=\"in-overview\">$sLabel</span>";
         }
@@ -1687,7 +1734,7 @@ class renderadminlte
         $aElement = $aOptions;
         $aElement['class'] = ''
             . 'form-control '
-            . ($aOptions['class'] ??  '').' '
+            . (string) ($aOptions['class'] ??  '').' '
             . (($aOptions['bootstrap-select']??false) ? 'selectpicker ' : '') //$aOptions
         ;
         if (isset($aOptions['bootstrap-select']) && $aOptions['bootstrap-select']) {
