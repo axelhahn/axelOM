@@ -316,6 +316,7 @@ $sBreadcrumb='<a href="?page=home">{{nav.home}}</a>'.$sBcSpacer
             $renderAdminLTE->addCol(
                 $renderAdminLTE->getCard([
                     'type'=>'secondary',
+                    'variant' => 'outline',
                     'title'=>icon::get('debug').'{{debug.title}}',
                     'text'=>''
                         .icon::get('clock').'<strong>'.(round((microtime(true)-$iTimerStart)*10000)/10).'</strong> ms - {{debug.processing_time}}<br>'
