@@ -422,24 +422,39 @@ if ($iItems == 0) {
             </thead>
             <tbody>\n";
 
+        $aAttributes=$o->getAttributes(true);
+        $aCacheLookup=[];
         foreach ($aItems as $aRow) {
-            $sTable .= '<tr>';
+            $sOnDblClick=$acl->canEdit($sTabApp)
+                ? "location.href='$sBaseUrl&id={$aRow['id']}';"
+                : "";
+            $sTable .= '<tr'. ($sOnDblClick ? " ondblclick=\"$sOnDblClick\"" : "").'>';
             $iCol = 0;
             foreach (array_keys($aBasicAttributes) as $sField) {
                 if ($sField == 'id') {
                     continue;
                 }
                 $iCol++;
+
                 $sText = $aRow[$sField];
+                if($aAttributes[$sField]['lookup']??false){
+                    if(!isset($aCacheLookup[$sText])){
+                        $o->read($aRow['id']);
+                        $aCacheLookup[$sText]=icon::get('relation').' '.$o->getRelLabel((string) $sField);
+                    }
+                    $sText=$aCacheLookup[$sText];
+                }
+
+                // print_r($aRow);
                 if ($sField == 'label' || $iCol == 1) {
                     $sText = $acl->canEdit($sTabApp)
                         ? '<a href="'
-                        . $sBaseUrl
-                        . '&id='
-                        . $aRow['id']
-                        . '"><strong>'
-                        . $aRow[$sField]
-                        . '</strong></a>'
+                            . $sBaseUrl
+                            . '&id='
+                            . $aRow['id']
+                            . '"><strong>'
+                            . $aRow[$sField]
+                            . '</strong></a>'
                         : '<strong>' . $aRow[$sField] . '</strong>';
                 }
                 $sTable .= '<td>' . $sText . '</td>';
@@ -462,7 +477,7 @@ if ($iItems == 0) {
                     $bDbTableOk
                     && $acl->canEdit($sTabApp)
                         ? $renderAdminLTE->getButton([
-                            'class' => 'btn-outline-dark',
+                            'class' => 'btn-outline-dark btn-sm',
                             'text' => icon::get('edit') . '{{edit}}',
                             'title' => '{{edit}}: ' . $o->getLabel($aRow),
                             'onclick' => 'location.href=\'' . $sBaseUrl . '&id=' . $aRow['id'] . '\'',
@@ -473,7 +488,7 @@ if ($iItems == 0) {
                 . (
                     $acl->canEdit($sTabApp)
                         ? $renderAdminLTE->getButton([
-                            'class' => 'btn-outline-danger',
+                            'class' => 'btn-outline-danger btn-sm',
                             'text' => icon::get('delete') . '{{delete}}',
                             'title' => '{{delete}}: ' . $o->getLabel($aRow),
                             'onclick' =>
@@ -498,7 +513,7 @@ if ($iItems == 0) {
             'variant' => 'outline',
             // 'tb-remove' => 1,
             // 'tb-collapse' => 1,
-            'title' => icon::get($aObjdata['icon']) . '{{items}} :: <strong>' . $sObject . '</strong>',
+            'title' => '<strong>' . $sObjLabel . '</strong>',
             'tools' => '',
             'text' =>
                 ''
@@ -861,6 +876,7 @@ if ($bShowEdit && $bDbTableOk) {
                             $bRelationAllowed
                                 ? $renderAdminLTE->getButton([
                                     'type' => $sObjname == $sObject ? 'secondary' : 'success',
+                                    'class' => "btn-sm",
                                     'text' =>
                                         icon::get($appmeta->getObjectIcon($sObjname))
                                         . ($aObjdata['label'] ?? $sObjname),
@@ -875,6 +891,7 @@ if ($bShowEdit && $bDbTableOk) {
                                 ])
                                 : $renderAdminLTE->getButton([
                                     'disabled' => 'disabled',
+                                    'class' => "btn-sm",
                                     'text' =>
                                         icon::get($appmeta->getObjectIcon($sObjname))
                                         . ($aObjdata['label'] ?? $sObjname),
@@ -1005,7 +1022,7 @@ if ($bShowEdit && $bDbTableOk) {
                         $aRelation['_target']['label'] ?? $aRelation['_target']['displayname'] ?? $aRelation['_target']['filename'] ?? $sRelObjectname
                             ?? '?';
                     $sBtnEdit = $renderAdminLTE->getButton([
-                        'class' => 'btn-outline-dark',
+                        'class' => 'btn-outline-dark btn-sm',
                         'text' => icon::get('edit') . '{{edit}}',
                         'title' => '{{edit}} ' . $sTargetLabel,
                         // 'onclick' => 'location.href=\'?page=object&app='.$sTabApp.'&object='.$aRelation['table'].'&id=' . $oRelobj->id() . '\'',
@@ -1021,10 +1038,11 @@ if ($bShowEdit && $bDbTableOk) {
                     $sBtnDel = $aRelation['_column']
                         ? $renderAdminLTE->getButton([
                             'disabled' => 'disabled',
+                            'class' => 'btn-sm',
                             'text' => icon::get('delete') . '{{delete}}',
                         ])
                         : $renderAdminLTE->getButton([
-                            'class' => 'btn-outline-danger',
+                            'class' => 'btn-outline-danger btn-sm',
                             'text' => icon::get('delete') . '{{delete}}',
                             'title' => 'Delete relation ' . $o->getLabel() . ' -> ' . $sTargetLabel,
                             'onclick' =>
@@ -1037,9 +1055,15 @@ if ($bShowEdit && $bDbTableOk) {
                                 . '\'});',
                         ]);
 
+                    $sOnDblClick=$acl->canEdit($sTabApp)
+                        ? "location.href='$sBaseUrl&object={$aRelation['_totable']}&id={$aRelation['_toid']}';"
+                        : ""
+                        ;
+
                     $sRelTable .=
                         '<tr'
                         . ($appmeta->isRelationAllowed($sObject, $aRelation['_totable']) ? '' : ' class="table-danger"')
+                        . ($sOnDblClick ? " ondblclick=\"$sOnDblClick\"" : "")
                         . '>'
                         . '<td>'
                         . '<a href="'
@@ -1102,7 +1126,7 @@ if ($bShowEdit && $bDbTableOk) {
                             'variant' => 'outline',
                             // 'tb-remove' => 1,
                             // 'tb-collapse' => 1,
-                            'title' => icon::get('relation') . '{{relations}}',
+                            'title' => icon::get('relation') . '{{relations}} <strong>' . $o->getLabel() . '</strong>',
                             // 'tools' => '123',
                             'text' => $sContentRelations . $sRelObjects,
                             // 'footer' => $sFooterRelations,
