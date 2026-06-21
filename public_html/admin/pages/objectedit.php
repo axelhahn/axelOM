@@ -149,8 +149,9 @@ $sMainContent.= $renderAdminLTE->addRow(
         $renderAdminLTE->getCard([
             'type' => 'info',
             'variant' => 'outline',
-            'title' => icon::get('properties').'{{properties}}',
-            'text' => $sProperties 
+            'tb-collapse' => 1,
+            'title' => $sObjLabel . ' ' . icon::get('properties').'<strong>{{properties}}</strong>',
+            'text' => $sProperties
                 /*
                 .'<hr>'
                 .$renderAdminLTE->getButton([
@@ -159,12 +160,28 @@ $sMainContent.= $renderAdminLTE->addRow(
                     'onclick' => '$(\'#objsource\').toggleClass(\'hidden\');',
                 ])
                 */
-                .'<hr>'
-                .$sCfgdata
+                // .'<hr>'
+                // .$sCfgdata
                 ,
             // 'footer' => $sFooterRelations,
         ]),
         12
+    )
+)
+. $renderAdminLTE->addRow(
+    
+    $renderAdminLTE->addCol('', 1)
+    . $renderAdminLTE->addCol(
+        $renderAdminLTE->getCard([
+            'type' => 'dark',
+            'variant' => 'outline',
+            'tb-collapse' => 1,
+            'title' => $sObjLabel . ' ' . icon::get('edit').'<strong>{{edit}}</strong>',
+            'text' => $sCfgdata
+                ,
+            // 'footer' => $sFooterRelations,
+        ]),
+        11
     )
 )
 .$codemirror->getHtmlHead()

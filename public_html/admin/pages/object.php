@@ -772,7 +772,7 @@ if ($bShowEdit && $bDbTableOk) {
             'type' => $iId ? 'primary' : 'success',
             'variant' => 'outline',
             // 'tb-remove' => 1,
-            // 'tb-collapse' => 1,
+            'tb-collapse' => $iId ? 1 : 0,
             'title' => $iId
                 ? icon::get($aObjdata['icon']) . '{{edit}} <strong>' . $o->getLabel() . '</strong>'
                 : icon::get('new') . '{{create_new_item}}', /* . ' :: ' . $sObject */
