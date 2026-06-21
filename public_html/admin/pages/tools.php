@@ -280,14 +280,14 @@ if($sTabApp){
         . '<td align="right">' . number_format( filesize($file), false, false,"'") . '</td>'
         . '<td align="right"><nobr>' 
                 . $renderAdminLTE->getButton([
-                    'class' => 'btn-outline-dark',
+                    'class' => 'btn-outline-dark btn-sm',
                     'text' => icon::get('view') . '{{view}}',
                     'title' => '{{view}}: '.$file,
                     'onclick' => 'httprequest(\'POST\', location.href , {\'action\': \'view\', \'file\': \''.basename($file).'\'});',
                 ])
                 .' '
                 . $renderAdminLTE->getButton([
-                    'class' => 'btn-outline-dark',
+                    'class' => 'btn-outline-dark btn-sm',
                     'text' => icon::get('restore') . '{{restore}}',
                     'title' => '{{restore}}: '.$file,
                     // 'onclick' => 'if(confirm(\'{{confirm_restore}}\n\n'.$file.'\n\n?\')) httprequest(\'POST\', location.href , {\'action\': \'restore_custom\', \'file\': \''.basename($file).'\'});',
@@ -295,7 +295,7 @@ if($sTabApp){
                 ])
                 .' '
                 .$renderAdminLTE->getButton([
-                    'class' => 'btn-outline-danger',
+                    'class' => 'btn-outline-danger btn-sm',
                     'text' => icon::get('delete') . '{{delete}}',
                     'title' => '{{delete}}: '.basename($file),
                     'onclick' => 'if(confirm(\'{{confirm_delete}}\n\n'.$file.'\n\n?\')) httprequest(\'POST\', location.href , {\'action\': \'delete\', \'file\': \''.basename($file).'\'});',

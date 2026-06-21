@@ -176,6 +176,7 @@ if ($acl->isGlobalAdmin()){
                 'text' => icon::get('new').'{{new}}',
                 'onclick' => 'overlayDisplay(document.getElementById(\'frmNewApp\').innerHTML); return false;',
             ]).'</center>',
+            'onclick' => 'overlayDisplay(document.getElementById(\'frmNewApp\').innerHTML); return false;',
             'class' => 'height10em'
             // 'variant' => '',
         ]),

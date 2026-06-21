@@ -14,8 +14,8 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 
 const APP_NAME='axel :: OM';
-const APP_VERSION='0.0.61';
-const APP_DATE='2026-06-18';
+const APP_VERSION='0.0.62';
+const APP_DATE='2026-06-21';
 const DELIM_TITLE='<span></span>';
 
 require_once('../vendor/adminlte-renderer/render-adminlte4.class.php');
@@ -316,6 +316,7 @@ $sBreadcrumb='<a href="?page=home">{{nav.home}}</a>'.$sBcSpacer
             $renderAdminLTE->addCol(
                 $renderAdminLTE->getCard([
                     'type'=>'secondary',
+                    'variant' => 'outline',
                     'title'=>icon::get('debug').'{{debug.title}}',
                     'text'=>''
                         .icon::get('clock').'<strong>'.(round((microtime(true)-$iTimerStart)*10000)/10).'</strong> ms - {{debug.processing_time}}<br>'
