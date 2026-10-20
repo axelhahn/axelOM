@@ -71,8 +71,7 @@ class appmetainfos {
 
     /**
      * Constructor
-     * @param mixed $aAppdir  full path of application directory or app name
-     * @return boolean
+     * @param string $sAppdir  full path of application directory or app name
      */
     public function __construct(string $sAppdir='')
     {
@@ -96,6 +95,7 @@ class appmetainfos {
     public function set(string $sAppdir='') :bool {
         $this->_sApp = '';
         $this->_aConfig = [];
+
         if($sAppdir && is_dir($sAppdir) && $this->getConfigfile($sAppdir)>""){
             $this->_sAppBasedir = dirname($sAppdir);
             $this->_sApp = basename($sAppdir);
@@ -247,7 +247,7 @@ class appmetainfos {
      * @return string
      */
     public function getAppicon() :string {
-        return $this->getConfig('icon');
+        return (string) ($this->getConfig('icon'));
     }
 
     /**
@@ -256,7 +256,7 @@ class appmetainfos {
      * @return string
      */
     public function getAppname() :string {
-        return $this->getConfig('label');
+        return (string) ($this->getConfig('label'));
     }
 
     /**
@@ -265,7 +265,7 @@ class appmetainfos {
      * @return string
      */
     public function getApphint() :string {
-        return $this->getConfig('hint') ?: '{{msgerr.app_hint_missing}}';
+        return (string) $this->getConfig('hint') ?: '{{msgerr.app_hint_missing}}';
     }
 
     // --------------------------------------------------------------

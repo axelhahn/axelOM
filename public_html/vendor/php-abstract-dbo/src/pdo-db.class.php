@@ -9,10 +9,9 @@
  * Licence: GNU GPL 3.0
  * ----------------------------------------------------------------------
  * 2023-08-26  0.1  ah  first lines
- * 2025-08-19  ___  ah  last changes
+ * 2026-10-12  ___  ah  last changes
  * ======================================================================
  */
-
 
 namespace axelhahn;
 
@@ -52,6 +51,15 @@ class pdo_db
      * @var boolean
      */
     protected bool $_bDebug = false;
+
+    /**
+     * flag: store all queries and metadata in this->_aQueries
+     * @see $this->_aQueries
+     * @see setQueryLog
+     * @var bool
+     */
+    protected bool $_bQueryLog = true;
+
 
     protected int $_iLastError = -1;
     protected int $_iLastDBError = -1;
@@ -257,7 +265,9 @@ class pdo_db
         return true;
     }
     /**
-     * Enable/ disable debug; database error is visible on enabled debug only
+     * Enable/ disable debug; if enabled it shows database actions.
+     * - Default is false (off)
+     * - Preset can be set in config pdo->showdebug
      * @param  bool  $bNewValue  new debug mode; false = off; true = on
      * @return bool
      */
@@ -274,8 +284,12 @@ class pdo_db
     }
 
     /**
-     * Enable/ disable debug; show error message if they occur
-     * @param  bool  $bNewValue  new debug mode; false = off; true = on
+     * Enable/ disable showing database error messages if they occur
+     * - Default is false (off)
+     * - Preset can be set in config pdo->showerrors
+     * @see _log()
+     * 
+     * @param  bool  $bNewValue  flag; false = off; true = on
      * @return bool
      */
     public function showErrors(bool $bNewValue): bool
@@ -283,6 +297,24 @@ class pdo_db
         $this->_bShowErrors = !!$bNewValue;
         // echo(__METHOD__." - ShowErrors is now ".($this->_bShowErrors ? "ON" : "OFF"));
         $this->_wd(__METHOD__ . " - ShowErrors is now " . ($this->_bShowErrors ? "ON" : "OFF"));
+        return true;
+    }
+
+    /**
+     * Enable/ disable logging queries.
+     * You should disable logging of each query on import scripts or indexers
+     * in CLI mode to avoid memory leaks of stored queries.
+     * - Default is true (on)
+     * 
+     * @see makeQuery()
+     * 
+     * @param  bool  $bNewValue  new debug mode; false = off; true = on
+     * @return bool
+     */
+    public function setQueryLog(bool $bNewValue): bool
+    {
+        $this->_bQueryLog = !!$bNewValue;
+        $this->_wd(__METHOD__ . " - QueryLog is now " . ($this->_bQueryLog ? "ON" : "OFF"));
         return true;
     }
 
@@ -447,8 +479,10 @@ class pdo_db
                         __METHOD__,
                         'prepare() failed.'
                     );
-                    $this->_aQueries[] = $aLastQuery;
-                    $this->_iLastDBError = (count($this->_aQueries) - 1);
+                    if($this->_bQueryLog){
+                        $this->_aQueries[] = $aLastQuery;
+                        $this->_iLastDBError = (count($this->_aQueries) - 1);
+                    }
                     return false;
                 }
                 $result->execute($aData);
@@ -464,15 +498,19 @@ class pdo_db
                 __METHOD__,
                 "{$_table} Query [$sSql] failed:" . $aLastQuery['error'] . ' See $DB->queries().'
             );
-            $this->_aQueries[] = $aLastQuery;
-            $this->_iLastDBError = (count($this->_aQueries) - 1);
+            if($this->_bQueryLog){
+                $this->_aQueries[] = $aLastQuery;
+                $this->_iLastDBError = (count($this->_aQueries) - 1);
+            }
 
             return false;
         }
         $_aData = (array) $result->fetchAll(PDO::FETCH_ASSOC);
         $aLastQuery['records'] = count((array) $_aData) ?: $result->rowCount();
 
-        $this->_aQueries[] = $aLastQuery;
+        if($this->_bQueryLog){
+            $this->_aQueries[] = $aLastQuery;
+        }
         return $_aData;
     }
 
@@ -616,9 +654,9 @@ class pdo_db
      * @see import()
      * @param string $sOutfile  optional: output file name
      * @param array  $aTables   optional: array of tables to dump; default: false (dumps all tables)
-     * @return mixed  array of data on success or false on error
+     * @return bool  true on success or false on error
      */
-    public function dump(string $sOutfile = '', array $aTables = []): array|bool
+    public function dump(string $sOutfile = '', array $aTables = []): bool
     {
         $this->_wd(__METHOD__ . ' Writing to ' . $sOutfile . ' ' . (count($aTables) ? 'tables: ' . implode(', ', $aTables) : '(all tables)'));
 
