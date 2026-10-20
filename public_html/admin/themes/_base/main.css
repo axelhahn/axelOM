@@ -204,7 +204,7 @@ table.dataTable.no-footer {
 
 table tr.error>td {background:#f0e0e0 !important;}
 table tr.info{}
-table tr.warning>td{background:#f0e0c0 !important;}
+table tr.warning>td, table tr.warn>td{background:#f0e0c0 !important;}
 table.dataTable tbody th, table.dataTable tbody td {
 	padding: 3px 10px;
 }

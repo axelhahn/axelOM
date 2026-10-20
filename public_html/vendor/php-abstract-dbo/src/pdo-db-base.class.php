@@ -20,6 +20,8 @@
  * 2026-03-15  ___  ah  implement 1:n relations
  * 2026-06-04  ___  ah  extend delete(): add hook hookDeletePre()
  * 2026-06-16  ___  ah  fix save lookup relations with multiple values (arrays)
+ * 2026-10-10  ___  ah  last changes- update hasChange()
+ * 2026-10-18  ___  ah  update getRelLabel()
  * ======================================================================
  */
 
@@ -1459,7 +1461,7 @@ class pdo_db_base
     public function getRelLabel(string $sColumn): string|bool
     {
         $aItem = $this->relReadLookupItem($sColumn);
-        return $this->getLabel($aItem);
+        return $aItem ? $this->getLabel($aItem) : false;
     }
 
     /**
@@ -1711,7 +1713,6 @@ class pdo_db_base
      */
     public function hasChange(): bool
     {
-        return true;
         return $this->_bChanged;
     }
 
